@@ -82,6 +82,8 @@ unsigned char * UART_Buffer_QueueHead=UART_Buffer_Queue;
 unsigned char * UART_Buffer_QueueBottom=UART_Buffer_Queue;
 unsigned char TX_Ready =1;
 static char Byte;
+char TxOrder = 0;
+unsigned char TxByte = 0;
 //----------------------PWM----------------------------------------------------
 #define PWM1_HighLevelPercent 0.1
 #define PWM3_HighLevelPercent 0.1
@@ -118,7 +120,11 @@ void main (void)
 
    while (1)
    {  
-		Uart0_SendByte('h');
+		if(UART_Buffer_QueueHead < UART_Buffer_QueueBottom)
+		{
+			Uart0_SendByte(*UART_Buffer_QueueHead);
+			++UART_Buffer_QueueHead;
+		}		
    }
 }
 
@@ -311,11 +317,17 @@ void UART0_Interrupt (void) interrupt 4
 
    if (TI0 == 1)                   // Check if transmit flag is set
    {
-      TI0 = 0;                           // Clear interrupt flag
-
-      TX_Ready = 1;                    // Indicate transmission complete
-     
-   }
+	   TI0 = 0;
+	   if(TxOrder == 1)
+	   {
+		   TxOrder = 0;
+		   SBUF0 = TxByte;
+	   }
+	   else
+	   {
+		   TX_Ready = 1;
+	   }
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -360,7 +372,9 @@ void Uart0_SendByte(unsigned char value)
 	
 	while(!TX_Ready);
 	TX_Ready = 0;
-	SBUF0 = value;
+	TxOrder = 1;
+	TxByte = value;
+	TI0=1;
 	
 	
 	SFRPAGE = SFRPAGE_SAVE;//Recover the SFR Page

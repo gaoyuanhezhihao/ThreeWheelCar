@@ -116,9 +116,13 @@ void main (void)
 
    SFRPAGE = UART0_PAGE;   
 
-   while (1)
+	while (1)
    {  
-		Uart0_SendByte('h');
+		if(UART_Buffer_QueueHead < UART_Buffer_QueueBottom)
+		{
+			Uart0_SendByte(*UART_Buffer_QueueHead);
+			++UART_Buffer_QueueHead;
+		}		
    }
 }
 
