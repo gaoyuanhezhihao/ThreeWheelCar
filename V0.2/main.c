@@ -122,8 +122,19 @@ void main (void)
    {  
 		if(UART_Buffer_QueueHead < UART_Buffer_QueueBottom)
 		{
-			Uart0_SendByte(*UART_Buffer_QueueHead);
-			++UART_Buffer_QueueHead;
+			//Uart0_SendByte(*UART_Buffer_QueueHead);
+			//++UART_Buffer_QueueHead;
+			if( 0x53 == *UART_Buffer_QueueHead )
+			{
+				if( UART_Buffer_QueueBottom - UART_Buffer_QueueHead < 2 )
+				{
+					//wait the rest two char
+					continue;
+				}
+				//next char (order) come
+				switch(*UART
+			}
+			
 		}		
    }
 }
