@@ -241,7 +241,7 @@
         <Ww>
           <count>20</count>
           <WinNumber>1</WinNumber>
-          <ItemText>uiPWM1Degree &amp; 0x100</ItemText>
+          <ItemText>UART_Receive_Buffer_QueueBottom</ItemText>
         </Ww>
         <Ww>
           <count>21</count>
@@ -252,6 +252,11 @@
           <count>22</count>
           <WinNumber>1</WinNumber>
           <ItemText>UART_Receive_Buffer_Queue</ItemText>
+        </Ww>
+        <Ww>
+          <count>23</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>UART_Receive_Buffer_QueueBottom</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

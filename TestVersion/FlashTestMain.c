@@ -74,6 +74,7 @@ sfr16 TMR2     = 0xcc;                 // Timer2
 sbit PWM1 	= 	P3^2;                      
 sbit IN11		=	P3^3;
 sbit IN12		= 	P3^4;
+sbit TMR3Debug 	=   P3^5;
 sbit SET		=	P3^1;
 sbit Key1		= 	P7^2;
 sbit PWM3		=	P6^7;
@@ -130,7 +131,9 @@ void TIMER3_Init(void);
 void UART1_Init (void);
 void Uart1_SendByte(unsigned char value);
 void PWMChange(void);
-
+void TouchKeepAlive(void);
+void Acknowledge(unsigned char back);
+void LostConnect(void);
 //-----------------------------------------------------------------------------
 // Global Variables
 //-----------------------------------------------------------------------------
@@ -178,6 +181,8 @@ struct Pair_Angel_Control Map_Angel_PID[ANGELRANGE_SIZE] = {{ANGELSCALE_10,5,0,1
 																{ANGELSCALE5,3,0,1},\
 																{ANGELSCALE10,5,0,1}};
 int iCurrentKey = 0;
+unsigned int KeepAliveTime_i=0;
+									
 //-------------------------------Motor--------------------------------
 unsigned int Motor1_Time=0;
 unsigned int Motor2_Time=0;
@@ -237,8 +242,8 @@ void main (void)
 	UART0_Init();                      // Initialize UART0
 //	UART1_Init();
 	WirelessModule_Init();
-//	TIMER0_Init();
-	TIMER3_Init();
+	TIMER0_Init();
+//	TIMER3_Init();
 	EA = 1;
 
 	//*************flash test**********************
@@ -269,6 +274,11 @@ void main (void)
 	Uart0_TransmitString("Ready",strlen("Ready"));
 	while (1)
 	{
+		//if more than 20*50ms=1000ms is past since last message.
+		if(KeepAliveTime_i > 100)
+		{
+			LostConnect();
+		}
 		if(UART_Receive_Buffer_QueueHead < UART_Receive_Buffer_QueueBottom)
 		{
 			//Uart0_SendByte(*UART_Receive_Buffer_Queue);
@@ -285,7 +295,7 @@ void main (void)
 				if( *UART_Receive_Buffer_QueueHead + *(UART_Receive_Buffer_QueueHead+1) != *(UART_Receive_Buffer_QueueHead+2) )
 				{
 					/*debug*/
-					Uart0_SendByte('s');
+					Uart0_SendByte('w');
 					UART_Receive_Buffer_QueueHead+=3;
 					/*debug end*/
 					continue;
@@ -303,6 +313,8 @@ void main (void)
 						IN12=0;
 						IN31=1;
 						IN32=0;
+						TouchKeepAlive();
+						Acknowledge(*UART_Receive_Buffer_QueueHead);
 						break;
 					case 'f'://forward
 						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1) * 100;
@@ -311,6 +323,8 @@ void main (void)
 						IN12=0;
 						IN31=1;
 						IN32=0;
+						TouchKeepAlive();
+						Acknowledge(*UART_Receive_Buffer_QueueHead);
 						break;
 					case 'l'://turn left
 						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1) * 100;
@@ -319,6 +333,8 @@ void main (void)
 						IN12=0;
 						IN31=1;
 						IN32=0;
+						TouchKeepAlive();
+						Acknowledge(*UART_Receive_Buffer_QueueHead);
 						break;
 					case 'r'://turn right
 						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1) * 100;
@@ -328,6 +344,8 @@ void main (void)
 						IN12=0;
 						IN31=0;
 						IN32=0;
+						TouchKeepAlive();
+						Acknowledge(*UART_Receive_Buffer_QueueHead);
 						break;
 					case 'b'://go back
 						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1) * 100;
@@ -336,6 +354,8 @@ void main (void)
 						IN12=1;
 						IN31=0;
 						IN32=1;
+						TouchKeepAlive();
+						Acknowledge(*UART_Receive_Buffer_QueueHead);
 						break;
 					case 's'://stop
 						uiPWM1Degree=uiPWM2Degree=0;
@@ -344,13 +364,16 @@ void main (void)
 						IN12=0;
 						IN31=0;
 						IN32=0;
+						TouchKeepAlive();
+						Acknowledge(*UART_Receive_Buffer_QueueHead);
 						break;
 					default:
 						/*debug*/
-						Uart0_SendByte('n');
+						Acknowledge('n');//No such order
 						/*debug end*/
 						break;						
 				}
+				UART_Receive_Buffer_QueueHead+=3;
 			}
 			else
 			{
@@ -502,9 +525,10 @@ void TIMER0_Init(void)
 	CKCON |= 0x02;
 	CKCON &= ~0x08;//Timer 0 uses the clock defined by the prescale bits
 	TR0 = 0;
-	TH0= (0xFFFF-TIMER0CLOCK/100)>>8; //Timer0 cycle = 10ms
-	TL0=  0xFFFF-TIMER0CLOCK/100;
+	TH0= (0xFFFF-TIMER0CLOCK/20)>>8; //Timer0 cycle = 50ms
+	TL0=  0xFFFF-TIMER0CLOCK/20;
 	ET0 = 1;//Enable interrupt
+	TR0 = 1;//Run Timer0
 	SFRPAGE = SFRPAGE_SAVE;
 }
 
@@ -559,8 +583,8 @@ void TIMER3_Init(void)
 	TMR3CN &= ~0x01;//Auto-Reload Mode 
 	TMR3CF &= ~0x18;//clear bit4 ,3.clock = SYSCLK/12
 	
-	RCAP3H = (0xFFFF-SYSTEMCLOCK/12/100)>>8; //Timer3 cycle = 10ms
-	RCAP3L =  0xFFFF-TIMER0CLOCK/100;
+	RCAP3H = (0xFFFF-TIMER0CLOCK/20)>>8; //Timer3 cycle = 10ms
+	RCAP3L =  0xFFFF-TIMER0CLOCK/20;
 //	TMRH3_HighLevelPrefetch = ( 0xffff - (unsigned int) (count * fPWM3_HighLevelPercent) )>>8;
 //	TMRL3_HighLevelPrefetch =   0xffff - (unsigned int) (count * fPWM3_HighLevelPercent) ;
 //	TMRH3_LowLevelPrefetch = (  0xffff - (unsigned int )( count * (1-fPWM3_HighLevelPercent) )  )>>8;
@@ -574,28 +598,8 @@ void Timer3_ISR(void) interrupt 14
 {
 	char data SFRPAGE_SAVE =SFRPAGE;//Save current SFP page
 	SFRPAGE = TMR3_PAGE;
-	/***************Debug Begin***********************/
-		DEBUGPORT ^= 1;
-	//---------------Debug End ---------------------------
-//	if( Motor1_Time == 0 )
-//	{
-//		IN11=0;
-//		IN12=0;
-//	}
-//	else
-//	{
-//		Motor1_Time--;
-//	}
-//	
-//	if( Motor2_Time == 0 )
-//	{
-//		IN31=0;
-//		IN32=0;
-//	}
-//	else
-//	{
-//		Motor2_Time--;
-//	}
+	TMR3Debug = ~TMR3Debug;
+
 	
 	if( Control_Time == 0 )
 	{
@@ -672,39 +676,8 @@ void Timer0_ISR(void) interrupt 1
 {	
 	Global_SFRPAGE_SAVE=SFRPAGE;//Save current SFP page
 	SFRPAGE=CONFIG_PAGE;
+	KeepAliveTime_i++;
 	
-	if( Motor1_Time == 0 )
-	{
-		IN11=0;
-		IN12=0;
-	}
-	else
-	{
-		Motor1_Time--;
-	}
-	
-	if( Motor2_Time == 0 )
-	{
-		IN31=0;
-		IN32=0;
-	}
-	else
-	{
-		Motor2_Time--;
-	}
-	
-	if( Control_Time == 0 )
-	{
-		Control_Time = Const_Control_Time;
-		Control_TimeIsUp=1;
-		/***************Debug Begin***********************/
-//		IN31 ^= 1;
-		//---------------Debug End ---------------------------
-	}
-	else
-	{
-		Control_Time--;
-	}
 	TF0=0;
 	SFRPAGE=Global_SFRPAGE_SAVE;
 }
@@ -1076,7 +1049,33 @@ void PWMChange(void)
 	while( PWM2CHANGEORDER != 0 );//wait
 	PWM2CHANGEORDER =  1;
 }
-
+void TouchKeepAlive(void)
+{
+	char data SFRPAGE_SAVE =SFRPAGE;
+	SFRPAGE=TIMER01_PAGE;
+	KeepAliveTime_i = 0;
+	ET0 = 1;//Enable Timer0 interrupt
+	TR0 = 1;//Run Timer0
+	SFRPAGE = SFRPAGE_SAVE;
+}
+void LostConnect(void)
+{
+	uiPWM1Degree=uiPWM2Degree=0;
+	PWMChange();
+	IN11=0;
+	IN12=0;
+	IN31=0;
+	IN32=0;
+}
+void Acknowledge(unsigned char back)
+{
+	Uart0_SendByte(0x54);
+	Uart0_SendByte(back);
+	Uart0_SendByte(1);
+	Uart0_SendByte(back+1);
+	
+	
+}
 //-----------------------------------------------------------------------------
 // End Of File
 //-----------------------------------------------------------------------------
