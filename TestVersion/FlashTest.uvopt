@@ -141,12 +141,12 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>uiAbsoluteDeviation</ItemText>
+          <ItemText>back</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>UART1_Receive_Buffer_Queue</ItemText>
+          <ItemText>UART_Receive_Buffer_Queue</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
@@ -161,7 +161,7 @@
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Byte_UART1</ItemText>
+          <ItemText>UART_Receive_Buffer_Queue</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
@@ -216,7 +216,7 @@
         <Ww>
           <count>15</count>
           <WinNumber>1</WinNumber>
-          <ItemText>w&amp;0x8000? -w:w /Kd</ItemText>
+          <ItemText>UART_Receive_Buffer_QueueHead</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
@@ -265,7 +265,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>0</aLwin>
+        <aLwin>1</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>

@@ -285,12 +285,25 @@ void main (void)
 			//++UART_Receive_Buffer_Queue;
 			if( 0x53 == *UART_Receive_Buffer_QueueHead )
 			{
+				char WaitFailSign = 0;
 				++UART_Receive_Buffer_QueueHead;
 				while( UART_Receive_Buffer_QueueBottom - UART_Receive_Buffer_QueueHead < 3 )
 				{
 					//wait the rest three char
-					;
+					if(KeepAliveTime_i > 100)
+					{
+						//wait too long 
+						WaitFailSign = 1;
+						break;
+					}
 				}
+				if(WaitFailSign == 1) 
+				{
+					//wait too long. Abort this frame. 
+					UART_Receive_Buffer_QueueHead = UART_Receive_Buffer_QueueHead;
+					break;
+				}
+				
 				//check the sum 
 				if( *UART_Receive_Buffer_QueueHead + *(UART_Receive_Buffer_QueueHead+1) != *(UART_Receive_Buffer_QueueHead+2) )
 				{
@@ -501,6 +514,7 @@ void PORT_Init (void)
 	P3MDOUT = 0x18;						// P3.3 P3.4 is  push-pull
 //	P6MDOUT = 0x60;						// P6.x is push-pull
 	P6		&= ~0x80;
+	P6MDOUT = 0x60;
 	P5MDOUT	= 0xFF;						//P6 is push-pull
 	P4MDOUT = 0xC3;						//P4.7,4.6,4.0,4.1 is push-pull
 //	P7MDOUT = 0x00;						//P7.x is  open-drain
@@ -545,55 +559,55 @@ void TIMER0_Init(void)
 // interrupt generated) using SYSCLK as its time base.
 //
 //-----------------------------------------------------------------------------
-void TIMER1_Init(unsigned int count)
-{
-	char data SFRPAGE_SAVE =SFRPAGE;
-	PWM1_HighLevelCount = count * fPWM1_HighLevelPercent;
-	PWM1_LowLevelCount = (float)count * (1-fPWM1_HighLevelPercent);
-	SFRPAGE=TIMER01_PAGE;
-	TCON &= ~0xC0;//stop the timer1
-	TMOD &= ~0x00;//Set the timer1 work in mode of hex
-	TMOD |= 0x10;
-	
-	CKCON &=0x0f;//clear CKCON bit4~7
-	CKCON |= 0x10;//Timer 1 use SYSTEMCLOCK
-	
-	TH1_HighLevelPrefetch = ( 0xffff - (unsigned int) (count * fPWM1_HighLevelPercent) )>>8;
-	TL1_HighLevelPrefetch =   0xffff - (unsigned int) (count * fPWM1_HighLevelPercent) ;
-	TH1_LowLevelPrefetch = (  0xffff - (unsigned int )( count * (1-fPWM1_HighLevelPercent) )  )>>8;
-	TL1_LowLevelPrefetch =    0xffff - (unsigned int) (count * (1-fPWM1_HighLevelPercent));
-	ET1 = 1;//Enable interrupt;
-	TCON |= 0xC0;//start the timer1
-	
-	SFRPAGE = SFRPAGE_SAVE;
-}
+//void TIMER1_Init(unsigned int count)
+//{
+//	char data SFRPAGE_SAVE =SFRPAGE;
+//	PWM1_HighLevelCount = count * fPWM1_HighLevelPercent;
+//	PWM1_LowLevelCount = (float)count * (1-fPWM1_HighLevelPercent);
+//	SFRPAGE=TIMER01_PAGE;
+//	TCON &= ~0xC0;//stop the timer1
+//	TMOD &= ~0x00;//Set the timer1 work in mode of hex
+//	TMOD |= 0x10;
+//	
+//	CKCON &=0x0f;//clear CKCON bit4~7
+//	CKCON |= 0x10;//Timer 1 use SYSTEMCLOCK
+//	
+//	TH1_HighLevelPrefetch = ( 0xffff - (unsigned int) (count * fPWM1_HighLevelPercent) )>>8;
+//	TL1_HighLevelPrefetch =   0xffff - (unsigned int) (count * fPWM1_HighLevelPercent) ;
+//	TH1_LowLevelPrefetch = (  0xffff - (unsigned int )( count * (1-fPWM1_HighLevelPercent) )  )>>8;
+//	TL1_LowLevelPrefetch =    0xffff - (unsigned int) (count * (1-fPWM1_HighLevelPercent));
+//	ET1 = 1;//Enable interrupt;
+//	TCON |= 0xC0;//start the timer1
+//	
+//	SFRPAGE = SFRPAGE_SAVE;
+//}
 
 //-----------------------------------------------------------------------------
 // TIMER3_Init
 //-----------------------------------------------------------------------------
 //
 //-----------------------------------------------------------------------------
-void TIMER3_Init(void)
-{
-	char data SFRPAGE_SAVE =SFRPAGE;
-//	PWM3_HighLevelCount = count * fPWM3_HighLevelPercent;
-//	PWM3_LowLevelCount = (float)count * (1-fPWM3_HighLevelPercent);
-	SFRPAGE=TMR3_PAGE;
-	TMR3CN &= ~0x04;//stop the timer3
-	TMR3CN &= ~0x01;//Auto-Reload Mode 
-	TMR3CF &= ~0x18;//clear bit4 ,3.clock = SYSCLK/12
-	
-	RCAP3H = (0xFFFF-TIMER0CLOCK/20)>>8; //Timer3 cycle = 10ms
-	RCAP3L =  0xFFFF-TIMER0CLOCK/20;
-//	TMRH3_HighLevelPrefetch = ( 0xffff - (unsigned int) (count * fPWM3_HighLevelPercent) )>>8;
-//	TMRL3_HighLevelPrefetch =   0xffff - (unsigned int) (count * fPWM3_HighLevelPercent) ;
-//	TMRH3_LowLevelPrefetch = (  0xffff - (unsigned int )( count * (1-fPWM3_HighLevelPercent) )  )>>8;
-//	TMRL3_LowLevelPrefetch =  0xffff - (unsigned int) (count * (1-fPWM3_HighLevelPercent));
-	
-	EIE2 |= 0x01;//Enable TIMER3 interrupt;
-	TMR3CN |= 0x04;//start the timer3
-	SFRPAGE = SFRPAGE_SAVE;
-}
+//void TIMER3_Init(void)
+//{
+//	char data SFRPAGE_SAVE =SFRPAGE;
+////	PWM3_HighLevelCount = count * fPWM3_HighLevelPercent;
+////	PWM3_LowLevelCount = (float)count * (1-fPWM3_HighLevelPercent);
+//	SFRPAGE=TMR3_PAGE;
+//	TMR3CN &= ~0x04;//stop the timer3
+//	TMR3CN &= ~0x01;//Auto-Reload Mode 
+//	TMR3CF &= ~0x18;//clear bit4 ,3.clock = SYSCLK/12
+//	
+//	RCAP3H = (0xFFFF-TIMER0CLOCK/20)>>8; //Timer3 cycle = 10ms
+//	RCAP3L =  0xFFFF-TIMER0CLOCK/20;
+////	TMRH3_HighLevelPrefetch = ( 0xffff - (unsigned int) (count * fPWM3_HighLevelPercent) )>>8;
+////	TMRL3_HighLevelPrefetch =   0xffff - (unsigned int) (count * fPWM3_HighLevelPercent) ;
+////	TMRH3_LowLevelPrefetch = (  0xffff - (unsigned int )( count * (1-fPWM3_HighLevelPercent) )  )>>8;
+////	TMRL3_LowLevelPrefetch =  0xffff - (unsigned int) (count * (1-fPWM3_HighLevelPercent));
+//	
+//	EIE2 |= 0x01;//Enable TIMER3 interrupt;
+//	TMR3CN |= 0x04;//start the timer3
+//	SFRPAGE = SFRPAGE_SAVE;
+//}
 void Timer3_ISR(void) interrupt 14
 {
 	char data SFRPAGE_SAVE =SFRPAGE;//Save current SFP page
@@ -921,71 +935,71 @@ void Uart0_SendByte(unsigned char value)
 //-----------------------------------------------------------------------------
 //
 //-----------------------------------------------------------------------------
-void Calibration(void)
-{
-	char a_flag = 0,w_flag = 0,angle_flag = 0;
-	UART0_Receive_Buffer_Size = UART_Receive_Buffer_QueueBottom - UART_Receive_Buffer_QueueHead;
-//	strcat(UART_Transmit_Buffer_QueueHead,"ReadyToAdjust");
-//	UART_Transmit_Buffer_QueueBottom += strlen("ReadyToAdjust");
-	Uart0_SendByte('R');
-	
-//	Global_SFRPAGE_SAVE = SFRPAGE;
-//	SFRPAGE = ADC0_PAGE;
-//	TX_Ready = 0;                  // Set the flag to zero
-//    TI0 = 1;                       // Set transmit flag to 1
-//	SFRPAGE = Global_SFRPAGE_SAVE;
-	
-	while(1)
-	{
-		while( Rcv_New == 0 );//Wait for new message
-		Rcv_New = 0;
-		
-		if( *UART_Receive_Buffer_QueueHead++ != 'Z' )
-		{
-			continue;
-		}
-		else
-		{
-			while(1)
-			{
-				if(UART1_Receive_Buffer_Queue[0]==0x55)      
-				{  
-					switch(UART1_Receive_Buffer_Queue [1])
-					{
-						case 0x51:
-						a = (int)(UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
-						Temp = (int)(UART1_Receive_Buffer_Queue [9]<<8| UART1_Receive_Buffer_Queue [8]);
-						a_flag = 1;
-						break;
-						case 0x52:
-						w = (int)(UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
-						w_flag = 1;
-						break;
-						case 0x53:
-						angle = (int)((unsigned int)UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
-						angle_flag = 1;
-						break;
-					} 
-				}
-				
-				if( a_flag + w_flag + angle_flag == 3 )
-				{
-					break;
-				}
-			}
-			
-			//Save the current state to ZeroPoint
-			ZeroPoint_a = a;
-			ZeroPoint_w = w;
-			ZeroPoint_angle = angle;
-			ZeroPoint_Temp = Temp;
-			//
-			SaveMapToFlash();
-			return;
-		}
+//void Calibration(void)
+//{
+//	char a_flag = 0,w_flag = 0,angle_flag = 0;
+//	UART0_Receive_Buffer_Size = UART_Receive_Buffer_QueueBottom - UART_Receive_Buffer_QueueHead;
+////	strcat(UART_Transmit_Buffer_QueueHead,"ReadyToAdjust");
+////	UART_Transmit_Buffer_QueueBottom += strlen("ReadyToAdjust");
+//	Uart0_SendByte('R');
+//	
+////	Global_SFRPAGE_SAVE = SFRPAGE;
+////	SFRPAGE = ADC0_PAGE;
+////	TX_Ready = 0;                  // Set the flag to zero
+////    TI0 = 1;                       // Set transmit flag to 1
+////	SFRPAGE = Global_SFRPAGE_SAVE;
+//	
+//	while(1)
+//	{
+//		while( Rcv_New == 0 );//Wait for new message
+//		Rcv_New = 0;
+//		
+//		if( *UART_Receive_Buffer_QueueHead++ != 'Z' )
+//		{
+//			continue;
+//		}
+//		else
+//		{
+//			while(1)
+//			{
+//				if(UART1_Receive_Buffer_Queue[0]==0x55)      
+//				{  
+//					switch(UART1_Receive_Buffer_Queue [1])
+//					{
+//						case 0x51:
+//						a = (int)(UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
+//						Temp = (int)(UART1_Receive_Buffer_Queue [9]<<8| UART1_Receive_Buffer_Queue [8]);
+//						a_flag = 1;
+//						break;
+//						case 0x52:
+//						w = (int)(UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
+//						w_flag = 1;
+//						break;
+//						case 0x53:
+//						angle = (int)((unsigned int)UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
+//						angle_flag = 1;
+//						break;
+//					} 
+//				}
+//				
+//				if( a_flag + w_flag + angle_flag == 3 )
+//				{
+//					break;
+//				}
+//			}
+//			
+//			//Save the current state to ZeroPoint
+//			ZeroPoint_a = a;
+//			ZeroPoint_w = w;
+//			ZeroPoint_angle = angle;
+//			ZeroPoint_Temp = Temp;
+//			//
+//			SaveMapToFlash();
+//			return;
+//		}
 
-	}
-}
+//	}
+//}
 
 
 //-----------------------------------------------------------------------------
@@ -1012,10 +1026,10 @@ void Delay_ms(unsigned int count)
 void Uart0_TransmitString(unsigned char * pucString , int iStringSize )
 {
 	unsigned char *pucHeadofString = pucString;
-	if( strlen(pucString) != iStringSize )
-	{
-		ERROR("Uart0_TransmitString():string lenth not match");
-	}
+//	if( strlen(pucString) != iStringSize )
+//	{
+//		ERROR("Uart0_TransmitString():string lenth not match");
+//	}
 	
 
 	while( *pucHeadofString != 0 )
@@ -1066,10 +1080,12 @@ void LostConnect(void)
 	IN12=0;
 	IN31=0;
 	IN32=0;
+//	Uart0_TransmitString("lost connect",strlen("lost connect"));
+//	Acknowledge('s');
 }
 void Acknowledge(unsigned char back)
 {
-	Uart0_SendByte(0x54);
+Uart0_SendByte(0x54);
 	Uart0_SendByte(back);
 	Uart0_SendByte(1);
 	Uart0_SendByte(back+1);
