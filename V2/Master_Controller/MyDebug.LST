@@ -1,0 +1,31 @@
+C51 COMPILER V9.53.0.0   MYDEBUG                                                           09/18/2015 19:19:03 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE MYDEBUG
+OBJECT MODULE PLACED IN MyDebug.OBJ
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE MyDebug.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "MyDebug.h"
+   2          #include "string.h"
+   3          void ERROR(char cErrorMessage[])
+   4          {
+   5   1              char cErrorMessagePrint[80]=0 ;
+   6   1              strcpy(cErrorMessagePrint,cErrorMessage);
+   7   1              while(1);  //stop here
+   8   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     52    ----
+   CONSTANT SIZE    =     80    ----
+   XDATA SIZE       =   ----      83
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
