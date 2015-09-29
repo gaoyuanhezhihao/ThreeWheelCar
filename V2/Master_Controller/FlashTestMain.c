@@ -78,8 +78,8 @@ sbit TMR3Debug 	=   P3^5;
 sbit SET		=	P3^1;
 sbit Key1		= 	P7^2;
 sbit PWM3		=	P6^7;
-sbit IN31		=	P6^4;
-sbit IN32		=	P6^3;
+sbit IN31		=	P3^4;
+sbit IN32		=	P3^3;
 sbit DEBUGPORT  =   P3^0;
 sbit PWM1CHANGEORDER = P4^0;
 sbit PWM2CHANGEORDER = P4^1;
@@ -141,6 +141,7 @@ void PWMChange(void);
 void TouchKeepAlive(void);
 void Acknowledge(unsigned char back);
 void LostConnect(void);
+void Check_Counter(unsigned int * Couter_L, unsigned int *Counter_R);
 //-----------------------------------------------------------------------------
 // Global Variables
 //-----------------------------------------------------------------------------
@@ -234,7 +235,8 @@ unsigned char PWM_debug1 = 0;
 unsigned char PWM_debug2 = 0;
 unsigned char PWM_debug3 = 0;
 unsigned char PWM_debug4 = 0;
-
+unsigned int TMR3_1000_circles = 0;
+unsigned int TMR4_1000_circles = 0;
 
 //-----------------------------------------------------------------------------
 // main() Routine
@@ -242,7 +244,10 @@ unsigned char PWM_debug4 = 0;
 
 void main (void)
 {
-
+	unsigned int Counter_L =0;
+	unsigned int *Counter_L_p = &Counter_L;
+	unsigned int Counter_R = 0;
+	unsigned int *Counter_R_p = &Counter_R;
 	//Initialization
 	SFRPAGE = CONFIG_PAGE;
 	WDTCN = 0xDE;                       // Disable watchdog timer
@@ -253,7 +258,8 @@ void main (void)
 //	UART1_Init();
 	WirelessModule_Init();
 	TIMER0_Init();
-//	TIMER3_Init();
+	TIMER4_Init();
+	TIMER3_Init();
 	EA = 1;
 
 	//*************flash test**********************
@@ -404,6 +410,8 @@ void main (void)
 			}
 			
 		}	
+		// Get the counter information
+		Check_Counter(Counter_L_p, Counter_R_p);
 	}
 }
 
@@ -514,7 +522,7 @@ void PORT_Init (void)
 	
 	XBR1     = 0x20;					//Enable T2
 	XBR2     = 0x40;                    // Enable crossbar and weak pull-up
-	XBR2	|= 0X08;
+	XBR2	|= 0X08;					//Enable T4
 	XBR2	|= 0x04;					//Enable UART1
  //   P1MDIN   = 0xFF;                                   
 	P0MDOUT |= 0x04;                    // Set CEX0 (P0.2) to push-pull
@@ -595,29 +603,41 @@ void TIMER0_Init(void)
 //-----------------------------------------------------------------------------
 // TIMER3_Init
 //-----------------------------------------------------------------------------
-//
-//-----------------------------------------------------------------------------
-//void TIMER3_Init(void)
-//{
-//	char data SFRPAGE_SAVE =SFRPAGE;
-////	PWM3_HighLevelCount = count * fPWM3_HighLevelPercent;
-////	PWM3_LowLevelCount = (float)count * (1-fPWM3_HighLevelPercent);
-//	SFRPAGE=TMR3_PAGE;
-//	TMR3CN &= ~0x04;//stop the timer3
-//	TMR3CN &= ~0x01;//Auto-Reload Mode 
-//	TMR3CF &= ~0x18;//clear bit4 ,3.clock = SYSCLK/12
-//	
-//	RCAP3H = (0xFFFF-TIMER0CLOCK/20)>>8; //Timer3 cycle = 10ms
-//	RCAP3L =  0xFFFF-TIMER0CLOCK/20;
-////	TMRH3_HighLevelPrefetch = ( 0xffff - (unsigned int) (count * fPWM3_HighLevelPercent) )>>8;
-////	TMRL3_HighLevelPrefetch =   0xffff - (unsigned int) (count * fPWM3_HighLevelPercent) ;
-////	TMRH3_LowLevelPrefetch = (  0xffff - (unsigned int )( count * (1-fPWM3_HighLevelPercent) )  )>>8;
-////	TMRL3_LowLevelPrefetch =  0xffff - (unsigned int) (count * (1-fPWM3_HighLevelPercent));
-//	
-//	EIE2 |= 0x01;//Enable TIMER3 interrupt;
-//	TMR3CN |= 0x04;//start the timer3
-//	SFRPAGE = SFRPAGE_SAVE;
-//}
+void Timer3_Init(void)
+{
+    char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
+
+	SFRPAGE = TMR3_PAGE;                // Set SFR page
+	TMR3CF	= 0x00;
+	TMR3CN	= 0x00;
+	TMR3CN	= 0x02;
+//	tmp=TMR3CN;
+//	TMR3CF &= ~0x18;                    // Timer3 uses SYSCLK/12
+	TMR3L = 0x00;                       // Init the Timer3 register
+	TMR3H = 0x00;
+	TMR3CN |= 0x04;                      // Enable Timer3 in auto-reload mode
+//	ET4 = 1;                            // Timer4 interrupt enabled
+	TR3 = 1;
+	
+	SFRPAGE = SFRPAGE_SAVE;             // Restore SFR page
+}
+void Timer4_Init(void)
+{
+    char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
+
+	SFRPAGE = TMR4_PAGE;                // Set SFR page
+	TMR4CF	= 0x00;
+	TMR4CN	= 0x00;
+	TMR4CN	= 0x02;
+//	tmp=TMR4CN;
+	TMR4L = 0x00;                       // Init the Timer3 register
+	TMR4H = 0x00;
+	TMR4CN |= 0x04;                      // Enable Timer3 in auto-reload mode
+//	ET4 = 1;                            // Timer4 interrupt enabled
+	TR4 = 1;
+	
+	SFRPAGE = SFRPAGE_SAVE;             // Restore SFR page
+}
 void Timer3_ISR(void) interrupt 14
 {
 	char data SFRPAGE_SAVE =SFRPAGE;//Save current SFP page
@@ -1109,6 +1129,60 @@ Uart0_SendByte(0x54);
 	
 	
 }
+void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p)
+{
+#ifndef CHECK_COUNTER_DEBUG
+	static unsigned int c_L = 0;
+	static unsigned int c_R = 0;
+					char debug = 0;
+#endif
+	char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
+	SFRPAGE = TMR4_PAGE;                // Set SFR page
+	*Counter_L_p = TMR4H;
+	*Counter_L_p = *Counter_L_p << 8;
+	*Counter_L_p += TMR4L;
+	SFRPAGE = TMR3_PAGE;                // Set SFR page
+	*Counter_R_p = TMR3H;
+	*Counter_R_p = *Counter_R_p << 8;
+	*Counter_R_p += TMR3L;
+	
+	if(*Counter_R_p >= 50000)
+	{
+		TMR3H = 0;
+		TMR3L = 0;
+		*Counter_R_p = 0;
+		TMR3_1000_circles ++;
+	}
+	if(*Counter_L_p >= 50000)
+	{
+		SFRPAGE = TMR4_PAGE;                // Set SFR page
+		TMR4H = 0;
+		TMR4L = 0;
+		*Counter_L_p = 0;
+		TMR4_1000_circles ++;
+	}
+	
+#ifndef CHECK_COUNTER_DEBUG
+	if(*Counter_L_p > c_L )
+	{
+		c_L = *Counter_L_p;
+	}
+	if(*Counter_R_p > c_R )
+	{
+		c_R = *Counter_R_p;
+	}
+	if(*Counter_R_p > 2000)
+	{
+		c_R = *Counter_R_p;
+	}
+//	if( TMR3_1000_circles > 0 )
+//	{
+//		debug ++; 
+//	}
+#endif
+	SFRPAGE = SFRPAGE_SAVE;
+}
+
 //-----------------------------------------------------------------------------
 // End Of File
 //-----------------------------------------------------------------------------

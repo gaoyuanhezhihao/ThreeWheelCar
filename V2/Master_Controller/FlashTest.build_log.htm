@@ -8,23 +8,47 @@ Copyright (C) 2014 ARM Ltd and ARM Germany GmbH. All rights reserved.
 License Information: hao he, hefei university of technology, LIC=76PJJ-U0G75-C6FQ1-CJ6ZF-NT05C-323J1
  
 Tool Versions:
-Toolchain:       PK51 Prof. Developers Kit  Version: <unknown>
-Toolchain Path:  
-C Compiler:      C51.exe
-Assembler:       A51.exe
-Linker/Locator:  BL51.exe
-Library Manager: LIB51.exe
-Hex Converter:   OH51.exe
-CPU DLL:         S8051.DLL
-Dialog DLL:      DCYG.DLL
-    Target DLL: SiC8051F.dll
-Dialog DLL:      TCYG.DLL
+Toolchain:       PK51 Prof. Developers Kit  Version: 9.53.0.0
+Toolchain Path:  D:\Keil_v5\C51\BIN
+C Compiler:      C51.exe V9.53.0.0
+Assembler:       A51.exe V8.02b
+Linker/Locator:  BL51.exe V6.22
+Library Manager: LIB51.exe V4.30.0.2
+Hex Converter:   OH51.exe V2.7.0.0
+CPU DLL:         S8051.DLL V3.95.0.0
+Dialog DLL:      DCYG.DLL V2.72.0.0
+Target DLL:      SiC8051F.dll V3.5.0.0
+Dialog DLL:      TCYG.DLL V2.70
  
 <h2>Project:</h2>
 G:\Study\Project\Smart Robot Car\Program\Code\ThreeWheel\V2\Master_Controller\FlashTest.uvproj
 Project File Date:  08/16/2015
 
 <h2>Output:</h2>
+Rebuild target 'Target 1'
+assembling STARTUP.A51...
+compiling FlashTestMain.c...
+FlashTestMain.c(261): warning C206: 'TIMER4_Init': missing function-prototype
+FlashTestMain.c(894): warning C260: '=': pointer truncation
+FlashTestMain.c(908): warning C260: '=': pointer truncation
+FlashTestMain.c(1059): warning C280: 'iStringSize': unreferenced local variable
+FlashTestMain.c(462): warning C294: unreachable code
+FlashTestMain.c(468): warning C294: unreachable code
+compiling F120_FlashPrimitives.c...
+compiling MyDebug.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?FLASHTESTMAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_FLASH_BYTEWRITE?F120_FLASHPRIMITIVES
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_FLASH_BYTEREAD?F120_FLASHPRIMITIVES
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_FLASH_PAGEERASE?F120_FLASHPRIMITIVES
+Program Size: data=19.3 xdata=431 code=4342
+"FlashTest" - 0 Error(s), 10 Warning(s).
 </pre>
 </body>
 </html>
+ cancelled. Debugger aborted !
+Error: Target DLL has been cancelled. Debugger aborted !
