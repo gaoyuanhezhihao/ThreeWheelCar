@@ -1,4 +1,4 @@
-C51 COMPILER V9.53.0.0   MAIN                                                              09/18/2015 20:37:39 PAGE 1   
+C51 COMPILER V9.53.0.0   MAIN                                                              10/18/2015 21:38:17 PAGE 1   
 
 
 C51 COMPILER V9.53.0.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   53          //-----------------------------------------------------------------------------
   54          // Global Constants
   55          //-----------------------------------------------------------------------------
-C51 COMPILER V9.53.0.0   MAIN                                                              09/18/2015 20:37:39 PAGE 2   
+C51 COMPILER V9.53.0.0   MAIN                                                              10/18/2015 21:38:17 PAGE 2   
 
   56          
   57          #define BAUDRATE     9600            // Baud rate of UART in bps
@@ -126,7 +126,7 @@ line level    source
  115          void main (void)
  116          {
  117   1         int count = 0;
-C51 COMPILER V9.53.0.0   MAIN                                                              09/18/2015 20:37:39 PAGE 3   
+C51 COMPILER V9.53.0.0   MAIN                                                              10/18/2015 21:38:17 PAGE 3   
 
  118   1         SFRPAGE = CONFIG_PAGE;
  119   1      
@@ -190,7 +190,7 @@ line level    source
  177          // Parameters   : None
  178          //
  179          // This function initializes the system clock to use the PLL as its clock
-C51 COMPILER V9.53.0.0   MAIN                                                              09/18/2015 20:37:39 PAGE 4   
+C51 COMPILER V9.53.0.0   MAIN                                                              10/18/2015 21:38:17 PAGE 4   
 
  180          // source, where the PLL multiplies the external 22.1184MHz crystal by 9/4.
  181          //
@@ -254,7 +254,7 @@ line level    source
  239   1      
  240   1         SFRPAGE = CONFIG_PAGE;
  241   1      
-C51 COMPILER V9.53.0.0   MAIN                                                              09/18/2015 20:37:39 PAGE 5   
+C51 COMPILER V9.53.0.0   MAIN                                                              10/18/2015 21:38:17 PAGE 5   
 
  242   1         CLKSEL = 0x02;                      // Select PLL as SYSTEMCLOCK source
  243   1      
@@ -318,7 +318,7 @@ line level    source
  301   1         TMR2CF = 0x08;                      // SYSCLK is time base; no output;
  302   1                                             // up count only
  303   1         RCAP2 = - ((long) SYSTEMCLOCK/BAUDRATE/16);
-C51 COMPILER V9.53.0.0   MAIN                                                              09/18/2015 20:37:39 PAGE 6   
+C51 COMPILER V9.53.0.0   MAIN                                                              10/18/2015 21:38:17 PAGE 6   
 
  304   1         TMR2 = RCAP2;
  305   1         TR2= 1;                             // Start Timer2
@@ -382,7 +382,7 @@ line level    source
  362   3                         TxOrder = 0;
  363   3                         SBUF0 = TxByte;
  364   3                 }
-C51 COMPILER V9.53.0.0   MAIN                                                              09/18/2015 20:37:39 PAGE 7   
+C51 COMPILER V9.53.0.0   MAIN                                                              10/18/2015 21:38:17 PAGE 7   
 
  365   2                 else
  366   2                 {
@@ -446,7 +446,7 @@ line level    source
  422          {
  423   1      
  424   1              char data SFRPAGE_SAVE =SFRPAGE;
-C51 COMPILER V9.53.0.0   MAIN                                                              09/18/2015 20:37:39 PAGE 8   
+C51 COMPILER V9.53.0.0   MAIN                                                              10/18/2015 21:38:17 PAGE 8   
 
  425   1              PWM1_HighLevelCount = count * (1-PWM1_HighLevelPercent);
  426   1              PWM1_LowLevelCount = (float)count * PWM1_HighLevelPercent;
@@ -510,7 +510,7 @@ line level    source
  484   2      //              TL0 = (0xFFFF-PWM1_LowLevelCount);
  485   2                      TH0 = TH0_low_pre;
  486   2                      TL0 = TL0_low_pre;
-C51 COMPILER V9.53.0.0   MAIN                                                              09/18/2015 20:37:39 PAGE 9   
+C51 COMPILER V9.53.0.0   MAIN                                                              10/18/2015 21:38:17 PAGE 9   
 
  487   2                      TF0 = 0;        //Clear Interrupt flag
  488   2                      return;         //return

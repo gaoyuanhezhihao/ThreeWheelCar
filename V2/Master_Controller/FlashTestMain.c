@@ -72,14 +72,14 @@ sfr16 TMR2     = 0xcc;                 // Timer2
 #define UART1BAUDRATE 115200		 
 #define Const_Control_Time	10			//ADC cycle = Const_Control_Time*Timer0 cycle = 10*10ms=100ms
 sbit PWM1 	= 	P3^2;                      
-sbit IN11		=	P6^5;
-sbit IN12		= 	P6^6;
+sbit IN11		=	P6^3;
+sbit IN12		= 	P6^4;
 sbit TMR3Debug 	=   P3^5;
 sbit SET		=	P3^1;
 sbit Key1		= 	P7^2;
 sbit PWM3		=	P6^7;
-sbit IN31		=	P3^4;
-sbit IN32		=	P3^3;
+sbit IN31		=	P6^5;
+sbit IN32		=	P6^6;
 sbit DEBUGPORT  =   P3^0;
 sbit PWM1CHANGEORDER = P4^0;
 sbit PWM2CHANGEORDER = P4^1;

@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22                                                        09/29/2015  16:13:42  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22                                                        10/26/2015  17:39:39  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
@@ -59,7 +59,7 @@ LINK MAP OF MODULE:  FlashTest (?C_STARTUP)
             XDATA   01A3H     0006H     UNIT         ?XD?_FLASH_BYTEREAD?F120_FLASHPRIMITIVES
             XDATA   01A9H     0006H     UNIT         ?XD?_FLASH_PAGEERASE?F120_FLASHPRIMITIVES
 
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 2
 
 
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
@@ -119,7 +119,7 @@ SEGMENT                                            DATA_GROUP          XDATA_GRO
   +--> ?PR?WIRELESSMODULE_INIT?FLASHTESTMAIN
   +--> ?PR?TIMER0_INIT?FLASHTESTMAIN
   +--> ?PR?TIMER4_INIT?FLASHTESTMAIN
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 3
 
 
   +--> ?PR?TIMER3_INIT?FLASHTESTMAIN
@@ -179,7 +179,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:0DE8H         SEGMENT       ?C_C51STARTUP
   I:0022H         SEGMENT       ?STACK
   C:0000H         PUBLIC        ?C_STARTUP
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 4
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 4
 
 
   D:00E0H         SYMBOL        ACC
@@ -239,7 +239,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   X:0010H         PUBLIC        angle
   D:0084H         PUBLIC        SFRPAGE
   D:00A4H         PUBLIC        P0MDOUT
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 5
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 5
 
 
   X:0012H         PUBLIC        UART_Receive_Buffer_Queue
@@ -299,7 +299,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   D:00C8H         PUBLIC        TMR3CN
   D:00C8H         PUBLIC        TMR4CN
   X:00F5H         PUBLIC        TMRL3_LowLevelPrefetch
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 6
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 6
 
 
   C:0F91H         PUBLIC        PORT_Init
@@ -359,7 +359,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   B:0020H.4       PUBLIC        PWM2ChangeOrder
   X:0130H         PUBLIC        ZeroPoint_a
   C:10A5H         PUBLIC        LostConnect
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 7
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 7
 
 
   D:00CCH         PUBLIC        TMR3L
@@ -368,11 +368,11 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   X:0132H         PUBLIC        w
   X:0134H         PUBLIC        Flag_NewFrame
   C:0E74H         PUBLIC        OSCILLATOR_Init
-  B:00E8H.5       PUBLIC        IN11
-  B:00E8H.6       PUBLIC        IN12
-  B:00B0H.4       PUBLIC        IN31
+  B:00E8H.3       PUBLIC        IN11
+  B:00E8H.4       PUBLIC        IN12
+  B:00E8H.5       PUBLIC        IN31
   X:0135H         PUBLIC        iCurrentKey
-  B:00B0H.3       PUBLIC        IN32
+  B:00E8H.6       PUBLIC        IN32
   D:008DH         PUBLIC        PLL0DIV
   -------         PROC          MAIN
   -------         DO            
@@ -419,7 +419,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:047CH         LINE#         309
   C:048AH         LINE#         310
   C:048AH         LINE#         312
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 8
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 8
 
 
   C:0490H         LINE#         313
@@ -479,7 +479,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:0532H         LINE#         377
   C:0532H         LINE#         378
   C:0534H         LINE#         379
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 9
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 9
 
 
   C:0534H         LINE#         380
@@ -539,7 +539,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:0E9CH         LINE#         463
   C:0E9CH         LINE#         465
   C:0E9FH         LINE#         466
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 10
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 10
 
 
   C:0E9FH         LINE#         468
@@ -599,7 +599,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:100EH         LINE#         551
   C:1011H         LINE#         552
   C:1014H         LINE#         553
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 11
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 11
 
 
   C:1017H         LINE#         554
@@ -659,7 +659,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:0F2EH         LINE#         643
   C:0F31H         LINE#         644
   C:0F34H         LINE#         645
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 12
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 12
 
 
   C:0F36H         LINE#         648
@@ -719,7 +719,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:0A85H         LINE#         827
   C:0A8FH         LINE#         828
   C:0AA2H         LINE#         829
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 13
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 13
 
 
   C:0AA7H         LINE#         830
@@ -779,7 +779,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   -------         PROC          WIRELESSMODULE_INIT
   C:10FDH         LINE#         921
   C:10FDH         LINE#         922
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 14
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 14
 
 
   C:10FDH         LINE#         923
@@ -839,7 +839,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:0D4CH         SYMBOL        L?0122
   C:0D57H         SYMBOL        L?0123
   -------         PROC          L?0121
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 15
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 15
 
 
   -------         ENDPROC       L?0121
@@ -899,7 +899,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:10BEH         LINE#         1123
   C:10C0H         LINE#         1124
   C:10C0H         LINE#         1125
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 16
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 16
 
 
   C:10C5H         LINE#         1126
@@ -959,7 +959,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   -------         ENDPROC       _CHECK_COUNTER
   -------         ENDMOD        FLASHTESTMAIN
 
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 17
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 17
 
 
   -------         MODULE        F120_FLASHPRIMITIVES
@@ -1019,7 +1019,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:0BB7H         LINE#         109
   C:0BBBH         LINE#         110
   -------         ENDPROC       _FLASH_BYTEWRITE
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 18
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 18
 
 
   -------         PROC          _FLASH_BYTEREAD
@@ -1079,7 +1079,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:0BC8H         LINE#         170
   C:0BCCH         LINE#         171
   C:0BD0H         LINE#         174
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 19
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 19
 
 
   C:0BD2H         LINE#         176
@@ -1139,7 +1139,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
   C:016CH         PUBLIC        ?C?CLDPTR
   -------         ENDMOD        ?C?CLDPTR
 
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 20
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 20
 
 
   -------         MODULE        ?C?CLDOPTR
@@ -1199,7 +1199,7 @@ SYMBOL TABLE OF MODULE:  FlashTest (?C_STARTUP)
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_FLASH_BYTEREAD?F120_FLASHPRIMITIVES
 
-BL51 BANKED LINKER/LOCATER V6.22                                                      09/29/2015  16:13:42  PAGE 21
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/26/2015  17:39:39  PAGE 21
 
 
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS

@@ -1,4 +1,4 @@
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 1   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 1   
 
 
 C51 COMPILER V9.53.0.0, COMPILATION OF MODULE FLASHTESTMAIN
@@ -62,7 +62,7 @@ line level    source
   53          
   54          #include <c8051f120.h>                 // SFR declarations
   55          #include <stdio.h>                     
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 2   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 2   
 
   56          #include <string.h>
   57          #include <F120_FlashPrimitives.h>
@@ -83,14 +83,14 @@ line level    source
   72          #define UART1BAUDRATE 115200             
   73          #define Const_Control_Time      10                      //ADC cycle = Const_Control_Time*Timer0 cycle = 10*10ms=100ms
   74          sbit PWM1       =       P3^2;                      
-  75          sbit IN11               =       P6^5;
-  76          sbit IN12               =       P6^6;
+  75          sbit IN11               =       P6^3;
+  76          sbit IN12               =       P6^4;
   77          sbit TMR3Debug  =   P3^5;
   78          sbit SET                =       P3^1;
   79          sbit Key1               =       P7^2;
   80          sbit PWM3               =       P6^7;
-  81          sbit IN31               =       P3^4;
-  82          sbit IN32               =       P3^3;
+  81          sbit IN31               =       P6^5;
+  82          sbit IN32               =       P6^6;
   83          sbit DEBUGPORT  =   P3^0;
   84          sbit PWM1CHANGEORDER = P4^0;
   85          sbit PWM2CHANGEORDER = P4^1;
@@ -126,7 +126,7 @@ line level    source
  115          #define ANGELSCALE10  0x071C  //10
  116          //-----------------------------------------------------------------------------
  117          // Function Prototypes
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 3   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 3   
 
  118          //-----------------------------------------------------------------------------
  119          
@@ -190,7 +190,7 @@ line level    source
  177          int iAngleRange[] = 0;
  178          struct Pair_Angel_Control{
  179                  int Angel;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 4   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 4   
 
  180                  int Kp;
  181                  int Ki;
@@ -254,7 +254,7 @@ line level    source
  239          unsigned int TMR4_1000_circles = 0;
  240          
  241          //-----------------------------------------------------------------------------
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 5   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 5   
 
  242          // main() Routine
  243          //-----------------------------------------------------------------------------
@@ -318,7 +318,7 @@ line level    source
  300   3                              //Uart0_SendByte(*UART_Receive_Buffer_Queue);
  301   3                              //++UART_Receive_Buffer_Queue;
  302   3                              if( 0x53 == *UART_Receive_Buffer_QueueHead )
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 6   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 6   
 
  303   3                              {
  304   4                                      char WaitFailSign = 0;
@@ -382,7 +382,7 @@ line level    source
  361   5                                                      IN11=0;
  362   5                                                      IN12=0;
  363   5                                                      IN31=1;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 7   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 7   
 
  364   5                                                      IN32=0;
  365   5                                                      TouchKeepAlive();
@@ -446,7 +446,7 @@ line level    source
  423          // OSCILLATOR_Init
  424          //-----------------------------------------------------------------------------
  425          //
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 8   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 8   
 
  426          // Return Value : None
  427          // Parameters   : None
@@ -510,7 +510,7 @@ line level    source
  485   1         // wait at least 5us
  486   1         for (i = 0; i < 256; )
  487   1         {
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 9   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 9   
 
  488   2                 i++;
  489   2         }
@@ -574,7 +574,7 @@ line level    source
  547          //-----------------------------------------------------------------------------
  548          void TIMER0_Init(void)
  549          {
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 10  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 10  
 
  550   1      
  551   1              char data SFRPAGE_SAVE =SFRPAGE;
@@ -638,7 +638,7 @@ line level    source
  609   1      
  610   1              SFRPAGE = TMR3_PAGE;                // Set SFR page
  611   1              TMR3CF  = 0x00;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 11  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 11  
 
  612   1              TMR3CN  = 0x00;
  613   1              TMR3CN  = 0x02;
@@ -702,7 +702,7 @@ line level    source
  671          //
  672          // Configure UART0 for operation at <baudrate> 8-N-1 using Timer2 as
  673          // baud rate source.
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 12  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 12  
 
  674          //
  675          //-----------------------------------------------------------------------------
@@ -766,7 +766,7 @@ line level    source
  733          //-----------------------------------------------------------------------------
  734          //void Timer1_ISR(void) interrupt 3
  735          //{
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 13  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 13  
 
  736          //      char data SFRPAGE_SAVE =SFRPAGE;//Save current SFP page
  737          //      if(!pwm1_flag)
@@ -830,7 +830,7 @@ line level    source
  795          //              TMR3L = TMRL3_LowLevelPrefetch;
  796          //              
  797          //              
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 14  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 14  
 
  798          //              TF3 = 0;        //Clear Interrupt flag
  799          //              
@@ -894,7 +894,7 @@ line level    source
  856   2      //                        TI0 = 0;
  857   2      //                        SBUF0 = *UART_Transmit_Buffer_QueueHead;
  858   2      //                        while( !TI0 );
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 15  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 15  
 
  859   2      //                        ++UART_Transmit_Buffer_QueueHead;
  860   2      ////              }
@@ -958,7 +958,7 @@ line level    source
  915   1      }
  916          //-----------------------------------------------------------------------------
  917          // WirelessModule_Init
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 16  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 16  
 
  918          //-----------------------------------------------------------------------------
  919          //
@@ -1022,7 +1022,7 @@ line level    source
  977          //      Uart0_SendByte('R');
  978          //      
  979          ////    Global_SFRPAGE_SAVE = SFRPAGE;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 17  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 17  
 
  980          ////    SFRPAGE = ADC0_PAGE;
  981          ////    TX_Ready = 0;                  // Set the flag to zero
@@ -1086,7 +1086,7 @@ line level    source
 1039          //      Delay_ms
 1040          //-----------------------------------------------------------------------------
 1041          //      input:count
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 18  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 18  
 
 1042          //      output:void
 1043          //      make the Program wait for count ms
@@ -1150,7 +1150,7 @@ line level    source
 1100   1              while( PWM2CHANGEORDER != 0 );//wait
 1101   1              PWM2CHANGEORDER =  1;
 1102   1      }
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 19  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 19  
 
 1103          void TouchKeepAlive(void)
 1104          {
@@ -1214,7 +1214,7 @@ line level    source
 1162   2                      TMR4_1000_circles ++;
 1163   2              }
 1164   1              
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/29/2015 16:13:41 PAGE 20  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     10/26/2015 17:39:38 PAGE 20  
 
 1165   1      #ifndef CHECK_COUNTER_DEBUG
 1166   1              if(*Counter_L_p > c_L )

@@ -1,0 +1,133 @@
+C51 COMPILER V9.53.0.0   INIT                                                              10/18/2015 21:32:37 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE INIT
+OBJECT MODULE PLACED IN Init.OBJ
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Init.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          void OSCILLATOR_Init (void)
+   2          {
+   3   1         int i;                              // Software timer
+   4   1      
+   5   1         char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
+*** ERROR C202 IN LINE 5 OF Init.c: 'SFRPAGE': undefined identifier
+   6   1      
+   7   1         SFRPAGE = CONFIG_PAGE;              // Set SFR page
+*** ERROR C202 IN LINE 7 OF Init.c: 'SFRPAGE': undefined identifier
+   8   1      
+   9   1         OSCICN = 0x80;                      // Set internal oscillator to run
+*** ERROR C202 IN LINE 9 OF Init.c: 'OSCICN': undefined identifier
+  10   1                                             // at its slowest frequency
+  11   1      
+  12   1         CLKSEL = 0x00;                      // Select the internal osc. as
+*** ERROR C202 IN LINE 12 OF Init.c: 'CLKSEL': undefined identifier
+  13   1                                             // the SYSTEMCLOCK source
+  14   1      
+  15   1         // Initialize external crystal oscillator to use 22.1184 MHz crystal
+  16   1      
+  17   1         OSCXCN = 0x67;                      // Enable external crystal osc.
+*** ERROR C202 IN LINE 17 OF Init.c: 'OSCXCN': undefined identifier
+  18   1         for (i=0; i < 256; i++);            // Wait at least 1ms
+  19   1      
+  20   1         while (!(OSCXCN & 0x80));           // Wait for crystal osc to settle
+*** ERROR C202 IN LINE 20 OF Init.c: 'OSCXCN': undefined identifier
+  21   1      
+  22   1         SFRPAGE = LEGACY_PAGE;
+*** ERROR C202 IN LINE 22 OF Init.c: 'SFRPAGE': undefined identifier
+  23   1         FLSCL |=  0x30;                     // Initially set FLASH read timing for
+*** ERROR C202 IN LINE 23 OF Init.c: 'FLSCL': undefined identifier
+  24   1                                             // 100MHz SYSTEMCLOCK (most conservative
+  25   1                                             // setting)
+  26   1         if (SYSTEMCLOCK <= 25000000) {           
+*** ERROR C202 IN LINE 26 OF Init.c: 'SYSTEMCLOCK': undefined identifier
+  27   2         // Set FLASH read timing for <=25MHz
+  28   2            FLSCL &= ~0x30;
+*** ERROR C202 IN LINE 28 OF Init.c: 'FLSCL': undefined identifier
+  29   2         } else if (SYSTEMCLOCK <= 50000000) {    
+*** ERROR C202 IN LINE 29 OF Init.c: 'SYSTEMCLOCK': undefined identifier
+  30   2         // Set FLASH read timing for <=50MHz
+  31   2            FLSCL &= ~0x20;
+*** ERROR C202 IN LINE 31 OF Init.c: 'FLSCL': undefined identifier
+  32   2         } else if (SYSTEMCLOCK <= 75000000) {    
+*** ERROR C202 IN LINE 32 OF Init.c: 'SYSTEMCLOCK': undefined identifier
+  33   2         // Set FLASH read timing for <=75MHz
+  34   2            FLSCL &= ~0x10;
+*** ERROR C202 IN LINE 34 OF Init.c: 'FLSCL': undefined identifier
+  35   2         } else {                            // set FLASH read timing for <=100MHz
+  36   2            FLSCL &= ~0x00;
+*** ERROR C202 IN LINE 36 OF Init.c: 'FLSCL': undefined identifier
+  37   2         }
+  38   1      
+  39   1         // Start PLL for 50MHz operation
+  40   1         SFRPAGE = PLL0_PAGE;
+C51 COMPILER V9.53.0.0   INIT                                                              10/18/2015 21:32:37 PAGE 2   
+
+*** ERROR C202 IN LINE 40 OF Init.c: 'SFRPAGE': undefined identifier
+  41   1         PLL0CN = 0x04;                      // Select EXTOSC as clk source
+*** ERROR C202 IN LINE 41 OF Init.c: 'PLL0CN': undefined identifier
+  42   1         PLL0CN |= 0x01;                     // Enable PLL power
+*** ERROR C202 IN LINE 42 OF Init.c: 'PLL0CN': undefined identifier
+  43   1         PLL0DIV = 0x04;                     // Divide by 4
+*** ERROR C202 IN LINE 43 OF Init.c: 'PLL0DIV': undefined identifier
+  44   1         PLL0FLT &= ~0x0f;
+*** ERROR C202 IN LINE 44 OF Init.c: 'PLL0FLT': undefined identifier
+  45   1         PLL0FLT |=  0x0f;                   // Set Loop Filt for (22/4)MHz input clock
+*** ERROR C202 IN LINE 45 OF Init.c: 'PLL0FLT': undefined identifier
+  46   1         PLL0FLT &= ~0x30;                   // Set ICO for 30-60MHz
+*** ERROR C202 IN LINE 46 OF Init.c: 'PLL0FLT': undefined identifier
+  47   1         PLL0FLT |=  0x10;
+*** ERROR C202 IN LINE 47 OF Init.c: 'PLL0FLT': undefined identifier
+  48   1      
+  49   1         PLL0MUL = 0x09;                     // Multiply by 9
+*** ERROR C202 IN LINE 49 OF Init.c: 'PLL0MUL': undefined identifier
+  50   1      
+  51   1         // wait at least 5us
+  52   1         for (i = 0; i < 256; i++) ;
+  53   1      
+  54   1         PLL0CN |= 0x02;                     // Enable PLL
+*** ERROR C202 IN LINE 54 OF Init.c: 'PLL0CN': undefined identifier
+  55   1      
+  56   1         while (PLL0CN & 0x10 == 0x00);      // Wait for PLL to lock
+*** ERROR C202 IN LINE 56 OF Init.c: 'PLL0CN': undefined identifier
+  57   1      
+  58   1         SFRPAGE = CONFIG_PAGE;
+*** ERROR C202 IN LINE 58 OF Init.c: 'SFRPAGE': undefined identifier
+  59   1      
+  60   1         CLKSEL = 0x02;                      // Select PLL as SYSTEMCLOCK source
+*** ERROR C202 IN LINE 60 OF Init.c: 'CLKSEL': undefined identifier
+  61   1      
+  62   1         SFRPAGE = SFRPAGE_SAVE;             // Restore SFRPAGE
+*** ERROR C202 IN LINE 62 OF Init.c: 'SFRPAGE': undefined identifier
+  63   1      }
+  64          
+  65          void PORT_Init (void)
+  66          {
+  67   1              char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
+*** ERROR C202 IN LINE 67 OF Init.c: 'SFRPAGE': undefined identifier
+  68   1      
+  69   1              SFRPAGE = CONFIG_PAGE;              // Set SFR page
+*** ERROR C202 IN LINE 69 OF Init.c: 'SFRPAGE': undefined identifier
+  70   1      
+  71   1              XBR0     = 0x04;                    // Enable UART0
+*** ERROR C202 IN LINE 71 OF Init.c: 'XBR0': undefined identifier
+  72   1              XBR1     = 0x00;
+*** ERROR C202 IN LINE 72 OF Init.c: 'XBR1': undefined identifier
+  73   1              XBR2     = 0x40;                    // Enable crossbar and weak pull-up
+*** ERROR C202 IN LINE 73 OF Init.c: 'XBR2': undefined identifier
+  74   1                                             
+  75   1      
+  76   1              P0MDOUT |= 0x01;                    // Set TX pin to push-pull
+*** ERROR C202 IN LINE 76 OF Init.c: 'P0MDOUT': undefined identifier
+  77   1              P1MDOUT |= 0x40;                    // Set P1.6(LED) to push-pull
+*** ERROR C202 IN LINE 77 OF Init.c: 'P1MDOUT': undefined identifier
+  78   1              P3MDOUT = 0xFF;                                         // P3.x is open-drain
+*** ERROR C202 IN LINE 78 OF Init.c: 'P3MDOUT': undefined identifier
+  79   1              SFRPAGE = SFRPAGE_SAVE;             // Restore SFR page
+*** ERROR C202 IN LINE 79 OF Init.c: 'SFRPAGE': undefined identifier
+C51 COMPILER V9.53.0.0   INIT                                                              10/18/2015 21:32:37 PAGE 3   
+
+  80   1      }
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  38 ERROR(S)

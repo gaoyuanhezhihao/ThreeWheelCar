@@ -1,0 +1,140 @@
+C51 COMPILER V9.53.0.0   TIMER                                                             10/18/2015 21:32:38 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE TIMER
+OBJECT MODULE PLACED IN Timer.OBJ
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Timer.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "main.h"
+*** ERROR C202 IN LINE 14 OF main.h: 'P3': undefined identifier
+*** ERROR C202 IN LINE 15 OF main.h: 'P3': undefined identifier
+   2          void TIMER0_Init(unsigned int count)
+   3          {
+   4   1      
+   5   1              char data SFRPAGE_SAVE =SFRPAGE;
+*** ERROR C202 IN LINE 5 OF Timer.c: 'SFRPAGE': undefined identifier
+   6   1              PWM1_HighLevelCount = count * (1-PWM1_HighLevelPercent);
+   7   1              PWM1_LowLevelCount = (float)count * PWM1_HighLevelPercent;
+   8   1              SFRPAGE=TIMER01_PAGE;
+*** ERROR C202 IN LINE 8 OF Timer.c: 'SFRPAGE': undefined identifier
+   9   1              TCON &= ~0x30;//stop the timer0
+*** ERROR C202 IN LINE 9 OF Timer.c: 'TCON': undefined identifier
+  10   1              TMOD &= ~0x00;//Set the timer0 work in mode of hex
+*** ERROR C202 IN LINE 10 OF Timer.c: 'TMOD': undefined identifier
+  11   1              TMOD |= 0x01;
+*** ERROR C202 IN LINE 11 OF Timer.c: 'TMOD': undefined identifier
+  12   1              CKCON = 0X08;
+*** ERROR C202 IN LINE 12 OF Timer.c: 'CKCON': undefined identifier
+  13   1              TR0 = 0;
+*** ERROR C202 IN LINE 13 OF Timer.c: 'TR0': undefined identifier
+  14   1              TH0 = count;
+*** ERROR C202 IN LINE 14 OF Timer.c: 'TH0': undefined identifier
+  15   1              TL0 = count;
+*** ERROR C202 IN LINE 15 OF Timer.c: 'TL0': undefined identifier
+  16   1              ET0 = 1;
+*** ERROR C202 IN LINE 16 OF Timer.c: 'ET0': undefined identifier
+  17   1              TR0 =1;
+*** ERROR C202 IN LINE 17 OF Timer.c: 'TR0': undefined identifier
+  18   1              SFRPAGE = SFRPAGE_SAVE;
+*** ERROR C202 IN LINE 18 OF Timer.c: 'SFRPAGE': undefined identifier
+  19   1      }
+  20          void TIMER1_Init(unsigned int count)
+  21          {
+  22   1              char data SFRPAGE_SAVE =SFRPAGE;
+*** ERROR C202 IN LINE 22 OF Timer.c: 'SFRPAGE': undefined identifier
+  23   1              PWM3_HighLevelCount = count * (1-PWM3_HighLevelPercent);
+  24   1              PWM3_LowLevelCount = (float)count * PWM3_HighLevelPercent;
+  25   1              SFRPAGE=TIMER01_PAGE;
+*** ERROR C202 IN LINE 25 OF Timer.c: 'SFRPAGE': undefined identifier
+  26   1              TCON &= ~0xC0;//stop timer1 ,clear TF1
+*** ERROR C202 IN LINE 26 OF Timer.c: 'TCON': undefined identifier
+  27   1              
+  28   1              TMOD &= ~0x30;//Set the timer1 work in mode of hex
+*** ERROR C202 IN LINE 28 OF Timer.c: 'TMOD': undefined identifier
+  29   1              TMOD |= 0x10;
+*** ERROR C202 IN LINE 29 OF Timer.c: 'TMOD': undefined identifier
+  30   1              
+  31   1              CKCON |= 0x10;
+*** ERROR C202 IN LINE 31 OF Timer.c: 'CKCON': undefined identifier
+  32   1              TR1 = 0;
+*** ERROR C202 IN LINE 32 OF Timer.c: 'TR1': undefined identifier
+  33   1              TH1 = count;
+*** ERROR C202 IN LINE 33 OF Timer.c: 'TH1': undefined identifier
+C51 COMPILER V9.53.0.0   TIMER                                                             10/18/2015 21:32:38 PAGE 2   
+
+  34   1              TL1 = count;
+*** ERROR C202 IN LINE 34 OF Timer.c: 'TL1': undefined identifier
+  35   1              ET1 = 1;
+*** ERROR C202 IN LINE 35 OF Timer.c: 'ET1': undefined identifier
+  36   1              TR1 =1;
+*** ERROR C202 IN LINE 36 OF Timer.c: 'TR1': undefined identifier
+  37   1              SFRPAGE = SFRPAGE_SAVE;
+*** ERROR C202 IN LINE 37 OF Timer.c: 'SFRPAGE': undefined identifier
+  38   1      }
+  39          
+  40          void Timer0_ISR(void) interrupt 1
+  41          {
+  42   1              if(!pwm1_flag)
+  43   1              {
+  44   2                      //Start of High level
+  45   2                              pwm1_flag = 1;  //Set flag
+  46   2                              PWM1 = 1;       //Set PWM o/p pin
+*** ERROR C202 IN LINE 46 OF Timer.c: 'PWM1': undefined identifier
+  47   2                              TH0 = (0xFFFF-PWM1_HighLevelCount)>>8;  //Load timer
+*** ERROR C202 IN LINE 47 OF Timer.c: 'TH0': undefined identifier
+  48   2                              TL0 = (0xFFFF-PWM1_HighLevelCount);
+*** ERROR C202 IN LINE 48 OF Timer.c: 'TL0': undefined identifier
+  49   2                              TF0 = 0;                //Clear interrupt flag
+*** ERROR C202 IN LINE 49 OF Timer.c: 'TF0': undefined identifier
+  50   2                              return;         //Return
+  51   2              }
+  52   1              else
+  53   1              {       //Start of Low level
+  54   2                      pwm1_flag = 0;  //Clear flag
+  55   2                      PWM1 = 0;       //Clear PWM o/p pin
+*** ERROR C202 IN LINE 55 OF Timer.c: 'PWM1': undefined identifier
+  56   2                      TH0 = (0xFFFF-PWM1_LowLevelCount)>>8;   //Load timer
+*** ERROR C202 IN LINE 56 OF Timer.c: 'TH0': undefined identifier
+  57   2                      TL0 = (0xFFFF-PWM1_LowLevelCount);
+*** ERROR C202 IN LINE 57 OF Timer.c: 'TL0': undefined identifier
+  58   2                      TF0 = 0;        //Clear Interrupt flag
+*** ERROR C202 IN LINE 58 OF Timer.c: 'TF0': undefined identifier
+  59   2                      return;         //return
+  60   2              }
+  61   1      }
+  62          void Timer1_ISR(void) interrupt 3
+  63          {
+  64   1              if(!pwm3_flag)
+  65   1              {
+  66   2                      //Start of High level
+  67   2                              pwm3_flag = 1;  //Set flag
+  68   2                              PWM3 = 1;       //Set PWM o/p pin
+*** ERROR C202 IN LINE 68 OF Timer.c: 'PWM3': undefined identifier
+  69   2                              TH1 = (0xFFFF-PWM3_HighLevelCount)>>8;  //Load timer
+*** ERROR C202 IN LINE 69 OF Timer.c: 'TH1': undefined identifier
+  70   2                              TL1 = (0xFFFF-PWM3_HighLevelCount);
+*** ERROR C202 IN LINE 70 OF Timer.c: 'TL1': undefined identifier
+  71   2                              TF1 = 0;                //Clear interrupt flag
+*** ERROR C202 IN LINE 71 OF Timer.c: 'TF1': undefined identifier
+  72   2                              return;         //Return
+  73   2              }
+  74   1              else
+  75   1              {       //Start of Low level
+  76   2                      pwm3_flag = 0;  //Clear flag
+  77   2                      PWM3 = 0;       //Clear PWM o/p pin
+*** ERROR C202 IN LINE 77 OF Timer.c: 'PWM3': undefined identifier
+  78   2                      TH1 = (0xFFFF-PWM3_LowLevelCount)>>8;   //Load timer
+C51 COMPILER V9.53.0.0   TIMER                                                             10/18/2015 21:32:38 PAGE 3   
+
+*** ERROR C202 IN LINE 78 OF Timer.c: 'TH1': undefined identifier
+  79   2                      TL1 = (0xFFFF-PWM3_LowLevelCount);
+*** ERROR C202 IN LINE 79 OF Timer.c: 'TL1': undefined identifier
+  80   2                      TF1 = 0;        //Clear Interrupt flag
+*** ERROR C202 IN LINE 80 OF Timer.c: 'TF1': undefined identifier
+  81   2                      return;         //return
+  82   2              }
+  83   1      }
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  42 ERROR(S)
