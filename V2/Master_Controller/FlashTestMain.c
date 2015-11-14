@@ -358,15 +358,16 @@ void main (void)
 //						break;
 					case 'f'://forward
 						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-//						PWMChange();						
-//						IN11=1;
-//						IN12=0;
-//						IN31=1;
-//						IN32=0;
-						if(uiPWM1Degree > 4)
-						{
-							uiPWM1Degree = 4;
-						}
+						PWMChange(1, uiPWM1Degree * 64 -1);	
+						PWMChange(2, uiPWM2Degree * 64 -1);							
+						IN11=1;
+						IN12=0;
+						IN31=1;
+						IN32=0;
+//						if(uiPWM1Degree > 4)
+//						{
+//							uiPWM1Degree = 4;
+//						}
 						TouchKeepAlive();
 						Acknowledge(*UART_Receive_Buffer_QueueHead);
 						break;
@@ -405,8 +406,8 @@ void main (void)
 						break;
 					case 's'://stop
 						uiPWM1Degree=uiPWM2Degree=0;
-						PWMChange(1, uiPWM1Degree * 64 -1);	
-						PWMChange(2, uiPWM2Degree * 64 -1);
+						PWMChange(1, 0);	
+						PWMChange(2, 0);
 						IN11=0;
 						IN12=0;
 						IN31=0;
@@ -430,7 +431,7 @@ void main (void)
 		}	
 		// Get the counter information
 		Check_Counter(Counter_L_p, Counter_R_p, Counter_HighBits_a);
-		balance_wheel(Counter_L_p, Counter_R_p, Counter_HighBits_a);
+//		balance_wheel(Counter_L_p, Counter_R_p, Counter_HighBits_a);
 	}
 }
 
@@ -1100,6 +1101,7 @@ void Uart0_TransmitString(unsigned char * pucString , int iStringSize )
 
 void PWMChange(unsigned int side_ui, unsigned int PWM_degree)
 {
+	char data SFRPAGE_SAVE =SFRPAGE;
 	int i= 0;
 	/*************************DEBUG BEGIN*************************/
 	if( PWM_degree > 256 )
@@ -1111,8 +1113,10 @@ void PWMChange(unsigned int side_ui, unsigned int PWM_degree)
 //	PWM_debug3  = (unsigned char)uiPWM1Degree + (unsigned char)uiPWM2Degree << 4;
 //	PWM_debug4 = PWM_debug1 + PWM_debug2;
 	//------------------------DEBUG END-------------------------------
-	
+	SFRPAGE = CONFIG_PAGE;
 	P5 = PWM_degree;
+	SFRPAGE = SFRPAGE_SAVE;
+
 	if(side_ui == 1)
 	{
 		PWM1CHANGEORDER =  0;
@@ -1138,8 +1142,8 @@ void TouchKeepAlive(void)
 void LostConnect(void)
 {
 	uiPWM1Degree=uiPWM2Degree=0;
-	PWMChange(1, uiPWM1Degree * 64 -1);	
-	PWMChange(2, uiPWM2Degree * 64 -1);
+	PWMChange(1, 0);	
+	PWMChange(2, 0);
 	IN11=0;
 	IN12=0;
 	IN31=0;
