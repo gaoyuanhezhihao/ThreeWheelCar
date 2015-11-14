@@ -1,0 +1,24 @@
+C51 COMPILER V9.53.0.0   FLASHOPERATIONFUNCTION                                            05/01/2015 13:36:52 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE FLASHOPERATIONFUNCTION
+OBJECT MODULE PLACED IN FlashOperationFunction.OBJ
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE FlashOperationFunction.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTE
+                    -ND
+
+line level    source
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

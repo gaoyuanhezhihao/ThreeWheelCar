@@ -1,0 +1,6 @@
+"STARTUP.obj",
+"FlashTestMain.obj",
+"F120_FlashPrimitives.obj",
+"MyDebug.obj" 
+TO "FlashTest" 
+RAMSIZE(256) 

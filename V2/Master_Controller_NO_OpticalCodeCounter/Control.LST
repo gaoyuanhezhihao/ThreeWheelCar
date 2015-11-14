@@ -1,0 +1,94 @@
+C51 COMPILER V9.53.0.0   CONTROL                                                           06/01/2015 16:40:14 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE CONTROL
+OBJECT MODULE PLACED IN Control.OBJ
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Control.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "Control.h"
+   2          struct Pair_Angel_Control{
+   3                  int Angel;
+   4                  int Kp;
+   5                  int Ki;
+   6                  int Kd;
+   7          };
+   8          
+   9          
+  10          
+  11          //-----------------------------------------------------------------------------
+  12          //      Regulate
+  13          //-----------------------------------------------------------------------------
+  14          //      Regulate the Motors to make the car stay steady.
+  15          //-----------------------------------------------------------------------------
+  16          void Regulate(void)
+  17          {
+  18   1              
+  19   1              //Calculate the deviation 
+  20   1              iDeviation = angle - ZeroPoint_angle - iStablePoint;
+*** ERROR C202 IN LINE 20 OF Control.c: 'iDeviation': undefined identifier
+  21   1              uiAbsoluteDeviation = iDeviation&0x8000? -iDeviation:iDeviation;
+*** ERROR C202 IN LINE 21 OF Control.c: 'uiAbsoluteDeviation': undefined identifier
+  22   1              //Search the range the deviation belongs to
+  23   1              
+  24   1              //Calculate the PWM
+  25   1              
+  26   1              //Get the new rotate direction of the motor
+  27   1              RotateDirection = ( iDeviation & 0x8000 ) >> 15 ;
+*** ERROR C202 IN LINE 27 OF Control.c: 'RotateDirection': undefined identifier
+  28   1              //has the direction been changed?
+  29   1              if( cOldRotateDirection != RotateDirection)
+*** ERROR C202 IN LINE 29 OF Control.c: 'cOldRotateDirection': undefined identifier
+  30   1              {
+  31   2                      //Brake
+  32   2                      IN11 = 1;
+*** ERROR C202 IN LINE 32 OF Control.c: 'IN11': undefined identifier
+  33   2                      IN12 = 1;
+*** ERROR C202 IN LINE 33 OF Control.c: 'IN12': undefined identifier
+  34   2                      IN31 = 1;
+*** ERROR C202 IN LINE 34 OF Control.c: 'IN31': undefined identifier
+  35   2                      IN32 = 1;
+*** ERROR C202 IN LINE 35 OF Control.c: 'IN32': undefined identifier
+  36   2                      
+  37   2                      cOldRotateDirection = RotateDirection;
+*** ERROR C202 IN LINE 37 OF Control.c: 'cOldRotateDirection': undefined identifier
+  38   2              }
+  39   1              else
+  40   1              {
+  41   2                      //Change the rotate direction
+  42   2      
+  43   2                      if(RotateDirection)
+*** ERROR C202 IN LINE 43 OF Control.c: 'RotateDirection': undefined identifier
+  44   2                      {
+  45   3                              IN11 = 0;
+C51 COMPILER V9.53.0.0   CONTROL                                                           06/01/2015 16:40:14 PAGE 2   
+
+*** ERROR C202 IN LINE 45 OF Control.c: 'IN11': undefined identifier
+  46   3                              IN12 = 1;
+*** ERROR C202 IN LINE 46 OF Control.c: 'IN12': undefined identifier
+  47   3                              IN31 = 1;
+*** ERROR C202 IN LINE 47 OF Control.c: 'IN31': undefined identifier
+  48   3                              IN32 = 0;
+*** ERROR C202 IN LINE 48 OF Control.c: 'IN32': undefined identifier
+  49   3                      }
+  50   2                      else
+  51   2                      {
+  52   3                              IN11 = 1;
+*** ERROR C202 IN LINE 52 OF Control.c: 'IN11': undefined identifier
+  53   3                              IN12 = 0;
+*** ERROR C202 IN LINE 53 OF Control.c: 'IN12': undefined identifier
+  54   3                              IN31 = 0;
+*** ERROR C202 IN LINE 54 OF Control.c: 'IN31': undefined identifier
+  55   3                              IN32 = 1;
+*** ERROR C202 IN LINE 55 OF Control.c: 'IN32': undefined identifier
+  56   3                      } 
+  57   2              }
+  58   1      
+  59   1              //Renew the Motor 
+  60   1              PWMChange(1);
+  61   1              PWMChange(2);
+  62   1              return;
+  63   1      }
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  18 ERROR(S)
