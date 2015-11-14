@@ -13,6 +13,7 @@ class CarAdmin():
         print(self.serial_ports())
         sPortChoic=raw_input("Input the port to open\n")
         self.port=serial.Serial(sPortChoic,9600)
+        self.SentOrderRecord = 0
     def TurnLeft(self):
         self.State='l'
         self.SendOrder('l')
@@ -26,13 +27,15 @@ class CarAdmin():
         self.state='b'
         self.SendOrder('b')
     def SendOrder(self,order):
-        print "SendOrder:%s\n"%order
-        self.port.write([0x53])
-        self.port.write([order])
-        self.port.write([0x01])
-        self.port.write([ord(order)+1])
-        self.LastSentOrder=order
-        return order
+        if self.SentOrderRecord != order:
+            self.SentOrderRecord = order
+            print "SendOrder:%s\n"%order
+            self.port.write([0x53])
+            self.port.write([order])
+            self.port.write([0x01])
+            self.port.write([ord(order)+1])
+            self.LastSentOrder=order
+            return order
     def serial_ports(self):
         """Lists serial ports
 

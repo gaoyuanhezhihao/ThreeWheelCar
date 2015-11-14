@@ -1,4 +1,4 @@
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 1   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 1   
 
 
 C51 COMPILER V9.53.0.0, COMPILATION OF MODULE FLASHTESTMAIN
@@ -62,7 +62,7 @@ line level    source
   53          
   54          #include <c8051f120.h>                 // SFR declarations
   55          #include <stdio.h>                     
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 2   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 2   
 
   56          #include <string.h>
   57          #include <F120_FlashPrimitives.h>
@@ -83,14 +83,14 @@ line level    source
   72          #define UART1BAUDRATE 115200             
   73          #define Const_Control_Time      10                      //ADC cycle = Const_Control_Time*Timer0 cycle = 10*10ms=100ms
   74          sbit PWM1       =       P3^2;                      
-  75          sbit IN11               =       P3^3;
-  76          sbit IN12               =       P3^4;
+  75          sbit IN11               =       P6^5;
+  76          sbit IN12               =       P6^6;
   77          sbit TMR3Debug  =   P3^5;
   78          sbit SET                =       P3^1;
   79          sbit Key1               =       P7^2;
   80          sbit PWM3               =       P6^7;
-  81          sbit IN31               =       P6^6;
-  82          sbit IN32               =       P6^5;
+  81          sbit IN31               =       P6^4;
+  82          sbit IN32               =       P6^3;
   83          sbit DEBUGPORT  =   P3^0;
   84          sbit PWM1CHANGEORDER = P4^0;
   85          sbit PWM2CHANGEORDER = P4^1;
@@ -126,7 +126,7 @@ line level    source
  115          void UART0_Init (void);
  116          void RerangeTheBufferQueue(unsigned char IndexOfBuffer);
  117          void WirelessModule_Init(void);
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 3   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 3   
 
  118          void Uart0_SendByte(unsigned char value);
  119          void Uart0_TransmitString(unsigned char * pucString , int iStringSize );
@@ -190,7 +190,7 @@ line level    source
  177                                                                                                                                          {ANGELSCALE_5,4,0,1},\
  178                                                                                                                                          {ANGELSCALE_3,3,0,1},\
  179                                                                                                                                          {ANGELSCALE0,1,0,1},\
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 4   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 4   
 
  180                                                                                                                                          {ANGELSCALE3,2,0,1},\
  181                                                                                                                                          {ANGELSCALE5,3,0,1},\
@@ -254,7 +254,7 @@ line level    source
  239   1              WDTCN = 0xAD;
  240   1              OSCILLATOR_Init();  
  241   1              PORT_Init();                       // Initialize crossbar and GPIO
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 5   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 5   
 
  242   1              UART0_Init();                      // Initialize UART0
  243   1      //      UART1_Init();
@@ -318,7 +318,7 @@ line level    source
  301   4                                      {
  302   5                                              //wait too long. Abort this frame. 
  303   5                                              UART_Receive_Buffer_QueueHead = UART_Receive_Buffer_QueueHead;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 6   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 6   
 
  304   5                                              break;
  305   5                                      }
@@ -382,7 +382,7 @@ line level    source
  362   5                                                      break;
  363   5                                              case 'b'://go back
  364   5                                                      uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1) * 100;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 7   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 7   
 
  365   5                                                      PWMChange();
  366   5                                                      IN11=0;
@@ -446,7 +446,7 @@ line level    source
  424   1                                             // at its slowest frequency
  425   1      
  426   1         CLKSEL = 0x00;                      // Select the internal osc. as
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 8   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 8   
 
  427   1                                             // the SYSTEMCLOCK source
  428   1      
@@ -510,7 +510,7 @@ line level    source
  486          //-----------------------------------------------------------------------------
  487          //
  488          // Return Value : None
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 9   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 9   
 
  489          // Parameters   : None
  490          //
@@ -540,7 +540,7 @@ line level    source
  514   1              P3MDOUT = 0x18;                                         // P3.3 P3.4 is  push-pull
  515   1      //      P6MDOUT = 0x60;                                         // P6.x is push-pull
  516   1              P6              &= ~0x80;
- 517   1              P6MDOUT = 0x60;
+ 517   1              P6MDOUT = 0xFF;
  518   1              P5MDOUT = 0xFF;                                         //P6 is push-pull
  519   1              P4MDOUT = 0xC3;                                         //P4.7,4.6,4.0,4.1 is push-pull
  520   1      //      P7MDOUT = 0x00;                                         //P7.x is  open-drain
@@ -574,7 +574,7 @@ line level    source
  548          
  549          //-----------------------------------------------------------------------------
  550          // TIMER1_Init
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 10  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 10  
 
  551          //-----------------------------------------------------------------------------
  552          //
@@ -638,7 +638,7 @@ line level    source
  610          //}
  611          void Timer3_ISR(void) interrupt 14
  612          {
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 11  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 11  
 
  613   1              char data SFRPAGE_SAVE =SFRPAGE;//Save current SFP page
  614   1              SFRPAGE = TMR3_PAGE;
@@ -702,7 +702,7 @@ line level    source
  672   1         ES0 = 1;  
  673   1         IP |= 0x10;
  674   1      
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 12  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 12  
 
  675   1         SFRPAGE = SFRPAGE_SAVE;             // Restore SFRPAGE
  676   1      }
@@ -766,7 +766,7 @@ line level    source
  734          //}
  735          
  736          //void Timer3_ISR(void) interrupt 14
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 13  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 13  
 
  737          //{
  738          //      char data SFRPAGE_SAVE =SFRPAGE;//Save current SFP page
@@ -818,341 +818,343 @@ line level    source
  784          {
  785   1         SFRPAGE = UART0_PAGE;
  786   1      
- 787   1         if ( RI0 == 1 && (UART_Receive_Buffer_QueueBottom-UART_Receive_Buffer_QueueHead) < UART_BUFFERSIZE ) //
-             -if the buffer is not full
+ 787   1         if ( RI0 == 1 ) //if the buffer is not full
  788   1         {
  789   2            
- 790   2            Byte = SBUF0;                      // Read a character from UART
- 791   2      
- 792   2            if ( UART_Receive_Buffer_QueueBottom < (UART_Receive_Buffer_Queue+UART_BUFFERSIZE) )
- 793   2            {
- 794   3                              *UART_Receive_Buffer_QueueBottom = Byte; // Store in array
- 795   3                              UART_Receive_Buffer_QueueBottom++;
- 796   3                              if( UART_Receive_Buffer_QueueBottom >= (UART_Receive_Buffer_Queue+UART_BUFFERSIZE) )
- 797   3                                      RerangeTheBufferQueue('r');
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 14  
+ 790   2                      Byte = SBUF0;                      // Read a character from UART
+ 791   2                      //if the buffer is't full
+ 792   2                  if(  (UART_Receive_Buffer_QueueBottom-UART_Receive_Buffer_QueueHead) < UART_BUFFERSIZE )
+ 793   2                  {
+ 794   3                          if ( UART_Receive_Buffer_QueueBottom < (UART_Receive_Buffer_Queue+UART_BUFFERSIZE) )
+ 795   3                              {
+ 796   4                                      *UART_Receive_Buffer_QueueBottom = Byte; // Store in array
+ 797   4                                      UART_Receive_Buffer_QueueBottom++;
+ 798   4                                      if( UART_Receive_Buffer_QueueBottom >= (UART_Receive_Buffer_Queue+UART_BUFFERSIZE) )
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 14  
 
- 798   3                              Rcv_New=1;//Notice new message come
- 799   3                              UART0_Receive_Buffer_Size++;
- 800   3            }
- 801   2                else
- 802   2                        RerangeTheBufferQueue('r');
- 803   2                RI0 = 0;                           // Clear interrupt flag
- 804   2         }
- 805   1      
- 806   1         if (TI0 == 1)                   // Check if transmit flag is set
- 807   1         {
- 808   2                 TX_Ready = 1;
- 809   2                 TI0 = 0;
- 810   2      //      if ( UART_Transmit_Buffer_QueueHead < UART_Transmit_Buffer_QueueBottom )         // If buffer not 
+ 799   4                                              RerangeTheBufferQueue('r');
+ 800   4                                      Rcv_New=1;//Notice new message come
+ 801   4                                      UART0_Receive_Buffer_Size++;
+ 802   4                              }
+ 803   3                              else
+ 804   3                                      RerangeTheBufferQueue('r');
+ 805   3                  }
+ 806   2                  RI0 = 0;                           // Clear interrupt flag
+ 807   2         }
+ 808   1      
+ 809   1         if (TI0 == 1)                   // Check if transmit flag is set
+ 810   1         {
+ 811   2                 TX_Ready = 1;
+ 812   2                 TI0 = 0;
+ 813   2      //      if ( UART_Transmit_Buffer_QueueHead < UART_Transmit_Buffer_QueueBottom )         // If buffer not 
              -empty
- 811   2      //      {
- 812   2      ////         Byte = UART_Buffer[UART_Output_First];
- 813   2      ////         if ((Byte >= 0x61) && (Byte <= 0x7A)) { // If upper case letter
- 814   2      ////            Byte -= 32; }
- 815   2      ////                                    int count = UART_Transmit_Buffer_QueueBottom - UART_Transmit_Buffer_QueueHead;
- 816   2      ////                                    for(;count>0;count--)
- 817   2      ////                                    {
- 818   2      ////                                            Uart0_SendByte(*UART_Transmit_Buffer_QueueHead);  // Transmit to Hyperterminal
- 819   2      ////                                        UART_Transmit_Buffer_QueueHead++;
- 820   2      ////                                    }
- 821   2      ////              while( UART_Transmit_Buffer_QueueHead < UART_Transmit_Buffer_QueueBottom )
- 822   2      ////              {
- 823   2      //                        TI0 = 0;
- 824   2      //                        SBUF0 = *UART_Transmit_Buffer_QueueHead;
- 825   2      //                        while( !TI0 );
- 826   2      //                        ++UART_Transmit_Buffer_QueueHead;
- 827   2      ////              }
- 828   2      //      }
- 829   2      //      else
- 830   2      //        {
- 831   2      //                TX_Ready = 1;                    // Indicate transmission complete
- 832   2      //                TI0 = 0;                           // Clear interrupt flag
- 833   2      //        }
- 834   2         }
- 835   1      }
- 836          //-----------------------------------------------------------------------------
- 837          // UART1_Interrupt
- 838          //-----------------------------------------------------------------------------
- 839          //
- 840          // This routine is invoked whenever a character is entered or displayed on the
- 841          // Hyperterminal.
+ 814   2      //      {
+ 815   2      ////         Byte = UART_Buffer[UART_Output_First];
+ 816   2      ////         if ((Byte >= 0x61) && (Byte <= 0x7A)) { // If upper case letter
+ 817   2      ////            Byte -= 32; }
+ 818   2      ////                                    int count = UART_Transmit_Buffer_QueueBottom - UART_Transmit_Buffer_QueueHead;
+ 819   2      ////                                    for(;count>0;count--)
+ 820   2      ////                                    {
+ 821   2      ////                                            Uart0_SendByte(*UART_Transmit_Buffer_QueueHead);  // Transmit to Hyperterminal
+ 822   2      ////                                        UART_Transmit_Buffer_QueueHead++;
+ 823   2      ////                                    }
+ 824   2      ////              while( UART_Transmit_Buffer_QueueHead < UART_Transmit_Buffer_QueueBottom )
+ 825   2      ////              {
+ 826   2      //                        TI0 = 0;
+ 827   2      //                        SBUF0 = *UART_Transmit_Buffer_QueueHead;
+ 828   2      //                        while( !TI0 );
+ 829   2      //                        ++UART_Transmit_Buffer_QueueHead;
+ 830   2      ////              }
+ 831   2      //      }
+ 832   2      //      else
+ 833   2      //        {
+ 834   2      //                TX_Ready = 1;                    // Indicate transmission complete
+ 835   2      //                TI0 = 0;                           // Clear interrupt flag
+ 836   2      //        }
+ 837   2         }
+ 838   1      }
+ 839          //-----------------------------------------------------------------------------
+ 840          // UART1_Interrupt
+ 841          //-----------------------------------------------------------------------------
  842          //
- 843          //-----------------------------------------------------------------------------
- 844          
- 845          
- 846          
- 847          //-----------------------------------------------------------------------------
- 848          // RerangeTheBufferQueue
- 849          //-----------------------------------------------------------------------------
- 850          //
- 851          // This routine is invoked to rerange the UART buffer queue when the bottom point has get to the bottom li
-             -mit
+ 843          // This routine is invoked whenever a character is entered or displayed on the
+ 844          // Hyperterminal.
+ 845          //
+ 846          //-----------------------------------------------------------------------------
+ 847          
+ 848          
+ 849          
+ 850          //-----------------------------------------------------------------------------
+ 851          // RerangeTheBufferQueue
  852          //-----------------------------------------------------------------------------
- 853          void RerangeTheBufferQueue( char IndexOfBuffer)
- 854          {
- 855   1              if( IndexOfBuffer == 'r')//rerange the receive buffer
- 856   1              {
- 857   2                      int count = UART_Receive_Buffer_QueueBottom-UART_Receive_Buffer_QueueHead;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 15  
+ 853          //
+ 854          // This routine is invoked to rerange the UART buffer queue when the bottom point has get to the bottom li
+             -mit
+ 855          //-----------------------------------------------------------------------------
+ 856          void RerangeTheBufferQueue( char IndexOfBuffer)
+ 857          {
+ 858   1              if( IndexOfBuffer == 'r')//rerange the receive buffer
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 15  
 
- 858   2                      int i=0;
- 859   2                      for(i=0;i<count;i++)
- 860   2                      {
- 861   3                                      *(UART_Receive_Buffer_Queue+i)= UART_Receive_Buffer_QueueHead;
-*** WARNING C260 IN LINE 861 OF FlashTestMain.c: '=': pointer truncation
- 862   3                                      UART_Receive_Buffer_QueueHead++;
- 863   3                                      
- 864   3                      }
- 865   2                      UART_Receive_Buffer_QueueHead=UART_Receive_Buffer_Queue;
- 866   2                      UART_Receive_Buffer_QueueBottom=UART_Receive_Buffer_QueueHead+count;
- 867   2              }
- 868   1              
- 869   1              if( IndexOfBuffer == 't')//rerange the transmit buffer
- 870   1              {
- 871   2                      int count = UART_Transmit_Buffer_QueueBottom-UART_Transmit_Buffer_QueueHead;
- 872   2                      int i=0;  
- 873   2                      for(i=0;i<count;i++)
- 874   2                      {
- 875   3                                      *(UART_Transmit_Buffer_Queue+i)= UART_Transmit_Buffer_QueueHead;
-*** WARNING C260 IN LINE 875 OF FlashTestMain.c: '=': pointer truncation
- 876   3                                      UART_Transmit_Buffer_QueueHead++;
- 877   3                                      
- 878   3                      }
- 879   2                      UART_Transmit_Buffer_QueueHead=UART_Transmit_Buffer_Queue;
- 880   2                      UART_Transmit_Buffer_QueueBottom=UART_Transmit_Buffer_QueueHead+count;
- 881   2              }       
- 882   1      }
- 883          //-----------------------------------------------------------------------------
- 884          // WirelessModule_Init
- 885          //-----------------------------------------------------------------------------
- 886          //
- 887          //-----------------------------------------------------------------------------
- 888          void WirelessModule_Init(void)
- 889          {
- 890   1              SET=1; // Enter the SET mode of the wireless module
- 891   1              memset( UART_Transmit_Buffer_Queue,0,sizeof(UART_Transmit_Buffer_Queue) );
- 892   1      }
- 893          //-----------------------------------------------------------------------------
- 894          // Uart0_SendByte
- 895          //-----------------------------------------------------------------------------
- 896          //
- 897          //-----------------------------------------------------------------------------
- 898          void Uart0_SendByte(unsigned char value)
- 899          {
- 900   1              char data SFRPAGE_SAVE = SFRPAGE;//save current SFR page
- 901   1              int i = 0;
- 902   1              SFRPAGE = UART0_PAGE;
- 903   1      //      //Check if the uart transmit is ready
- 904   1      //      while(1)
- 905   1      //      {
- 906   1      //              if( TI0 == 0 && TX_Ready == 1)
- 907   1      //              {
- 908   1      //                      break;
- 909   1      //              }
- 910   1      //      }
- 911   1      //      
- 912   1      //      //Check if there are enough space
- 913   1      //      if( UART_Transmit_Buffer_QueueBottom - UART_Transmit_Buffer_Queue >= UART_BUFFERSIZE )
- 914   1      //      {
- 915   1      //              RerangeTheBufferQueue('t');
- 916   1      //      }
- 917   1      //      //Write the Byte to the Transmit queue
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 16  
+ 859   1              {
+ 860   2                      int count = UART_Receive_Buffer_QueueBottom-UART_Receive_Buffer_QueueHead;
+ 861   2                      int i=0;
+ 862   2                      for(i=0;i<count;i++)
+ 863   2                      {
+ 864   3                                      *(UART_Receive_Buffer_Queue+i)= UART_Receive_Buffer_QueueHead;
+*** WARNING C260 IN LINE 864 OF FlashTestMain.c: '=': pointer truncation
+ 865   3                                      UART_Receive_Buffer_QueueHead++;
+ 866   3                                      
+ 867   3                      }
+ 868   2                      UART_Receive_Buffer_QueueHead=UART_Receive_Buffer_Queue;
+ 869   2                      UART_Receive_Buffer_QueueBottom=UART_Receive_Buffer_QueueHead+count;
+ 870   2              }
+ 871   1              
+ 872   1              if( IndexOfBuffer == 't')//rerange the transmit buffer
+ 873   1              {
+ 874   2                      int count = UART_Transmit_Buffer_QueueBottom-UART_Transmit_Buffer_QueueHead;
+ 875   2                      int i=0;  
+ 876   2                      for(i=0;i<count;i++)
+ 877   2                      {
+ 878   3                                      *(UART_Transmit_Buffer_Queue+i)= UART_Transmit_Buffer_QueueHead;
+*** WARNING C260 IN LINE 878 OF FlashTestMain.c: '=': pointer truncation
+ 879   3                                      UART_Transmit_Buffer_QueueHead++;
+ 880   3                                      
+ 881   3                      }
+ 882   2                      UART_Transmit_Buffer_QueueHead=UART_Transmit_Buffer_Queue;
+ 883   2                      UART_Transmit_Buffer_QueueBottom=UART_Transmit_Buffer_QueueHead+count;
+ 884   2              }       
+ 885   1      }
+ 886          //-----------------------------------------------------------------------------
+ 887          // WirelessModule_Init
+ 888          //-----------------------------------------------------------------------------
+ 889          //
+ 890          //-----------------------------------------------------------------------------
+ 891          void WirelessModule_Init(void)
+ 892          {
+ 893   1              SET=1; // Enter the SET mode of the wireless module
+ 894   1              memset( UART_Transmit_Buffer_Queue,0,sizeof(UART_Transmit_Buffer_Queue) );
+ 895   1      }
+ 896          //-----------------------------------------------------------------------------
+ 897          // Uart0_SendByte
+ 898          //-----------------------------------------------------------------------------
+ 899          //
+ 900          //-----------------------------------------------------------------------------
+ 901          void Uart0_SendByte(unsigned char value)
+ 902          {
+ 903   1              char data SFRPAGE_SAVE = SFRPAGE;//save current SFR page
+ 904   1              int i = 0;
+ 905   1              SFRPAGE = UART0_PAGE;
+ 906   1      //      //Check if the uart transmit is ready
+ 907   1      //      while(1)
+ 908   1      //      {
+ 909   1      //              if( TI0 == 0 && TX_Ready == 1)
+ 910   1      //              {
+ 911   1      //                      break;
+ 912   1      //              }
+ 913   1      //      }
+ 914   1      //      
+ 915   1      //      //Check if there are enough space
+ 916   1      //      if( UART_Transmit_Buffer_QueueBottom - UART_Transmit_Buffer_Queue >= UART_BUFFERSIZE )
+ 917   1      //      {
+ 918   1      //              RerangeTheBufferQueue('t');
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 16  
 
- 918   1      //      *UART_Transmit_Buffer_QueueBottom = value;
- 919   1      //      ++UART_Transmit_Buffer_QueueBottom;
- 920   1      //      //Set the TI0 
- 921   1      //      TI0 = 1;
- 922   1          while( TX_Ready == 0 );
- 923   1              
- 924   1              TI0 = 0;
- 925   1              TX_Ready = 0;
- 926   1              SBUF0 = value;
- 927   1              while(!TX_Ready)
- 928   1              {
- 929   2                      ;
- 930   2              }
- 931   1              SFRPAGE = SFRPAGE_SAVE;//Recover the SFR Page
- 932   1      }
- 933          //-----------------------------------------------------------------------------
- 934          // Calibration
- 935          //-----------------------------------------------------------------------------
- 936          //
- 937          //-----------------------------------------------------------------------------
- 938          //void Calibration(void)
- 939          //{
- 940          //      char a_flag = 0,w_flag = 0,angle_flag = 0;
- 941          //      UART0_Receive_Buffer_Size = UART_Receive_Buffer_QueueBottom - UART_Receive_Buffer_QueueHead;
- 942          ////    strcat(UART_Transmit_Buffer_QueueHead,"ReadyToAdjust");
- 943          ////    UART_Transmit_Buffer_QueueBottom += strlen("ReadyToAdjust");
- 944          //      Uart0_SendByte('R');
- 945          //      
- 946          ////    Global_SFRPAGE_SAVE = SFRPAGE;
- 947          ////    SFRPAGE = ADC0_PAGE;
- 948          ////    TX_Ready = 0;                  // Set the flag to zero
- 949          ////    TI0 = 1;                       // Set transmit flag to 1
- 950          ////    SFRPAGE = Global_SFRPAGE_SAVE;
- 951          //      
- 952          //      while(1)
- 953          //      {
- 954          //              while( Rcv_New == 0 );//Wait for new message
- 955          //              Rcv_New = 0;
- 956          //              
- 957          //              if( *UART_Receive_Buffer_QueueHead++ != 'Z' )
- 958          //              {
- 959          //                      continue;
- 960          //              }
- 961          //              else
- 962          //              {
- 963          //                      while(1)
- 964          //                      {
- 965          //                              if(UART1_Receive_Buffer_Queue[0]==0x55)      
- 966          //                              {  
- 967          //                                      switch(UART1_Receive_Buffer_Queue [1])
- 968          //                                      {
- 969          //                                              case 0x51:
- 970          //                                              a = (int)(UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
- 971          //                                              Temp = (int)(UART1_Receive_Buffer_Queue [9]<<8| UART1_Receive_Buffer_Queue [8]);
- 972          //                                              a_flag = 1;
- 973          //                                              break;
- 974          //                                              case 0x52:
- 975          //                                              w = (int)(UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
- 976          //                                              w_flag = 1;
- 977          //                                              break;
- 978          //                                              case 0x53:
- 979          //                                              angle = (int)((unsigned int)UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 17  
+ 919   1      //      }
+ 920   1      //      //Write the Byte to the Transmit queue
+ 921   1      //      *UART_Transmit_Buffer_QueueBottom = value;
+ 922   1      //      ++UART_Transmit_Buffer_QueueBottom;
+ 923   1      //      //Set the TI0 
+ 924   1      //      TI0 = 1;
+ 925   1          while( TX_Ready == 0 );
+ 926   1              
+ 927   1              TI0 = 0;
+ 928   1              TX_Ready = 0;
+ 929   1              SBUF0 = value;
+ 930   1              while(!TX_Ready)
+ 931   1              {
+ 932   2                      ;
+ 933   2              }
+ 934   1              SFRPAGE = SFRPAGE_SAVE;//Recover the SFR Page
+ 935   1      }
+ 936          //-----------------------------------------------------------------------------
+ 937          // Calibration
+ 938          //-----------------------------------------------------------------------------
+ 939          //
+ 940          //-----------------------------------------------------------------------------
+ 941          //void Calibration(void)
+ 942          //{
+ 943          //      char a_flag = 0,w_flag = 0,angle_flag = 0;
+ 944          //      UART0_Receive_Buffer_Size = UART_Receive_Buffer_QueueBottom - UART_Receive_Buffer_QueueHead;
+ 945          ////    strcat(UART_Transmit_Buffer_QueueHead,"ReadyToAdjust");
+ 946          ////    UART_Transmit_Buffer_QueueBottom += strlen("ReadyToAdjust");
+ 947          //      Uart0_SendByte('R');
+ 948          //      
+ 949          ////    Global_SFRPAGE_SAVE = SFRPAGE;
+ 950          ////    SFRPAGE = ADC0_PAGE;
+ 951          ////    TX_Ready = 0;                  // Set the flag to zero
+ 952          ////    TI0 = 1;                       // Set transmit flag to 1
+ 953          ////    SFRPAGE = Global_SFRPAGE_SAVE;
+ 954          //      
+ 955          //      while(1)
+ 956          //      {
+ 957          //              while( Rcv_New == 0 );//Wait for new message
+ 958          //              Rcv_New = 0;
+ 959          //              
+ 960          //              if( *UART_Receive_Buffer_QueueHead++ != 'Z' )
+ 961          //              {
+ 962          //                      continue;
+ 963          //              }
+ 964          //              else
+ 965          //              {
+ 966          //                      while(1)
+ 967          //                      {
+ 968          //                              if(UART1_Receive_Buffer_Queue[0]==0x55)      
+ 969          //                              {  
+ 970          //                                      switch(UART1_Receive_Buffer_Queue [1])
+ 971          //                                      {
+ 972          //                                              case 0x51:
+ 973          //                                              a = (int)(UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
+ 974          //                                              Temp = (int)(UART1_Receive_Buffer_Queue [9]<<8| UART1_Receive_Buffer_Queue [8]);
+ 975          //                                              a_flag = 1;
+ 976          //                                              break;
+ 977          //                                              case 0x52:
+ 978          //                                              w = (int)(UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
+ 979          //                                              w_flag = 1;
+ 980          //                                              break;
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 17  
 
- 980          //                                              angle_flag = 1;
- 981          //                                              break;
- 982          //                                      } 
- 983          //                              }
- 984          //                              
- 985          //                              if( a_flag + w_flag + angle_flag == 3 )
- 986          //                              {
- 987          //                                      break;
- 988          //                              }
- 989          //                      }
- 990          //                      
- 991          //                      //Save the current state to ZeroPoint
- 992          //                      ZeroPoint_a = a;
- 993          //                      ZeroPoint_w = w;
- 994          //                      ZeroPoint_angle = angle;
- 995          //                      ZeroPoint_Temp = Temp;
- 996          //                      //
- 997          //                      SaveMapToFlash();
- 998          //                      return;
- 999          //              }
-1000          
-1001          //      }
-1002          //}
+ 981          //                                              case 0x53:
+ 982          //                                              angle = (int)((unsigned int)UART1_Receive_Buffer_Queue [3]<<8| UART1_Receive_Buffer_Queue [2]);
+ 983          //                                              angle_flag = 1;
+ 984          //                                              break;
+ 985          //                                      } 
+ 986          //                              }
+ 987          //                              
+ 988          //                              if( a_flag + w_flag + angle_flag == 3 )
+ 989          //                              {
+ 990          //                                      break;
+ 991          //                              }
+ 992          //                      }
+ 993          //                      
+ 994          //                      //Save the current state to ZeroPoint
+ 995          //                      ZeroPoint_a = a;
+ 996          //                      ZeroPoint_w = w;
+ 997          //                      ZeroPoint_angle = angle;
+ 998          //                      ZeroPoint_Temp = Temp;
+ 999          //                      //
+1000          //                      SaveMapToFlash();
+1001          //                      return;
+1002          //              }
 1003          
-1004          
-1005          //-----------------------------------------------------------------------------
-1006          //      Delay_ms
-1007          //-----------------------------------------------------------------------------
-1008          //      input:count
-1009          //      output:void
-1010          //      make the Program wait for count ms
-1011          //-----------------------------------------------------------------------------
-1012          void Delay_ms(unsigned int count)
-1013          {
-1014   1              unsigned char ii,jj;
-1015   1              for(ii=0;ii<count;ii++)
-1016   1              {
-1017   2                      for(jj=0;jj<250;jj++)
-1018   2                              ;
-1019   2              }
-1020   1      }
-1021          
-1022          
-1023          
+1004          //      }
+1005          //}
+1006          
+1007          
+1008          //-----------------------------------------------------------------------------
+1009          //      Delay_ms
+1010          //-----------------------------------------------------------------------------
+1011          //      input:count
+1012          //      output:void
+1013          //      make the Program wait for count ms
+1014          //-----------------------------------------------------------------------------
+1015          void Delay_ms(unsigned int count)
+1016          {
+1017   1              unsigned char ii,jj;
+1018   1              for(ii=0;ii<count;ii++)
+1019   1              {
+1020   2                      for(jj=0;jj<250;jj++)
+1021   2                              ;
+1022   2              }
+1023   1      }
 1024          
 1025          
-1026          void Uart0_TransmitString(unsigned char * pucString , int iStringSize )
-1027          {
-1028   1              unsigned char *pucHeadofString = pucString;
-1029   1      //      if( strlen(pucString) != iStringSize )
-1030   1      //      {
-1031   1      //              ERROR("Uart0_TransmitString():string lenth not match");
-1032   1      //      }
-1033   1              
-1034   1      
-1035   1              while( *pucHeadofString != 0 )
-1036   1              {
-1037   2                      Uart0_SendByte(*pucHeadofString);
-1038   2                      ++pucHeadofString;
-1039   2              }
-1040   1              
-1041   1              
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 18  
+1026          
+1027          
+1028          
+1029          void Uart0_TransmitString(unsigned char * pucString , int iStringSize )
+1030          {
+1031   1              unsigned char *pucHeadofString = pucString;
+1032   1      //      if( strlen(pucString) != iStringSize )
+1033   1      //      {
+1034   1      //              ERROR("Uart0_TransmitString():string lenth not match");
+1035   1      //      }
+1036   1              
+1037   1      
+1038   1              while( *pucHeadofString != 0 )
+1039   1              {
+1040   2                      Uart0_SendByte(*pucHeadofString);
+1041   2                      ++pucHeadofString;
+1042   2              }
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 18  
 
-1042   1      }
-*** WARNING C280 IN LINE 1026 OF FlashTestMain.c: 'iStringSize': unreferenced local variable
-1043          
-1044          void PWMChange(void)
-1045          {
-1046   1              int i= 0;
-1047   1              /*************************DEBUG BEGIN*************************/
-1048   1              if( uiPWM1Degree > 800 )
-1049   1              {
-1050   2                      ERROR("void PWMChange(char PWMChannel):PWMDegree is too large");
-1051   2              }
-1052   1              //------------------------DEBUG END-------------------------------
-1053   1              PWMDEGREE_Low8Bits  = (unsigned char)uiPWM1Degree;
-1054   1              PWMDEGREE_HighBit0 = (uiPWM1Degree & 0x100)?1:0;
-1055   1              cDebugTmp = (uiPWM1Degree & 0x100)?1:0;
-1056   1              PWMDEGREE_HighBit1 = (uiPWM1Degree & 0x200)?1:0;
-1057   1              cDebugTmp = (uiPWM1Degree & 0x200)?1:0;
-1058   1              
-1059   1              PWM1CHANGEORDER =  0;
-1060   1              while( PWM1CHANGEORDER != 0 );//wait
-1061   1              PWM1CHANGEORDER =  1;
-1062   1              PWM2CHANGEORDER =  0;
-1063   1              while( PWM2CHANGEORDER != 0 );//wait
-1064   1              PWM2CHANGEORDER =  1;
-1065   1      }
-1066          void TouchKeepAlive(void)
-1067          {
-1068   1              char data SFRPAGE_SAVE =SFRPAGE;
-1069   1              SFRPAGE=TIMER01_PAGE;
-1070   1              KeepAliveTime_i = 0;
-1071   1              ET0 = 1;//Enable Timer0 interrupt
-1072   1              TR0 = 1;//Run Timer0
-1073   1              SFRPAGE = SFRPAGE_SAVE;
-1074   1      }
-1075          void LostConnect(void)
-1076          {
-1077   1              uiPWM1Degree=uiPWM2Degree=0;
-1078   1              PWMChange();
-1079   1              IN11=0;
-1080   1              IN12=0;
-1081   1              IN31=0;
-1082   1              IN32=0;
-1083   1      //      Uart0_TransmitString("lost connect",strlen("lost connect"));
-1084   1      //      Acknowledge('s');
-1085   1      }
-1086          void Acknowledge(unsigned char back)
-1087          {
-1088   1      Uart0_SendByte(0x54);
-1089   1              Uart0_SendByte(back);
-1090   1              Uart0_SendByte(1);
-1091   1              Uart0_SendByte(back+1);
-1092   1              
-1093   1              
-1094   1      }
-1095          //-----------------------------------------------------------------------------
-1096          // End Of File
-1097          //-----------------------------------------------------------------------------
+1043   1              
+1044   1              
+1045   1      }
+*** WARNING C280 IN LINE 1029 OF FlashTestMain.c: 'iStringSize': unreferenced local variable
+1046          
+1047          void PWMChange(void)
+1048          {
+1049   1              int i= 0;
+1050   1              /*************************DEBUG BEGIN*************************/
+1051   1              if( uiPWM1Degree > 800 )
+1052   1              {
+1053   2                      ERROR("void PWMChange(char PWMChannel):PWMDegree is too large");
+1054   2              }
+1055   1              //------------------------DEBUG END-------------------------------
+1056   1              PWMDEGREE_Low8Bits  = (unsigned char)uiPWM1Degree;
+1057   1              PWMDEGREE_HighBit0 = (uiPWM1Degree & 0x100)?1:0;
+1058   1              cDebugTmp = (uiPWM1Degree & 0x100)?1:0;
+1059   1              PWMDEGREE_HighBit1 = (uiPWM1Degree & 0x200)?1:0;
+1060   1              cDebugTmp = (uiPWM1Degree & 0x200)?1:0;
+1061   1              
+1062   1              PWM1CHANGEORDER =  0;
+1063   1              while( PWM1CHANGEORDER != 0 );//wait
+1064   1              PWM1CHANGEORDER =  1;
+1065   1              PWM2CHANGEORDER =  0;
+1066   1              while( PWM2CHANGEORDER != 0 );//wait
+1067   1              PWM2CHANGEORDER =  1;
+1068   1      }
+1069          void TouchKeepAlive(void)
+1070          {
+1071   1              char data SFRPAGE_SAVE =SFRPAGE;
+1072   1              SFRPAGE=TIMER01_PAGE;
+1073   1              KeepAliveTime_i = 0;
+1074   1              ET0 = 1;//Enable Timer0 interrupt
+1075   1              TR0 = 1;//Run Timer0
+1076   1              SFRPAGE = SFRPAGE_SAVE;
+1077   1      }
+1078          void LostConnect(void)
+1079          {
+1080   1              uiPWM1Degree=uiPWM2Degree=0;
+1081   1              PWMChange();
+1082   1              IN11=0;
+1083   1              IN12=0;
+1084   1              IN31=0;
+1085   1              IN32=0;
+1086   1      //      Uart0_TransmitString("lost connect",strlen("lost connect"));
+1087   1      //      Acknowledge('s');
+1088   1      }
+1089          void Acknowledge(unsigned char back)
+1090          {
+1091   1      Uart0_SendByte(0x54);
+1092   1              Uart0_SendByte(back);
+1093   1              Uart0_SendByte(1);
+1094   1              Uart0_SendByte(back+1);
+1095   1              
+1096   1              
+1097   1      }
+1098          //-----------------------------------------------------------------------------
+1099          // End Of File
+1100          //-----------------------------------------------------------------------------
 *** WARNING C294 IN LINE 444 OF FlashTestMain.c: unreachable code
 *** WARNING C294 IN LINE 450 OF FlashTestMain.c: unreachable code
 
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     09/16/2015 19:47:05 PAGE 19  
+
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     08/16/2015 15:10:45 PAGE 19  
-
-   CODE SIZE        =   1631    ----
+   CODE SIZE        =   1629    ----
    CONSTANT SIZE    =     61    ----
    XDATA SIZE       =    299      12
    PDATA SIZE       =   ----    ----

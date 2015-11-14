@@ -72,14 +72,14 @@ sfr16 TMR2     = 0xcc;                 // Timer2
 #define UART1BAUDRATE 115200		 
 #define Const_Control_Time	10			//ADC cycle = Const_Control_Time*Timer0 cycle = 10*10ms=100ms
 sbit PWM1 	= 	P3^2;                      
-sbit IN11		=	P3^3;
-sbit IN12		= 	P3^4;
+sbit IN11		=	P6^5;
+sbit IN12		= 	P6^6;
 sbit TMR3Debug 	=   P3^5;
 sbit SET		=	P3^1;
 sbit Key1		= 	P7^2;
 sbit PWM3		=	P6^7;
-sbit IN31		=	P6^6;
-sbit IN32		=	P6^5;
+sbit IN31		=	P6^4;
+sbit IN32		=	P6^3;
 sbit DEBUGPORT  =   P3^0;
 sbit PWM1CHANGEORDER = P4^0;
 sbit PWM2CHANGEORDER = P4^1;
@@ -514,7 +514,7 @@ void PORT_Init (void)
 	P3MDOUT = 0x18;						// P3.3 P3.4 is  push-pull
 //	P6MDOUT = 0x60;						// P6.x is push-pull
 	P6		&= ~0x80;
-	P6MDOUT = 0x60;
+	P6MDOUT = 0xFF;
 	P5MDOUT	= 0xFF;						//P6 is push-pull
 	P4MDOUT = 0xC3;						//P4.7,4.6,4.0,4.1 is push-pull
 //	P7MDOUT = 0x00;						//P7.x is  open-drain
@@ -784,23 +784,26 @@ void UART0_Interrupt (void) interrupt 4
 {
    SFRPAGE = UART0_PAGE;
 
-   if ( RI0 == 1 && (UART_Receive_Buffer_QueueBottom-UART_Receive_Buffer_QueueHead) < UART_BUFFERSIZE ) //if the buffer is not full
+   if ( RI0 == 1 ) //if the buffer is not full
    {
       
-      Byte = SBUF0;                      // Read a character from UART
-
-      if ( UART_Receive_Buffer_QueueBottom < (UART_Receive_Buffer_Queue+UART_BUFFERSIZE) )
-      {
-			*UART_Receive_Buffer_QueueBottom = Byte; // Store in array
-			UART_Receive_Buffer_QueueBottom++;
-			if( UART_Receive_Buffer_QueueBottom >= (UART_Receive_Buffer_Queue+UART_BUFFERSIZE) )
+		Byte = SBUF0;                      // Read a character from UART
+		//if the buffer is't full
+	    if(  (UART_Receive_Buffer_QueueBottom-UART_Receive_Buffer_QueueHead) < UART_BUFFERSIZE )
+	    {
+		    if ( UART_Receive_Buffer_QueueBottom < (UART_Receive_Buffer_Queue+UART_BUFFERSIZE) )
+			{
+				*UART_Receive_Buffer_QueueBottom = Byte; // Store in array
+				UART_Receive_Buffer_QueueBottom++;
+				if( UART_Receive_Buffer_QueueBottom >= (UART_Receive_Buffer_Queue+UART_BUFFERSIZE) )
+					RerangeTheBufferQueue('r');
+				Rcv_New=1;//Notice new message come
+				UART0_Receive_Buffer_Size++;
+			}
+			else
 				RerangeTheBufferQueue('r');
-			Rcv_New=1;//Notice new message come
-			UART0_Receive_Buffer_Size++;
-      }
-	  else
-		  RerangeTheBufferQueue('r');
-	  RI0 = 0;                           // Clear interrupt flag
+	    }
+	    RI0 = 0;                           // Clear interrupt flag
    }
 
    if (TI0 == 1)                   // Check if transmit flag is set

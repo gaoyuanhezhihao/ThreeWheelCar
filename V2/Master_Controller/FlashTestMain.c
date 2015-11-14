@@ -113,6 +113,9 @@ sbit D7 = P5^7;
 #define ANGELSCALE3  0x0222  //3
 #define ANGELSCALE5  0x038E  //5
 #define ANGELSCALE10  0x071C  //10
+
+#define ADJUST_THRESHOLD 100
+#define PWM_CHG_GAP 50
 //-----------------------------------------------------------------------------
 // Function Prototypes
 //-----------------------------------------------------------------------------
@@ -134,14 +137,16 @@ unsigned char FLASH_ByteRead (FLADDR addr, bit SFLE);
 void FLASH_PageErase (FLADDR addr, bit SFLE);
 void SaveMapToFlash(void);
 void RestoreMapFromFlash(void);
-void TIMER3_Init(void);
+void Timer3_Init(void);
+void Timer4_Init(void);
 void UART1_Init (void);
 void Uart1_SendByte(unsigned char value);
-void PWMChange(void);
+void PWMChange(unsigned int side_ui, unsigned int PWM_degree);
 void TouchKeepAlive(void);
 void Acknowledge(unsigned char back);
 void LostConnect(void);
-void Check_Counter(unsigned int * Couter_L, unsigned int *Counter_R);
+void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a);
+void balance_wheel(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a);
 //-----------------------------------------------------------------------------
 // Global Variables
 //-----------------------------------------------------------------------------
@@ -190,7 +195,7 @@ struct Pair_Angel_Control Map_Angel_PID[ANGELRANGE_SIZE] = {{ANGELSCALE_10,5,0,1
 																{ANGELSCALE10,5,0,1}};
 int iCurrentKey = 0;
 unsigned int KeepAliveTime_i=0;
-									
+char car_state = 0;  //1 = it is go forwarding state now
 //-------------------------------Motor--------------------------------
 unsigned int Motor1_Time=0;
 unsigned int Motor2_Time=0;
@@ -235,8 +240,8 @@ unsigned char PWM_debug1 = 0;
 unsigned char PWM_debug2 = 0;
 unsigned char PWM_debug3 = 0;
 unsigned char PWM_debug4 = 0;
-unsigned int TMR3_1000_circles = 0;
-unsigned int TMR4_1000_circles = 0;
+//unsigned int TMR3_1000_circles = 0;
+//unsigned int TMR4_1000_circles = 0;
 
 //-----------------------------------------------------------------------------
 // main() Routine
@@ -248,6 +253,7 @@ void main (void)
 	unsigned int *Counter_L_p = &Counter_L;
 	unsigned int Counter_R = 0;
 	unsigned int *Counter_R_p = &Counter_R;
+	unsigned long Counter_HighBits_a[2] = {0,0};
 	//Initialization
 	SFRPAGE = CONFIG_PAGE;
 	WDTCN = 0xDE;                       // Disable watchdog timer
@@ -258,8 +264,8 @@ void main (void)
 //	UART1_Init();
 	WirelessModule_Init();
 	TIMER0_Init();
-	TIMER4_Init();
-	TIMER3_Init();
+	Timer4_Init();
+	Timer3_Init();
 	EA = 1;
 
 	//*************flash test**********************
@@ -290,6 +296,10 @@ void main (void)
 	Uart0_TransmitString("Ready",strlen("Ready"));
 	while (1)
 	{
+//		/******Debug********/
+//		PWMChange();
+//		/******End**********/
+		
 		//if more than 20*50ms=1000ms is past since last message.
 		if(KeepAliveTime_i > 100)
 		{
@@ -333,31 +343,37 @@ void main (void)
 				
 				
 				//next char (order) come
+				car_state = *UART_Receive_Buffer_QueueHead;
 				switch(*UART_Receive_Buffer_QueueHead)
 				{
-					case 'g'://start the car
-						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-						PWMChange();
-						IN11=1;
-						IN12=0;
-						IN31=1;
-						IN32=0;
-						TouchKeepAlive();
-						Acknowledge(*UART_Receive_Buffer_QueueHead);
-						break;
+//					case 'g'://start the car
+//						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
+//						PWMChange();
+//						IN11=1;
+//						IN12=0;
+//						IN31=1;
+//						IN32=0;
+//						TouchKeepAlive();
+//						Acknowledge(*UART_Receive_Buffer_QueueHead);
+//						break;
 					case 'f'://forward
 						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-						PWMChange();						
-						IN11=1;
-						IN12=0;
-						IN31=1;
-						IN32=0;
+//						PWMChange();						
+//						IN11=1;
+//						IN12=0;
+//						IN31=1;
+//						IN32=0;
+						if(uiPWM1Degree > 4)
+						{
+							uiPWM1Degree = 4;
+						}
 						TouchKeepAlive();
 						Acknowledge(*UART_Receive_Buffer_QueueHead);
 						break;
 					case 'l'://turn left
 						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-						PWMChange();						
+						PWMChange(1, uiPWM1Degree * 64 -1);	
+						PWMChange(2, uiPWM2Degree * 64 -1);	
 						IN11=0;
 						IN12=0;
 						IN31=1;
@@ -367,8 +383,8 @@ void main (void)
 						break;
 					case 'r'://turn right
 						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-						PWMChange();						
-
+						PWMChange(1, uiPWM1Degree * 64 -1);	
+						PWMChange(2, uiPWM2Degree * 64 -1);						
 						IN11=1;
 						IN12=0;
 						IN31=0;
@@ -378,7 +394,8 @@ void main (void)
 						break;
 					case 'b'://go back
 						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-						PWMChange();
+						PWMChange(1, uiPWM1Degree * 64 -1);	
+						PWMChange(2, uiPWM2Degree * 64 -1);
 						IN11=0;
 						IN12=1;
 						IN31=0;
@@ -388,7 +405,8 @@ void main (void)
 						break;
 					case 's'://stop
 						uiPWM1Degree=uiPWM2Degree=0;
-						PWMChange();
+						PWMChange(1, uiPWM1Degree * 64 -1);	
+						PWMChange(2, uiPWM2Degree * 64 -1);
 						IN11=0;
 						IN12=0;
 						IN31=0;
@@ -411,7 +429,8 @@ void main (void)
 			
 		}	
 		// Get the counter information
-		Check_Counter(Counter_L_p, Counter_R_p);
+		Check_Counter(Counter_L_p, Counter_R_p, Counter_HighBits_a);
+		balance_wheel(Counter_L_p, Counter_R_p, Counter_HighBits_a);
 	}
 }
 
@@ -610,12 +629,12 @@ void Timer3_Init(void)
 	SFRPAGE = TMR3_PAGE;                // Set SFR page
 	TMR3CF	= 0x00;
 	TMR3CN	= 0x00;
-	TMR3CN	= 0x02;
+	TMR3CN	= 0x02;						//Counter mode
 //	tmp=TMR3CN;
 //	TMR3CF &= ~0x18;                    // Timer3 uses SYSCLK/12
 	TMR3L = 0x00;                       // Init the Timer3 register
 	TMR3H = 0x00;
-	TMR3CN |= 0x04;                      // Enable Timer3 in auto-reload mode
+	TMR3CN |= 0x04;                      // Enable Counter3
 //	ET4 = 1;                            // Timer4 interrupt enabled
 	TR3 = 1;
 	
@@ -628,39 +647,39 @@ void Timer4_Init(void)
 	SFRPAGE = TMR4_PAGE;                // Set SFR page
 	TMR4CF	= 0x00;
 	TMR4CN	= 0x00;
-	TMR4CN	= 0x02;
+	TMR4CN	= 0x02;						//Counter mode
 //	tmp=TMR4CN;
-	TMR4L = 0x00;                       // Init the Timer3 register
+	TMR4L = 0x00;                      
 	TMR4H = 0x00;
-	TMR4CN |= 0x04;                      // Enable Timer3 in auto-reload mode
+	TMR4CN |= 0x04;                      // Enable Counter4
 //	ET4 = 1;                            // Timer4 interrupt enabled
 	TR4 = 1;
 	
 	SFRPAGE = SFRPAGE_SAVE;             // Restore SFR page
 }
-void Timer3_ISR(void) interrupt 14
-{
-	char data SFRPAGE_SAVE =SFRPAGE;//Save current SFP page
-	SFRPAGE = TMR3_PAGE;
-	TMR3Debug = ~TMR3Debug;
+//void Timer3_ISR(void) interrupt 14
+//{
+//	char data SFRPAGE_SAVE =SFRPAGE;//Save current SFP page
+//	SFRPAGE = TMR3_PAGE;
+//	TMR3Debug = ~TMR3Debug;
 
-	
-	if( Control_Time == 0 )
-	{
-		Control_Time = Const_Control_Time;
-		Control_TimeIsUp=1;
-//		/***************Debug Begin***********************/
-//		IN31 ^= 1;
-//		//---------------Debug End ---------------------------
-	}
-	else
-	{
-		Control_Time--;
-	}
-	TMR3CN &= ~0x80;//clear interrupt flag
-	SFRPAGE=Global_SFRPAGE_SAVE;
-	SFRPAGE = SFRPAGE_SAVE;
-}
+//	
+//	if( Control_Time == 0 )
+//	{
+//		Control_Time = Const_Control_Time;
+//		Control_TimeIsUp=1;
+////		/***************Debug Begin***********************/
+////		IN31 ^= 1;
+////		//---------------Debug End ---------------------------
+//	}
+//	else
+//	{
+//		Control_Time--;
+//	}
+//	TMR3CN &= ~0x80;//clear interrupt flag
+//	SFRPAGE=Global_SFRPAGE_SAVE;
+//	SFRPAGE = SFRPAGE_SAVE;
+//}
 
 //-----------------------------------------------------------------------------
 // UART0_Init   Variable baud rate, Timer 2, 8-N-1
@@ -1034,7 +1053,12 @@ void Uart0_SendByte(unsigned char value)
 //	}
 //}
 
-
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
+// balance_wheel
+//	Input:void
+//	Output:void
+//	check the whel
 //-----------------------------------------------------------------------------
 // 	Delay_ms
 //-----------------------------------------------------------------------------
@@ -1074,31 +1098,33 @@ void Uart0_TransmitString(unsigned char * pucString , int iStringSize )
 	
 }
 
-void PWMChange(void)
+void PWMChange(unsigned int side_ui, unsigned int PWM_degree)
 {
 	int i= 0;
 	/*************************DEBUG BEGIN*************************/
-	if( uiPWM1Degree > 800 )
+	if( PWM_degree > 256 )
 	{
-		ERROR("void PWMChange(char PWMChannel):PWMDegree is too large");
+		ERROR("function PWMChange():PWM_degree is too large");
 	}
 //	PWM_debug1 = (unsigned char)uiPWM1Degree;
 //	PWM_debug2 = (unsigned char)uiPWM2Degree << 4;
 //	PWM_debug3  = (unsigned char)uiPWM1Degree + (unsigned char)uiPWM2Degree << 4;
 //	PWM_debug4 = PWM_debug1 + PWM_debug2;
 	//------------------------DEBUG END-------------------------------
-	PWMDEGREE_Low8Bits  = (unsigned char)uiPWM1Degree + ((unsigned char)uiPWM2Degree << 4);
-	PWMDEGREE_HighBit0 = (uiPWM1Degree & 0x100)?1:0;
-	cDebugTmp = (uiPWM1Degree & 0x100)?1:0;
-	PWMDEGREE_HighBit1 = (uiPWM1Degree & 0x200)?1:0;
-	cDebugTmp = (uiPWM1Degree & 0x200)?1:0;
 	
-	PWM1CHANGEORDER =  0;
-	while( PWM1CHANGEORDER != 0 );//wait
-	PWM1CHANGEORDER =  1;
-	PWM2CHANGEORDER =  0;
-	while( PWM2CHANGEORDER != 0 );//wait
-	PWM2CHANGEORDER =  1;
+	P5 = PWM_degree;
+	if(side_ui == 1)
+	{
+		PWM1CHANGEORDER =  0;
+		while( PWM1CHANGEORDER != 0 );//wait
+		PWM1CHANGEORDER =  1;
+	}
+	else if(side_ui == 2)
+	{
+		PWM2CHANGEORDER =  0;
+		while( PWM2CHANGEORDER != 0 );//wait
+		PWM2CHANGEORDER =  1;
+	}
 }
 void TouchKeepAlive(void)
 {
@@ -1112,7 +1138,8 @@ void TouchKeepAlive(void)
 void LostConnect(void)
 {
 	uiPWM1Degree=uiPWM2Degree=0;
-	PWMChange();
+	PWMChange(1, uiPWM1Degree * 64 -1);	
+	PWMChange(2, uiPWM2Degree * 64 -1);
 	IN11=0;
 	IN12=0;
 	IN31=0;
@@ -1129,7 +1156,62 @@ Uart0_SendByte(0x54);
 	
 	
 }
-void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p)
+void balance_wheel(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a)
+{
+	static long CHG_Times = 0;
+	static char last_order = 0;
+	unsigned int average_count = 0;
+	if(car_state != 'f')
+	{
+		if(car_state != last_order)
+		{
+			last_order = car_state;
+		}
+		return;
+	}
+	if(last_order != 'f')
+	{
+		//This is the start of forwarding
+		last_order = 'f';
+		// Clear wheels' count
+		*Counter_L_p = 0;
+		*Counter_R_p = 0;
+		*Counter_HighBits_a = 0;
+		*(Counter_HighBits_a + 1) = 0;
+		// Change the pwm
+		PWMChange(1, uiPWM1Degree * 64 -1);	
+		PWMChange(2, uiPWM1Degree * 64 -1);
+		IN11=1;
+		IN12=0;
+		IN31=1;
+		IN32=0;
+		return;
+	}
+	else
+	{
+		//check the counter
+		Check_Counter(Counter_L_p, Counter_R_p, Counter_HighBits_a);
+		if(ADJUST_THRESHOLD > *Counter_L_p || ADJUST_THRESHOLD > * Counter_R_p)
+		{
+			/*	
+				1.Change The PWM every PWM_CHG_GAP count.
+				2. proportional to wheel circle counts:PWM1 /PWM2 = dist1/dist2
+			*/
+			if(*Counter_L_p / PWM_CHG_GAP > CHG_Times || *Counter_R_p / PWM_CHG_GAP)
+			{
+				CHG_Times = *Counter_L_p / PWM_CHG_GAP;
+				average_count = (*Counter_L_p + *Counter_R_p) / 2;
+				uiPWM1Degree *= *Counter_L_p / average_count;
+				uiPWM2Degree *= *Counter_R_p / average_count;
+				PWMChange(1, uiPWM1Degree);
+				PWMChange(2, uiPWM2Degree);
+			}
+		}
+		return;
+	}
+}
+
+void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a)
 {
 #ifndef CHECK_COUNTER_DEBUG
 	static unsigned int c_L = 0;
@@ -1138,28 +1220,28 @@ void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p)
 #endif
 	char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
 	SFRPAGE = TMR4_PAGE;                // Set SFR page
-	*Counter_L_p = TMR4H;
-	*Counter_L_p = *Counter_L_p << 8;
-	*Counter_L_p += TMR4L;
-	SFRPAGE = TMR3_PAGE;                // Set SFR page
-	*Counter_R_p = TMR3H;
+	*Counter_R_p = TMR4H;
 	*Counter_R_p = *Counter_R_p << 8;
-	*Counter_R_p += TMR3L;
+	*Counter_R_p += TMR4L;
+	SFRPAGE = TMR3_PAGE;                // Set SFR page
+	*Counter_L_p = TMR3H;
+	*Counter_L_p = *Counter_L_p << 8;
+	*Counter_L_p += TMR3L;
 	
-	if(*Counter_R_p >= 50000)
+	if(*Counter_L_p >= 50000)
 	{
 		TMR3H = 0;
 		TMR3L = 0;
-		*Counter_R_p = 0;
-		TMR3_1000_circles ++;
+		*Counter_L_p = 0;
+		++*(Counter_HighBits_a);
 	}
-	if(*Counter_L_p >= 50000)
+	if(*Counter_R_p >= 50000)
 	{
 		SFRPAGE = TMR4_PAGE;                // Set SFR page
 		TMR4H = 0;
 		TMR4L = 0;
-		*Counter_L_p = 0;
-		TMR4_1000_circles ++;
+		*Counter_R_p = 0;
+		++*(Counter_HighBits_a+1);
 	}
 	
 #ifndef CHECK_COUNTER_DEBUG

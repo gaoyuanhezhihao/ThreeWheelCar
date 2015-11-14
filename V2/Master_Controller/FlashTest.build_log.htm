@@ -28,12 +28,11 @@ Project File Date:  08/16/2015
 Rebuild target 'Target 1'
 assembling STARTUP.A51...
 compiling FlashTestMain.c...
-FlashTestMain.c(261): warning C206: 'TIMER4_Init': missing function-prototype
-FlashTestMain.c(894): warning C260: '=': pointer truncation
-FlashTestMain.c(908): warning C260: '=': pointer truncation
-FlashTestMain.c(1059): warning C280: 'iStringSize': unreferenced local variable
-FlashTestMain.c(462): warning C294: unreachable code
-FlashTestMain.c(468): warning C294: unreachable code
+FlashTestMain.c(913): warning C260: '=': pointer truncation
+FlashTestMain.c(927): warning C260: '=': pointer truncation
+FlashTestMain.c(1083): warning C280: 'iStringSize': unreferenced local variable
+FlashTestMain.c(481): warning C294: unreachable code
+FlashTestMain.c(487): warning C294: unreachable code
 compiling F120_FlashPrimitives.c...
 compiling MyDebug.c...
 linking...
@@ -45,8 +44,20 @@ linking...
     SEGMENT: ?PR?_FLASH_BYTEREAD?F120_FLASHPRIMITIVES
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_FLASH_PAGEERASE?F120_FLASHPRIMITIVES
-Program Size: data=19.3 xdata=431 code=4342
-"FlashTest" - 0 Error(s), 10 Warning(s).
+Program Size: data=18.3 xdata=456 code=5769
+"FlashTest" - 0 Error(s), 9 Warning(s).
 </pre>
 </body>
 </html>
+code=5723
+"FlashTest" - 0 Error(s), 10 Warning(s).
+NCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_FLASH_BYTEREAD?F120_FLASHPRIMITIVES
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_FLASH_PAGEERASE?F120_FLASHPRIMITIVES
+Program Size: data=18.3 xdata=456 code=5465
+"FlashTest" - 0 Error(s), 14 Warning(s).
+Size: data=19.3 xdata=456 code=5521
+"FlashTest" - 0 Error(s), 15 Warning(s).
+data=19.3 xdata=459 code=5457
+"FlashTest" - 0 Error(s), 16 Warning(s).

@@ -122,14 +122,14 @@ void main (void)
 
    OSCILLATOR_Init ();                 // Initialize oscillator
    PORT_Init ();                       // Initialize crossbar and GPIO
-	TIMER0_Init(SYSTEMCLOCK/12/2000);
-	TIMER1_Init(SYSTEMCLOCK/12/2000);
+	TIMER0_Init(SYSTEMCLOCK/12/20000);
+	TIMER1_Init(SYSTEMCLOCK/12/20000);
 
 //   UART0_Init ();                      // Initialize UART0
 //   WirelessModule_Init();
    EA = 1;
 
-	count = SYSTEMCLOCK/12/2000;
+	count = SYSTEMCLOCK/12/20000;
 	
 	//**Debug**
 	
