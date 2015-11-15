@@ -358,12 +358,12 @@ void main (void)
 //						break;
 					case 'f'://forward
 						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-						PWMChange(1, uiPWM1Degree * 64 -1);	
-						PWMChange(2, uiPWM2Degree * 64 -1);							
-						IN11=1;
-						IN12=0;
-						IN31=1;
-						IN32=0;
+//						PWMChange(1, uiPWM1Degree * 64 -1);	
+//						PWMChange(2, uiPWM2Degree * 64 -1);							
+//						IN11=1;
+//						IN12=0;
+//						IN31=1;
+//						IN32=0;
 //						if(uiPWM1Degree > 4)
 //						{
 //							uiPWM1Degree = 4;
@@ -431,7 +431,7 @@ void main (void)
 		}	
 		// Get the counter information
 		Check_Counter(Counter_L_p, Counter_R_p, Counter_HighBits_a);
-//		balance_wheel(Counter_L_p, Counter_R_p, Counter_HighBits_a);
+		balance_wheel(Counter_L_p, Counter_R_p, Counter_HighBits_a);
 	}
 }
 
@@ -1162,9 +1162,14 @@ Uart0_SendByte(0x54);
 }
 void balance_wheel(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a)
 {
+	char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
 	static long CHG_Times = 0;
 	static char last_order = 0;
-	unsigned int average_count = 0;
+	static unsigned int PWM1_degree = 0;
+	static unsigned int PWM2_degree = 0;
+	static unsigned int average_degree = 0;
+	static char Enough_circle_to_balance = 0;
+	double average_count_d = 0.0;
 	if(car_state != 'f')
 	{
 		if(car_state != last_order)
@@ -1182,9 +1187,14 @@ void balance_wheel(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigne
 		*Counter_R_p = 0;
 		*Counter_HighBits_a = 0;
 		*(Counter_HighBits_a + 1) = 0;
+		Enough_circle_to_balance = 0;
+		CHG_Times = 0;
 		// Change the pwm
-		PWMChange(1, uiPWM1Degree * 64 -1);	
-		PWMChange(2, uiPWM1Degree * 64 -1);
+		PWM1_degree = uiPWM1Degree * 64 -1;
+		PWM2_degree = uiPWM1Degree * 64 -1;
+		average_degree = (PWM1_degree + PWM2_degree) / 2.0;
+		PWMChange(1, PWM1_degree);	
+		PWMChange(2, PWM2_degree);
 		IN11=1;
 		IN12=0;
 		IN31=1;
@@ -1195,20 +1205,38 @@ void balance_wheel(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigne
 	{
 		//check the counter
 		Check_Counter(Counter_L_p, Counter_R_p, Counter_HighBits_a);
-		if(ADJUST_THRESHOLD > *Counter_L_p || ADJUST_THRESHOLD > * Counter_R_p)
+		if(Enough_circle_to_balance || ADJUST_THRESHOLD < *Counter_L_p || ADJUST_THRESHOLD < * Counter_R_p)
 		{
+			Enough_circle_to_balance = 1;
 			/*	
 				1.Change The PWM every PWM_CHG_GAP count.
 				2. proportional to wheel circle counts:PWM1 /PWM2 = dist1/dist2
 			*/
-			if(*Counter_L_p / PWM_CHG_GAP > CHG_Times || *Counter_R_p / PWM_CHG_GAP)
+			if(*Counter_L_p / PWM_CHG_GAP > CHG_Times || *Counter_R_p / PWM_CHG_GAP > CHG_Times)
 			{
 				CHG_Times = *Counter_L_p / PWM_CHG_GAP;
-				average_count = (*Counter_L_p + *Counter_R_p) / 2;
-				uiPWM1Degree *= *Counter_L_p / average_count;
-				uiPWM2Degree *= *Counter_R_p / average_count;
-				PWMChange(1, uiPWM1Degree);
-				PWMChange(2, uiPWM2Degree);
+				average_count_d = *Counter_L_p /2.0 + *Counter_R_p / 2.0;
+				PWM1_degree = *Counter_L_p / average_count_d * average_degree;
+				PWM2_degree = *Counter_R_p / average_count_d * average_degree;
+				PWMChange(1, PWM1_degree);
+				PWMChange(2, PWM2_degree);
+				if(*Counter_L_p > 500 || *Counter_R_p > 500)
+				{
+					SFRPAGE = TMR4_PAGE;                // Set SFR page
+					TMR4L = 0;
+					TMR4H = 0;
+					SFRPAGE = TMR3_PAGE;                // Set SFR page
+					TMR3H = 0;
+					TMR3L = 0;
+					SFRPAGE = SFRPAGE_SAVE;
+					*Counter_L_p = 0;
+					*Counter_R_p = 0;
+					*Counter_HighBits_a = 0;
+					*(Counter_HighBits_a + 1) = 0;
+					Enough_circle_to_balance = 0;
+					CHG_Times = 0;
+
+				}
 			}
 		}
 		return;
@@ -1257,7 +1285,7 @@ void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigne
 	{
 		c_R = *Counter_R_p;
 	}
-	if(*Counter_R_p > 2000)
+	if(*Counter_R_p > 50)
 	{
 		c_R = *Counter_R_p;
 	}

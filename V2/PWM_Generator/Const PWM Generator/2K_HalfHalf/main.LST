@@ -1,0 +1,554 @@
+C51 COMPILER V9.53.0.0   MAIN                                                              11/14/2015 23:11:03 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c LARGE OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          //-----------------------------------------------------------------------------
+   2          // F12x_UART0_Interrupt.c
+   3          //-----------------------------------------------------------------------------
+   4          // ????????????? RJ ?? ???????
+   5          // ???????:     http://dadastudio.taobao.com/ 
+   6          // ????????      C8051F12x-13x???.pdf ?? 21 ?:UART0
+   7          //
+   8          // Copyright 2006 Silicon Laboratories, Inc.
+   9          // http://www.silabs.com
+  10          //
+  11          // Program Description:
+  12          //
+  13          // This program demonstrates how to configure the C8051F120 to write to and read 
+  14          // from the UART interface. The program reads a word using the UART0 interrupts 
+  15          // and outputs that word to the screen, with all characters in uppercase
+  16          //
+  17          // How To Test:
+  18          //
+  19          // 1) Download code to a 'F12x device that is connected to a UART transceiver
+  20          // 2) Verify jumpers J6 and J9 are populated on the 'F12x TB.
+  21          // 3) Connect serial cable from the transceiver to a PC
+  22          // 4) On the PC, open HyperTerminal (or any other terminal program) and connect
+  23          //    to the COM port at <BAUDRATE> and 8-N-1
+  24          // 5) Download and execute code on an 'F12x target board.
+  25          // 6) Type up to 64 characters into the Terminal and press Enter.  The MCU 
+  26          //    will then print back the characters that were typed
+  27          //   
+  28          //
+  29          // Target:         C8051F12x
+  30          // Tool chain:     Keil C51 7.50 / Keil EVAL C51
+  31          // Command Line:   None
+  32          //
+  33          // Release 1.0
+  34          //    -Initial Revision (SM)
+  35          //    -11 JULY 2007
+  36          //
+  37          
+  38          
+  39          //-----------------------------------------------------------------------------
+  40          // Includes
+  41          //-----------------------------------------------------------------------------
+  42          
+  43          #include <c8051f120.h>                 // SFR declarations
+  44          #include <stdio.h>                     
+  45          #include <string.h>
+  46          //-----------------------------------------------------------------------------
+  47          // 16-bit SFR Definitions for 'F12x
+  48          //-----------------------------------------------------------------------------
+  49          
+  50          sfr16 RCAP2    = 0xca;                 // Timer2 capture/reload
+  51          sfr16 TMR2     = 0xcc;                 // Timer2
+  52          
+  53          //-----------------------------------------------------------------------------
+  54          // Global Constants
+  55          //-----------------------------------------------------------------------------
+C51 COMPILER V9.53.0.0   MAIN                                                              11/14/2015 23:11:03 PAGE 2   
+
+  56          
+  57          #define BAUDRATE     9600            // Baud rate of UART in bps
+  58          
+  59          // SYSTEMCLOCK = System clock frequency in Hz
+  60          #define SYSTEMCLOCK       (22118400L * 9 / 4)
+  61          
+  62          //-----------------------------------------------------------------------------
+  63          // Function Prototypes
+  64          //-----------------------------------------------------------------------------
+  65          
+  66          void OSCILLATOR_Init (void);         
+  67          void PORT_Init (void);
+  68          void UART0_Init (void);
+  69          void RerangeTheBufferQueue(void);
+  70          void WirelessModule_Init(void);
+  71          void Uart0_SendByte(unsigned char value);
+  72          void TIMER0_Init(unsigned int count);
+  73          void TIMER1_Init(unsigned int count);
+  74          
+  75          //-----------------------------------------------------------------------------
+  76          // Global Variables
+  77          //-----------------------------------------------------------------------------
+  78          
+  79          #define UART_BUFFERSIZE 64
+  80          unsigned char UART_Buffer_Queue[UART_BUFFERSIZE];
+  81          unsigned char * UART_Buffer_QueueHead=UART_Buffer_Queue;
+  82          unsigned char * UART_Buffer_QueueBottom=UART_Buffer_Queue;
+  83          unsigned char TX_Ready =1;
+  84          static char Byte;
+  85          char TxOrder = 0;
+  86          unsigned char TxByte = 0;
+  87          //----------------------PWM----------------------------------------------------
+  88          #define MOTOR_SPEED_DEGREE = 16;
+  89          //unsigned int Motor_speed_degree[16][
+  90          float PWM1_HighLevelPercent = 0.5;
+  91          float PWM3_HighLevelPercent = 0.5;
+  92          sbit PWM1       =       P4^4;                      
+  93          sbit PWM3   =   P3^4;
+  94          bit pwm1_flag=0;
+  95          bit pwm3_flag=0;
+  96          unsigned int PWM1_HighLevelCount=0;
+  97          unsigned int PWM1_LowLevelCount=0;
+  98          unsigned int PWM3_HighLevelCount=0;
+  99          unsigned int PWM3_LowLevelCount=0;
+ 100          unsigned char PWM_Degree_uc = 0;
+ 101          //---------------------------Timer---------------------------------------------
+ 102          unsigned int TH0_high_pre =  0;
+ 103          unsigned int TL0_high_pre =  0;
+ 104          unsigned int TH0_low_pre =  0;
+ 105          unsigned int TL0_low_pre =  0;
+ 106          
+ 107          unsigned int TH1_high_pre =  0;
+ 108          unsigned int TL1_high_pre =  0;
+ 109          unsigned int TH1_low_pre =  0;
+ 110          unsigned int TL1_low_pre =  0;
+ 111          //-----------------------------------------------------------------------------
+ 112          // main() Routine
+ 113          //-----------------------------------------------------------------------------
+ 114          
+ 115          void main (void)
+ 116          {
+ 117   1         int count = 0;
+C51 COMPILER V9.53.0.0   MAIN                                                              11/14/2015 23:11:03 PAGE 3   
+
+ 118   1         SFRPAGE = CONFIG_PAGE;
+ 119   1      
+ 120   1         WDTCN = 0xDE;                       // Disable watchdog timer
+ 121   1         WDTCN = 0xAD;
+ 122   1      
+ 123   1         OSCILLATOR_Init ();                 // Initialize oscillator
+ 124   1         PORT_Init ();                       // Initialize crossbar and GPIO
+ 125   1              TIMER0_Init(SYSTEMCLOCK/12/2000);
+ 126   1              TIMER1_Init(SYSTEMCLOCK/12/2000);
+ 127   1      
+ 128   1      //   UART0_Init ();                      // Initialize UART0
+ 129   1      //   WirelessModule_Init();
+ 130   1         EA = 1;
+ 131   1      
+ 132   1              count = SYSTEMCLOCK/12/2000;
+ 133   1              PWM1_HighLevelCount = count * (1-PWM1_HighLevelPercent);
+ 134   1              PWM1_LowLevelCount = (float)count * PWM1_HighLevelPercent;
+ 135   1              PWM3_HighLevelCount = count * (1-PWM3_HighLevelPercent);
+ 136   1              PWM3_LowLevelCount = (float)count * PWM3_HighLevelPercent;
+ 137   1              TH0_high_pre = (0xFFFF-PWM3_HighLevelCount)>>8;
+ 138   1              TL0_high_pre = (0xFFFF-PWM1_HighLevelCount);
+ 139   1              TH0_low_pre = (0xFFFF-PWM1_LowLevelCount)>>8;
+ 140   1              TL0_low_pre = (0xFFFF-PWM1_LowLevelCount);
+ 141   1              TH1_high_pre = (0xFFFF-PWM3_HighLevelCount)>>8;
+ 142   1              TL1_high_pre = (0xFFFF-PWM3_HighLevelCount);
+ 143   1              TH1_low_pre = (0xFFFF-PWM3_LowLevelCount)>>8;   
+ 144   1              TL1_low_pre = (0xFFFF-PWM3_LowLevelCount);
+ 145   1      
+ 146   1              //**Debug**
+ 147   1              
+ 148   1              //**End Debug**
+ 149   1         while (1)
+ 150   1         {
+ 151   2                 ;
+ 152   2         }
+ 153   1      }
+ 154          
+ 155          //-----------------------------------------------------------------------------
+ 156          // Initialization Subroutines
+ 157          //-----------------------------------------------------------------------------
+ 158          
+ 159          //-----------------------------------------------------------------------------
+ 160          // OSCILLATOR_Init
+ 161          //-----------------------------------------------------------------------------
+ 162          //
+ 163          // Return Value : None
+ 164          // Parameters   : None
+ 165          //
+ 166          // This function initializes the system clock to use the PLL as its clock
+ 167          // source, where the PLL multiplies the external 22.1184MHz crystal by 9/4.
+ 168          //
+ 169          //-----------------------------------------------------------------------------
+ 170          void OSCILLATOR_Init (void)
+ 171          {
+ 172   1         int i;                              // Software timer
+ 173   1      
+ 174   1         char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
+ 175   1      
+ 176   1         SFRPAGE = CONFIG_PAGE;              // Set SFR page
+ 177   1      
+ 178   1         OSCICN = 0x80;                      // Set internal oscillator to run
+ 179   1                                             // at its slowest frequency
+C51 COMPILER V9.53.0.0   MAIN                                                              11/14/2015 23:11:03 PAGE 4   
+
+ 180   1      
+ 181   1         CLKSEL = 0x00;                      // Select the internal osc. as
+ 182   1                                             // the SYSTEMCLOCK source
+ 183   1      
+ 184   1         // Initialize external crystal oscillator to use 22.1184 MHz crystal
+ 185   1      
+ 186   1         OSCXCN = 0x67;                      // Enable external crystal osc.
+ 187   1         for (i=0; i < 256; i++);            // Wait at least 1ms
+ 188   1      
+ 189   1         while (!(OSCXCN & 0x80));           // Wait for crystal osc to settle
+ 190   1      
+ 191   1         SFRPAGE = LEGACY_PAGE;
+ 192   1         FLSCL |=  0x30;                     // Initially set FLASH read timing for
+ 193   1                                             // 100MHz SYSTEMCLOCK (most conservative
+ 194   1                                             // setting)
+ 195   1         if (SYSTEMCLOCK <= 25000000) {           
+ 196   2         // Set FLASH read timing for <=25MHz
+ 197   2            FLSCL &= ~0x30;
+ 198   2         } else if (SYSTEMCLOCK <= 50000000) {    
+ 199   2         // Set FLASH read timing for <=50MHz
+ 200   2            FLSCL &= ~0x20;
+ 201   2         } else if (SYSTEMCLOCK <= 75000000) {    
+ 202   2         // Set FLASH read timing for <=75MHz
+ 203   2            FLSCL &= ~0x10;
+ 204   2         } else {                            // set FLASH read timing for <=100MHz
+ 205   2            FLSCL &= ~0x00;
+ 206   2         }
+ 207   1      
+ 208   1         // Start PLL for 50MHz operation
+ 209   1         SFRPAGE = PLL0_PAGE;
+ 210   1         PLL0CN = 0x04;                      // Select EXTOSC as clk source
+ 211   1         PLL0CN |= 0x01;                     // Enable PLL power
+ 212   1         PLL0DIV = 0x04;                     // Divide by 4
+ 213   1         PLL0FLT &= ~0x0f;
+ 214   1         PLL0FLT |=  0x0f;                   // Set Loop Filt for (22/4)MHz input clock
+ 215   1         PLL0FLT &= ~0x30;                   // Set ICO for 30-60MHz
+ 216   1         PLL0FLT |=  0x10;
+ 217   1      
+ 218   1         PLL0MUL = 0x09;                     // Multiply by 9
+ 219   1      
+ 220   1         // wait at least 5us
+ 221   1         for (i = 0; i < 256; i++) ;
+ 222   1      
+ 223   1         PLL0CN |= 0x02;                     // Enable PLL
+ 224   1      
+ 225   1         while (PLL0CN & 0x10 == 0x00);      // Wait for PLL to lock
+ 226   1      
+ 227   1         SFRPAGE = CONFIG_PAGE;
+ 228   1      
+ 229   1         CLKSEL = 0x02;                      // Select PLL as SYSTEMCLOCK source
+ 230   1      
+ 231   1         SFRPAGE = SFRPAGE_SAVE;             // Restore SFRPAGE
+ 232   1      }
+ 233          
+ 234          
+ 235          //-----------------------------------------------------------------------------
+ 236          // PORT_Init
+ 237          //-----------------------------------------------------------------------------
+ 238          //
+ 239          // Return Value : None
+ 240          // Parameters   : None
+ 241          //
+C51 COMPILER V9.53.0.0   MAIN                                                              11/14/2015 23:11:03 PAGE 5   
+
+ 242          // This function configures the crossbar and GPIO ports.
+ 243          //
+ 244          // P0.0   digital   push-pull     UART TX
+ 245          // P0.1   digital   open-drain    UART RX
+ 246          //-----------------------------------------------------------------------------
+ 247          void PORT_Init (void)
+ 248          {
+ 249   1              char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
+ 250   1      
+ 251   1              SFRPAGE = CONFIG_PAGE;              // Set SFR page
+ 252   1      
+ 253   1              XBR0     = 0x04;                    // Enable UART0
+ 254   1              XBR1     = 0x00;
+ 255   1              XBR2     = 0x40;                    // Enable crossbar and weak pull-up
+ 256   1                                             
+ 257   1      
+ 258   1              P0MDOUT |= 0x01;                    // Set TX pin to push-pull
+ 259   1              P1MDOUT |= 0x40;                    // Set P1.6(LED) to push-pull
+ 260   1              P3MDOUT |= 0x10;                                                // P3.4 is push-pull
+ 261   1              P4MDOUT |= 0x10;                                        // P4.4. is push-pull
+ 262   1              P5MDOUT = 0xFF;                                         // P5.x is push-pull
+ 263   1              SFRPAGE = SFRPAGE_SAVE;             // Restore SFR page
+ 264   1      }
+ 265          
+ 266          
+ 267          //-----------------------------------------------------------------------------
+ 268          // UART0_Init   Variable baud rate, Timer 2, 8-N-1
+ 269          //-----------------------------------------------------------------------------
+ 270          //
+ 271          // Return Value : None
+ 272          // Parameters   : None
+ 273          //
+ 274          // Configure UART0 for operation at <baudrate> 8-N-1 using Timer2 as
+ 275          // baud rate source.
+ 276          //
+ 277          //-----------------------------------------------------------------------------
+ 278          void UART0_Init (void)
+ 279          {
+ 280   1         char SFRPAGE_SAVE;
+ 281   1      
+ 282   1         SFRPAGE_SAVE = SFRPAGE;             // Preserve SFRPAGE
+ 283   1      
+ 284   1         SFRPAGE = TMR2_PAGE;
+ 285   1      
+ 286   1         TMR2CN = 0x00;                      // Timer in 16-bit auto-reload up timer
+ 287   1                                             // mode
+ 288   1         TMR2CF = 0x08;                      // SYSCLK is time base; no output;
+ 289   1                                             // up count only
+ 290   1         RCAP2 = - ((long) SYSTEMCLOCK/BAUDRATE/16);
+ 291   1         TMR2 = RCAP2;
+ 292   1         TR2= 1;                             // Start Timer2
+ 293   1      
+ 294   1         SFRPAGE = UART0_PAGE;
+ 295   1      
+ 296   1         SCON0 = 0x50;                       // 8-bit variable baud rate;
+ 297   1                                             // 9th bit ignored; RX enabled
+ 298   1                                             // clear all flags
+ 299   1         SSTA0 = 0x15;                       // Clear all flags; enable baud rate
+ 300   1                                             // doubler (not relevant for these
+ 301   1                                             // timers);
+ 302   1                                             // Use Timer2 as RX and TX baud rate
+ 303   1                                             // source;
+C51 COMPILER V9.53.0.0   MAIN                                                              11/14/2015 23:11:03 PAGE 6   
+
+ 304   1         ES0 = 1;  
+ 305   1         IP |= 0x10;
+ 306   1      
+ 307   1         SFRPAGE = SFRPAGE_SAVE;             // Restore SFRPAGE
+ 308   1      }
+ 309          
+ 310          
+ 311          //-----------------------------------------------------------------------------
+ 312          // Interrupt Service Routines
+ 313          //-----------------------------------------------------------------------------
+ 314          
+ 315          //-----------------------------------------------------------------------------
+ 316          // UART0_Interrupt
+ 317          //-----------------------------------------------------------------------------
+ 318          //
+ 319          // This routine is invoked whenever a character is entered or displayed on the
+ 320          // Hyperterminal.
+ 321          //
+ 322          //-----------------------------------------------------------------------------
+ 323          
+ 324          void UART0_Interrupt (void) interrupt 4
+ 325          {
+ 326   1         SFRPAGE = UART0_PAGE;
+ 327   1      
+ 328   1         if ( RI0 == 1 && (UART_Buffer_QueueBottom-UART_Buffer_Queue) < UART_BUFFERSIZE ) //if the buffer is not
+             - full
+ 329   1         {
+ 330   2            RI0 = 0;                           // Clear interrupt flag
+ 331   2            Byte = SBUF0;                      // Read a character from UART
+ 332   2      
+ 333   2            if ( UART_Buffer_QueueBottom < (UART_Buffer_Queue+UART_BUFFERSIZE) )
+ 334   2            {
+ 335   3                              *UART_Buffer_QueueBottom = Byte; // Store in array
+ 336   3                              UART_Buffer_QueueBottom++;
+ 337   3                              if( UART_Buffer_QueueBottom >= (UART_Buffer_Queue+UART_BUFFERSIZE) )
+ 338   3                                      RerangeTheBufferQueue();
+ 339   3            }
+ 340   2                else
+ 341   2                        RerangeTheBufferQueue();
+ 342   2         }
+ 343   1      
+ 344   1         if (TI0 == 1)                   // Check if transmit flag is set
+ 345   1         {
+ 346   2                 TI0 = 0;
+ 347   2                 if(TxOrder == 1)
+ 348   2                 {
+ 349   3                         TxOrder = 0;
+ 350   3                         SBUF0 = TxByte;
+ 351   3                 }
+ 352   2                 else
+ 353   2                 {
+ 354   3                         TX_Ready = 1;
+ 355   3                 }
+ 356   2              }
+ 357   1      }
+ 358          
+ 359          //-----------------------------------------------------------------------------
+ 360          // RerangeTheBufferQueue
+ 361          //-----------------------------------------------------------------------------
+ 362          //
+ 363          // This routine is invoked to rerange the UART buffer queue when the bottom point has get to the bottom li
+             -mit
+C51 COMPILER V9.53.0.0   MAIN                                                              11/14/2015 23:11:03 PAGE 7   
+
+ 364          //-----------------------------------------------------------------------------
+ 365          void RerangeTheBufferQueue(void)
+ 366          {
+ 367   1                      int count = UART_Buffer_QueueBottom-UART_Buffer_QueueHead;
+ 368   1                      int i=0;
+ 369   1                      for(i=0;i<count;i++)
+ 370   1                      {
+ 371   2                                      *(UART_Buffer_Queue+i)= UART_Buffer_QueueHead;
+*** WARNING C260 IN LINE 371 OF main.c: '=': pointer truncation
+ 372   2                                      UART_Buffer_QueueHead++;
+ 373   2                                      
+ 374   2                      }
+ 375   1                      UART_Buffer_QueueHead=UART_Buffer_Queue;
+ 376   1                      UART_Buffer_QueueBottom=UART_Buffer_QueueHead+count;
+ 377   1      }
+ 378          //-----------------------------------------------------------------------------
+ 379          // WirelessModule_Init
+ 380          //-----------------------------------------------------------------------------
+ 381          //
+ 382          //-----------------------------------------------------------------------------
+ 383          void WirelessModule_Init(void)
+ 384          {
+ 385   1              P3 = 0xFF; // Enter the SET mode of the wireless module
+ 386   1              strcat(UART_Buffer_Queue,"helloworld");
+ 387   1              UART_Buffer_QueueBottom += strlen("helloworld");
+ 388   1      }
+ 389          //-----------------------------------------------------------------------------
+ 390          // Uart0_SendByte
+ 391          //-----------------------------------------------------------------------------
+ 392          //
+ 393          //-----------------------------------------------------------------------------
+ 394          void Uart0_SendByte(unsigned char value)
+ 395          {
+ 396   1              char data SFRPAGE_SAVE = SFRPAGE;//save current SFR page
+ 397   1              SFRPAGE = UART0_PAGE;
+ 398   1              
+ 399   1              while(!TX_Ready);
+ 400   1              TX_Ready = 0;
+ 401   1              TxOrder = 1;
+ 402   1              TxByte = value;
+ 403   1              TI0=1;
+ 404   1              
+ 405   1              
+ 406   1              SFRPAGE = SFRPAGE_SAVE;//Recover the SFR Page
+ 407   1      }
+ 408          void TIMER0_Init(unsigned int count)
+ 409          {
+ 410   1      
+ 411   1              char data SFRPAGE_SAVE =SFRPAGE;
+ 412   1              PWM1_HighLevelCount = count * (1-PWM1_HighLevelPercent);
+ 413   1              PWM1_LowLevelCount = (float)count * PWM1_HighLevelPercent;
+ 414   1              SFRPAGE=TIMER01_PAGE;
+ 415   1              TCON &= ~0x30;//stop the timer0
+ 416   1              TMOD &= ~0x00;//Set the timer0 work in mode of hex
+ 417   1              TMOD |= 0x01;
+ 418   1              CKCON &= ~0x0F; //clear Timer0 part 
+ 419   1              CKCON &= ~0x03;// SysClk/12
+ 420   1              TR0 = 0;
+ 421   1              TH0 = count;
+ 422   1              TL0 = count;
+ 423   1              ET0 = 1;
+ 424   1              TR0 =1;
+C51 COMPILER V9.53.0.0   MAIN                                                              11/14/2015 23:11:03 PAGE 8   
+
+ 425   1              SFRPAGE = SFRPAGE_SAVE;
+ 426   1      }
+ 427          void TIMER1_Init(unsigned int count)
+ 428          {
+ 429   1              char data SFRPAGE_SAVE =SFRPAGE;
+ 430   1              PWM3_HighLevelCount = count * (1-PWM3_HighLevelPercent);
+ 431   1              PWM3_LowLevelCount = (float)count * PWM3_HighLevelPercent;
+ 432   1              SFRPAGE=TIMER01_PAGE;
+ 433   1              TCON &= ~0xC0;//stop timer1 ,clear TF1
+ 434   1              
+ 435   1              TMOD &= ~0x30;//Set the timer1 work in mode of hex
+ 436   1              TMOD |= 0x10;
+ 437   1              CKCON &= ~0x10;//Use SCA0~SCA1
+ 438   1              TR1 = 0;
+ 439   1              TH1 = count;
+ 440   1              TL1 = count;
+ 441   1              ET1 = 1;
+ 442   1              TR1 =1;
+ 443   1              SFRPAGE = SFRPAGE_SAVE;
+ 444   1      }
+ 445          void Timer0_ISR(void) interrupt 1
+ 446          {
+ 447   1              char data SFRPAGE_SAVE =SFRPAGE;
+ 448   1              SFRPAGE=TIMER01_PAGE;
+ 449   1              
+ 450   1              if(!pwm1_flag)
+ 451   1              {
+ 452   2                      //Start of High level
+ 453   2                              pwm1_flag = 1;  //Set flag
+ 454   2                              SFRPAGE = CONFIG_PAGE;
+ 455   2                              PWM1 = 1;       //Set PWM o/p pin
+ 456   2                          SFRPAGE=TIMER01_PAGE;
+ 457   2      //                      TH0 = (0xFFFF-PWM1_HighLevelCount)>>8;  //Load timer
+ 458   2      //                      TL0 = (0xFFFF-PWM1_HighLevelCount);
+ 459   2                              TH0 = TH0_high_pre;
+ 460   2                              TL0 = TL0_high_pre;
+ 461   2                              TF0 = 0;                //Clear interrupt flag
+ 462   2                              return;         //Return
+ 463   2              }
+ 464   1              else
+ 465   1              {       //Start of Low level
+ 466   2                      pwm1_flag = 0;  //Clear flag
+ 467   2                      SFRPAGE = CONFIG_PAGE;
+ 468   2                      PWM1 = 0;       //Clear PWM o/p pin
+ 469   2                      SFRPAGE=TIMER01_PAGE;           
+ 470   2      //              TH0 = (0xFFFF-PWM1_LowLevelCount)>>8;   //Load timer
+ 471   2      //              TL0 = (0xFFFF-PWM1_LowLevelCount);
+ 472   2                      TH0 = TH0_low_pre;
+ 473   2                      TL0 = TL0_low_pre;
+ 474   2                      TF0 = 0;        //Clear Interrupt flag
+ 475   2                      return;         //return
+ 476   2              }
+ 477   1              SFRPAGE = SFRPAGE_SAVE;
+ 478   1      }
+ 479          void Timer1_ISR(void) interrupt 3
+ 480          {
+ 481   1              char data SFRPAGE_SAVE =SFRPAGE;
+ 482   1              SFRPAGE=TIMER01_PAGE;
+ 483   1              if(!pwm3_flag)
+ 484   1              {
+ 485   2                      //Start of High level
+ 486   2                              pwm3_flag = 1;  //Set flag
+C51 COMPILER V9.53.0.0   MAIN                                                              11/14/2015 23:11:03 PAGE 9   
+
+ 487   2                              PWM3 = 1;       //Set PWM o/p pin
+ 488   2      //                      TH1 = (0xFFFF-PWM3_HighLevelCount)>>8;  //Load timer
+ 489   2      //                      TL1 = (0xFFFF-PWM3_HighLevelCount);
+ 490   2                              TH1 = TH1_high_pre;
+ 491   2                              TL1 = TL1_high_pre;
+ 492   2                              TF1 = 0;                //Clear interrupt flag
+ 493   2                              return;         //Return
+ 494   2              }
+ 495   1              else
+ 496   1              {       //Start of Low level
+ 497   2                      pwm3_flag = 0;  //Clear flag
+ 498   2                      PWM3 = 0;       //Set PWM o/p pin
+ 499   2      //              TH1 = (0xFFFF-PWM3_LowLevelCount)>>8;   //Load timer
+ 500   2      //              TL1 = (0xFFFF-PWM3_LowLevelCount);
+ 501   2                      TH1 = TH1_low_pre;
+ 502   2                      TL1 = TL1_low_pre;
+ 503   2                      TF1 = 0;        //Clear Interrupt flag
+ 504   2                      return;         //return
+ 505   2              }
+ 506   1              SFRPAGE = SFRPAGE_SAVE;
+ 507   1      }
+ 508          //-----------------------------------------------------------------------------
+ 509          // End Of File
+ 510          //-----------------------------------------------------------------------------
+*** WARNING C294 IN LINE 197 OF main.c: unreachable code
+*** WARNING C294 IN LINE 203 OF main.c: unreachable code
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1421    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =    107       8
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

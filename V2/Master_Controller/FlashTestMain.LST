@@ -1,4 +1,4 @@
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 1   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 1   
 
 
 C51 COMPILER V9.53.0.0, COMPILATION OF MODULE FLASHTESTMAIN
@@ -62,7 +62,7 @@ line level    source
   53          
   54          #include <c8051f120.h>                 // SFR declarations
   55          #include <stdio.h>                     
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 2   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 2   
 
   56          #include <string.h>
   57          #include <F120_FlashPrimitives.h>
@@ -126,7 +126,7 @@ line level    source
  115          #define ANGELSCALE10  0x071C  //10
  116          
  117          #define ADJUST_THRESHOLD 100
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 3   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 3   
 
  118          #define PWM_CHG_GAP 50
  119          //-----------------------------------------------------------------------------
@@ -190,7 +190,7 @@ line level    source
  175          int ZeroPoint_a,ZeroPoint_w,ZeroPoint_angle,ZeroPoint_Temp;
  176          int iDeviation = 0;
  177          unsigned int uiAbsoluteDeviation =  0;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 4   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 4   
 
  178          unsigned int AbsoluteW_ui = 0;
  179          int iStablePoint = 0;
@@ -254,7 +254,7 @@ line level    source
  237          unsigned char TH0_Prefetch = 0;
  238          unsigned char TL0_Prefetch = 0;
  239          unsigned char PWM_debug1 = 0;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 5   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 5   
 
  240          unsigned char PWM_debug2 = 0;
  241          unsigned char PWM_debug3 = 0;
@@ -318,7 +318,7 @@ line level    source
  299   2      //              /******Debug********/
  300   2      //              PWMChange();
  301   2      //              /******End**********/
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 6   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 6   
 
  302   2                      
  303   2                      //if more than 20*50ms=1000ms is past since last message.
@@ -380,14 +380,14 @@ line level    source
  358   5      //                                              break;
  359   5                                              case 'f'://forward
  360   5                                                      uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
- 361   5                                                      PWMChange(1, uiPWM1Degree * 64 -1);     
- 362   5                                                      PWMChange(2, uiPWM2Degree * 64 -1);                                                     
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 7   
+ 361   5      //                                              PWMChange(1, uiPWM1Degree * 64 -1);     
+ 362   5      //                                              PWMChange(2, uiPWM2Degree * 64 -1);                                                     
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 7   
 
- 363   5                                                      IN11=1;
- 364   5                                                      IN12=0;
- 365   5                                                      IN31=1;
- 366   5                                                      IN32=0;
+ 363   5      //                                              IN11=1;
+ 364   5      //                                              IN12=0;
+ 365   5      //                                              IN31=1;
+ 366   5      //                                              IN32=0;
  367   5      //                                              if(uiPWM1Degree > 4)
  368   5      //                                              {
  369   5      //                                                      uiPWM1Degree = 4;
@@ -446,7 +446,7 @@ line level    source
  422   5                                                      break;                                          
  423   5                                      }
  424   4                                      UART_Receive_Buffer_QueueHead+=3;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 8   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 8   
 
  425   4                              }
  426   3                              else
@@ -457,7 +457,7 @@ line level    source
  431   3                      }       
  432   2                      // Get the counter information
  433   2                      Check_Counter(Counter_L_p, Counter_R_p, Counter_HighBits_a);
- 434   2      //              balance_wheel(Counter_L_p, Counter_R_p, Counter_HighBits_a);
+ 434   2                      balance_wheel(Counter_L_p, Counter_R_p, Counter_HighBits_a);
  435   2              }
  436   1      }
  437          
@@ -510,7 +510,7 @@ line level    source
  484   2         // Set FLASH read timing for <=50MHz
  485   2            FLSCL &= ~0x20;
  486   2         } else if (SYSTEMCLOCK <= 75000000L) {    
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 9   
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 9   
 
  487   2         // Set FLASH read timing for <=75MHz
  488   2            FLSCL &= ~0x10;
@@ -574,7 +574,7 @@ line level    source
  546   1              XBR2    |= 0x04;                                        //Enable UART1
  547   1       //   P1MDIN   = 0xFF;                                   
  548   1              P0MDOUT |= 0x04;                    // Set CEX0 (P0.2) to push-pull
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 10  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 10  
 
  549   1              P0MDOUT |= 0x01;                    // Set TX pin to push-pull
  550   1              P0MDOUT |= 0x04;                                        //Set UART1 TX pin to push-pull
@@ -638,7 +638,7 @@ line level    source
  608          //      TMOD |= 0x10;
  609          //      
  610          //      CKCON &=0x0f;//clear CKCON bit4~7
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 11  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 11  
 
  611          //      CKCON |= 0x10;//Timer 1 use SYSTEMCLOCK
  612          //      
@@ -702,7 +702,7 @@ line level    source
  670          //              Control_Time = Const_Control_Time;
  671          //              Control_TimeIsUp=1;
  672          ////            /***************Debug Begin***********************/
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 12  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 12  
 
  673          ////            IN31 ^= 1;
  674          ////            //---------------Debug End ---------------------------
@@ -766,7 +766,7 @@ line level    source
  732          
  733          //-----------------------------------------------------------------------------
  734          // Timer0_ISR
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 13  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 13  
 
  735          //-----------------------------------------------------------------------------
  736          //
@@ -830,7 +830,7 @@ line level    source
  794          //                      SFRPAGE = CONFIG_PAGE;
  795          //                      PWM3 = 1;       //Set PWM o/p pin
  796          //              
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 14  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 14  
 
  797          //                      SFRPAGE = TMR3_PAGE;
  798          //                      TMR3H = TMRH3_HighLevelPrefetch;        //Load timer
@@ -894,7 +894,7 @@ line level    source
  856   2                  RI0 = 0;                           // Clear interrupt flag
  857   2         }
  858   1      
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 15  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 15  
 
  859   1         if (TI0 == 1)                   // Check if transmit flag is set
  860   1         {
@@ -958,7 +958,7 @@ line level    source
  915   3                                      UART_Receive_Buffer_QueueHead++;
  916   3                                      
  917   3                      }
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 16  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 16  
 
  918   2                      UART_Receive_Buffer_QueueHead=UART_Receive_Buffer_Queue;
  919   2                      UART_Receive_Buffer_QueueBottom=UART_Receive_Buffer_QueueHead+count;
@@ -1022,7 +1022,7 @@ line level    source
  976   1              
  977   1              TI0 = 0;
  978   1              TX_Ready = 0;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 17  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 17  
 
  979   1              SBUF0 = value;
  980   1              while(!TX_Ready)
@@ -1086,7 +1086,7 @@ line level    source
 1038          //                              if( a_flag + w_flag + angle_flag == 3 )
 1039          //                              {
 1040          //                                      break;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 18  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 18  
 
 1041          //                              }
 1042          //                      }
@@ -1150,7 +1150,7 @@ line level    source
 1100   1      }
 *** WARNING C280 IN LINE 1084 OF FlashTestMain.c: 'iStringSize': unreferenced local variable
 1101          
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 19  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 19  
 
 1102          void PWMChange(unsigned int side_ui, unsigned int PWM_degree)
 1103          {
@@ -1214,136 +1214,164 @@ line level    source
 1161   1              
 1162   1      }
 1163          void balance_wheel(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 20  
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 20  
 
              -)
 1164          {
-1165   1              static long CHG_Times = 0;
-1166   1              static char last_order = 0;
-1167   1              unsigned int average_count = 0;
-1168   1              if(car_state != 'f')
-1169   1              {
-1170   2                      if(car_state != last_order)
-1171   2                      {
-1172   3                              last_order = car_state;
-1173   3                      }
-1174   2                      return;
-1175   2              }
-1176   1              if(last_order != 'f')
-1177   1              {
-1178   2                      //This is the start of forwarding
-1179   2                      last_order = 'f';
-1180   2                      // Clear wheels' count
-1181   2                      *Counter_L_p = 0;
-1182   2                      *Counter_R_p = 0;
-1183   2                      *Counter_HighBits_a = 0;
-1184   2                      *(Counter_HighBits_a + 1) = 0;
-1185   2                      // Change the pwm
-1186   2                      PWMChange(1, uiPWM1Degree * 64 -1);     
-1187   2                      PWMChange(2, uiPWM1Degree * 64 -1);
-1188   2                      IN11=1;
-1189   2                      IN12=0;
-1190   2                      IN31=1;
-1191   2                      IN32=0;
-1192   2                      return;
-1193   2              }
-1194   1              else
-1195   1              {
-1196   2                      //check the counter
-1197   2                      Check_Counter(Counter_L_p, Counter_R_p, Counter_HighBits_a);
-1198   2                      if(ADJUST_THRESHOLD > *Counter_L_p || ADJUST_THRESHOLD > * Counter_R_p)
-1199   2                      {
-1200   3                              /*      
-1201   3                                      1.Change The PWM every PWM_CHG_GAP count.
-1202   3                                      2. proportional to wheel circle counts:PWM1 /PWM2 = dist1/dist2
-1203   3                              */
-1204   3                              if(*Counter_L_p / PWM_CHG_GAP > CHG_Times || *Counter_R_p / PWM_CHG_GAP)
-1205   3                              {
-1206   4                                      CHG_Times = *Counter_L_p / PWM_CHG_GAP;
-1207   4                                      average_count = (*Counter_L_p + *Counter_R_p) / 2;
-1208   4                                      uiPWM1Degree *= *Counter_L_p / average_count;
-1209   4                                      uiPWM2Degree *= *Counter_R_p / average_count;
-1210   4                                      PWMChange(1, uiPWM1Degree);
-1211   4                                      PWMChange(2, uiPWM2Degree);
-1212   4                              }
-1213   3                      }
-1214   2                      return;
-1215   2              }
-1216   1      }
-1217          
-1218          void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a
-             -)
-1219          {
-1220   1      #ifndef CHECK_COUNTER_DEBUG
-1221   1              static unsigned int c_L = 0;
-1222   1              static unsigned int c_R = 0;
-1223   1                                              char debug = 0;
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 21  
+1165   1              char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
+1166   1              static long CHG_Times = 0;
+1167   1              static char last_order = 0;
+1168   1              static unsigned int PWM1_degree = 0;
+1169   1              static unsigned int PWM2_degree = 0;
+1170   1              static unsigned int average_degree = 0;
+1171   1              static char Enough_circle_to_balance = 0;
+1172   1              double average_count_d = 0.0;
+1173   1              if(car_state != 'f')
+1174   1              {
+1175   2                      if(car_state != last_order)
+1176   2                      {
+1177   3                              last_order = car_state;
+1178   3                      }
+1179   2                      return;
+1180   2              }
+1181   1              if(last_order != 'f')
+1182   1              {
+1183   2                      //This is the start of forwarding
+1184   2                      last_order = 'f';
+1185   2                      // Clear wheels' count
+1186   2                      *Counter_L_p = 0;
+1187   2                      *Counter_R_p = 0;
+1188   2                      *Counter_HighBits_a = 0;
+1189   2                      *(Counter_HighBits_a + 1) = 0;
+1190   2                      Enough_circle_to_balance = 0;
+1191   2                      CHG_Times = 0;
+1192   2                      // Change the pwm
+1193   2                      PWM1_degree = uiPWM1Degree * 64 -1;
+1194   2                      PWM2_degree = uiPWM1Degree * 64 -1;
+1195   2                      average_degree = (PWM1_degree + PWM2_degree) / 2.0;
+1196   2                      PWMChange(1, PWM1_degree);      
+1197   2                      PWMChange(2, PWM2_degree);
+1198   2                      IN11=1;
+1199   2                      IN12=0;
+1200   2                      IN31=1;
+1201   2                      IN32=0;
+1202   2                      return;
+1203   2              }
+1204   1              else
+1205   1              {
+1206   2                      //check the counter
+1207   2                      Check_Counter(Counter_L_p, Counter_R_p, Counter_HighBits_a);
+1208   2                      if(Enough_circle_to_balance || ADJUST_THRESHOLD < *Counter_L_p || ADJUST_THRESHOLD < * Counter_R_p)
+1209   2                      {
+1210   3                              Enough_circle_to_balance = 1;
+1211   3                              /*      
+1212   3                                      1.Change The PWM every PWM_CHG_GAP count.
+1213   3                                      2. proportional to wheel circle counts:PWM1 /PWM2 = dist1/dist2
+1214   3                              */
+1215   3                              if(*Counter_L_p / PWM_CHG_GAP > CHG_Times || *Counter_R_p / PWM_CHG_GAP > CHG_Times)
+1216   3                              {
+1217   4                                      CHG_Times = *Counter_L_p / PWM_CHG_GAP;
+1218   4                                      average_count_d = *Counter_L_p /2.0 + *Counter_R_p / 2.0;
+1219   4                                      PWM1_degree = *Counter_L_p / average_count_d * average_degree;
+1220   4                                      PWM2_degree = *Counter_R_p / average_count_d * average_degree;
+1221   4                                      PWMChange(1, PWM1_degree);
+1222   4                                      PWMChange(2, PWM2_degree);
+1223   4                                      if(*Counter_L_p > 500 || *Counter_R_p > 500)
+1224   4                                      {
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 21  
 
-1224   1      #endif
-1225   1              char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
-1226   1              SFRPAGE = TMR4_PAGE;                // Set SFR page
-1227   1              *Counter_R_p = TMR4H;
-1228   1              *Counter_R_p = *Counter_R_p << 8;
-1229   1              *Counter_R_p += TMR4L;
-1230   1              SFRPAGE = TMR3_PAGE;                // Set SFR page
-1231   1              *Counter_L_p = TMR3H;
-1232   1              *Counter_L_p = *Counter_L_p << 8;
-1233   1              *Counter_L_p += TMR3L;
-1234   1              
-1235   1              if(*Counter_L_p >= 50000)
-1236   1              {
-1237   2                      TMR3H = 0;
-1238   2                      TMR3L = 0;
-1239   2                      *Counter_L_p = 0;
-1240   2                      ++*(Counter_HighBits_a);
-1241   2              }
-1242   1              if(*Counter_R_p >= 50000)
-1243   1              {
-1244   2                      SFRPAGE = TMR4_PAGE;                // Set SFR page
-1245   2                      TMR4H = 0;
-1246   2                      TMR4L = 0;
-1247   2                      *Counter_R_p = 0;
-1248   2                      ++*(Counter_HighBits_a+1);
-1249   2              }
-1250   1              
-1251   1      #ifndef CHECK_COUNTER_DEBUG
-1252   1              if(*Counter_L_p > c_L )
-1253   1              {
-1254   2                      c_L = *Counter_L_p;
-1255   2              }
-1256   1              if(*Counter_R_p > c_R )
-1257   1              {
-1258   2                      c_R = *Counter_R_p;
-1259   2              }
-1260   1              if(*Counter_R_p > 2000)
-1261   1              {
-1262   2                      c_R = *Counter_R_p;
-1263   2              }
-1264   1      //      if( TMR3_1000_circles > 0 )
-1265   1      //      {
-1266   1      //              debug ++; 
-1267   1      //      }
-1268   1      #endif
-1269   1              SFRPAGE = SFRPAGE_SAVE;
-1270   1      }
-1271          
-1272          //-----------------------------------------------------------------------------
-1273          // End Of File
-1274          //-----------------------------------------------------------------------------
+1225   5                                              SFRPAGE = TMR4_PAGE;                // Set SFR page
+1226   5                                              TMR4L = 0;
+1227   5                                              TMR4H = 0;
+1228   5                                              SFRPAGE = TMR3_PAGE;                // Set SFR page
+1229   5                                              TMR3H = 0;
+1230   5                                              TMR3L = 0;
+1231   5                                              SFRPAGE = SFRPAGE_SAVE;
+1232   5                                              *Counter_L_p = 0;
+1233   5                                              *Counter_R_p = 0;
+1234   5                                              *Counter_HighBits_a = 0;
+1235   5                                              *(Counter_HighBits_a + 1) = 0;
+1236   5                                              Enough_circle_to_balance = 0;
+1237   5                                              CHG_Times = 0;
+1238   5      
+1239   5                                      }
+1240   4                              }
+1241   3                      }
+1242   2                      return;
+1243   2              }
+1244   1      }
+1245          
+1246          void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a
+             -)
+1247          {
+1248   1      #ifndef CHECK_COUNTER_DEBUG
+1249   1              static unsigned int c_L = 0;
+1250   1              static unsigned int c_R = 0;
+1251   1                                              char debug = 0;
+1252   1      #endif
+1253   1              char SFRPAGE_SAVE = SFRPAGE;        // Save Current SFR page
+1254   1              SFRPAGE = TMR4_PAGE;                // Set SFR page
+1255   1              *Counter_R_p = TMR4H;
+1256   1              *Counter_R_p = *Counter_R_p << 8;
+1257   1              *Counter_R_p += TMR4L;
+1258   1              SFRPAGE = TMR3_PAGE;                // Set SFR page
+1259   1              *Counter_L_p = TMR3H;
+1260   1              *Counter_L_p = *Counter_L_p << 8;
+1261   1              *Counter_L_p += TMR3L;
+1262   1              
+1263   1              if(*Counter_L_p >= 50000)
+1264   1              {
+1265   2                      TMR3H = 0;
+1266   2                      TMR3L = 0;
+1267   2                      *Counter_L_p = 0;
+1268   2                      ++*(Counter_HighBits_a);
+1269   2              }
+1270   1              if(*Counter_R_p >= 50000)
+1271   1              {
+1272   2                      SFRPAGE = TMR4_PAGE;                // Set SFR page
+1273   2                      TMR4H = 0;
+1274   2                      TMR4L = 0;
+1275   2                      *Counter_R_p = 0;
+1276   2                      ++*(Counter_HighBits_a+1);
+1277   2              }
+1278   1              
+1279   1      #ifndef CHECK_COUNTER_DEBUG
+1280   1              if(*Counter_L_p > c_L )
+1281   1              {
+1282   2                      c_L = *Counter_L_p;
+1283   2              }
+1284   1              if(*Counter_R_p > c_R )
+1285   1              {
+C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/15/2015 17:52:29 PAGE 22  
+
+1286   2                      c_R = *Counter_R_p;
+1287   2              }
+1288   1              if(*Counter_R_p > 50)
+1289   1              {
+1290   2                      c_R = *Counter_R_p;
+1291   2              }
+1292   1      //      if( TMR3_1000_circles > 0 )
+1293   1      //      {
+1294   1      //              debug ++; 
+1295   1      //      }
+1296   1      #endif
+1297   1              SFRPAGE = SFRPAGE_SAVE;
+1298   1      }
+1299          
+1300          //-----------------------------------------------------------------------------
+1301          // End Of File
+1302          //-----------------------------------------------------------------------------
 *** WARNING C294 IN LINE 482 OF FlashTestMain.c: unreachable code
 *** WARNING C294 IN LINE 488 OF FlashTestMain.c: unreachable code
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   3028    ----
+   CODE SIZE        =   3391    ----
    CONSTANT SIZE    =     59    ----
-   XDATA SIZE       =    313      56
+   XDATA SIZE       =    320      59
    PDATA SIZE       =   ----    ----
    DATA SIZE        =      1       4
    IDATA SIZE       =   ----    ----
-C51 COMPILER V9.53.0.0   FLASHTESTMAIN                                                     11/14/2015 20:25:19 PAGE 22  
-
    BIT SIZE         =      5    ----
 END OF MODULE INFORMATION.
 

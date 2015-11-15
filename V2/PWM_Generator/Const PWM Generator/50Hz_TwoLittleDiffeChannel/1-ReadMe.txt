@@ -1,0 +1,1 @@
+This is used to generate 20 channel PWM in 50 Hz to monk two optical coder.
