@@ -3,6 +3,10 @@
 	{
 		"selected_items":
 		[
+			[
+				"DIR_R_",
+				"DIR_R_1"
+			]
 		]
 	},
 	"buffers":
@@ -11,7 +15,7 @@
 			"file": "src/main.ino",
 			"settings":
 			{
-				"buffer_size": 3765,
+				"buffer_size": 3005,
 				"line_ending": "Windows",
 				"name": "/**"
 			}
@@ -49,12 +53,12 @@
 		"selected_items":
 		[
 			[
-				"Package Control: ",
-				"Package Control: List Packages"
-			],
-			[
 				"",
 				"Build: Upload"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Upgrade Package"
 			]
 		],
 		"width": 400.0
@@ -74,6 +78,7 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Anna Sherlock/AppData/Roaming/Sublime Text 2/Packages/Stino/Default (Windows).sublime-keymap",
 		"/C/Users/Anna Sherlock/AppData/Roaming/Sublime Text 2/Packages/Package Control/Package Control.sublime-settings",
 		"/C/Users/Anna Sherlock/AppData/Roaming/Sublime Text 2/Packages/User/Package Control.sublime-settings",
 		"/G/Study/Electronics/Arduino Workspace/platformio.sublime-project",
@@ -137,15 +142,15 @@
 					"file": "src/main.ino",
 					"settings":
 					{
-						"buffer_size": 3765,
+						"buffer_size": 3005,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3657,
-								3657
+								324,
+								324
 							]
 						],
 						"settings":
@@ -156,7 +161,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2537.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -173,8 +178,8 @@
 						"selection":
 						[
 							[
-								468,
-								468
+								530,
+								530
 							]
 						],
 						"settings":
@@ -186,13 +191,7 @@
 						"zoom_level": 1.0
 					},
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 1,
-			"sheets":
-			[
+				},
 				{
 					"buffer": 2,
 					"file": "/G/Study/Project/Smart Robot Car/Program/Code/Tang/StepMotor/StepMotor/StepMotor/StepMotor.ino",
@@ -205,8 +204,8 @@
 						"selection":
 						[
 							[
-								402,
-								402
+								2233,
+								2086
 							]
 						],
 						"settings":
@@ -231,8 +230,8 @@
 						"selection":
 						[
 							[
-								2085,
-								2085
+								1658,
+								1658
 							]
 						],
 						"settings":
@@ -242,7 +241,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 976.0,
+						"translation.y": 691.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -267,18 +266,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.5,
 			1.0
 		],
 		"rows":
@@ -305,6 +297,22 @@
 		"height": 124.0
 	},
 	"output.Deviot|Pio_Install1459663303.8":
+	{
+		"height": 124.0
+	},
+	"output.Deviot|Pio_Install1459663380.98":
+	{
+		"height": 124.0
+	},
+	"output.Deviot|Pio_Install1459664188.79":
+	{
+		"height": 124.0
+	},
+	"output.Deviot|Pio_Install1459664219.67":
+	{
+		"height": 124.0
+	},
+	"output.Deviot|Pio_Install1459664231.12":
 	{
 		"height": 124.0
 	},
