@@ -11,9 +11,25 @@
 			"file": "src/main.ino",
 			"settings":
 			{
-				"buffer_size": 513,
+				"buffer_size": 3765,
 				"line_ending": "Windows",
 				"name": "/**"
+			}
+		},
+		{
+			"file": "platformio.ini",
+			"settings":
+			{
+				"buffer_size": 531,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/G/Study/Project/Smart Robot Car/Program/Code/Tang/StepMotor/StepMotor/StepMotor/StepMotor.ino",
+			"settings":
+			{
+				"buffer_size": 8120,
+				"line_ending": "Windows"
 			}
 		},
 		{
@@ -33,12 +49,12 @@
 		"selected_items":
 		[
 			[
-				"",
-				"Build: Upload"
+				"Package Control: ",
+				"Package Control: List Packages"
 			],
 			[
-				"Package Control: ",
-				"Package Control: Install Package"
+				"",
+				"Build: Upload"
 			]
 		],
 		"width": 400.0
@@ -58,6 +74,8 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Anna Sherlock/AppData/Roaming/Sublime Text 2/Packages/Package Control/Package Control.sublime-settings",
+		"/C/Users/Anna Sherlock/AppData/Roaming/Sublime Text 2/Packages/User/Package Control.sublime-settings",
 		"/G/Study/Electronics/Arduino Workspace/platformio.sublime-project",
 		"/G/Study/Project/Smart Robot Car/Material/电机驱动/AnyRobot二路电机驱动板资料/arduino两路电机程序/两路电机PID调速/pidSpeed-2Motor/pidSpeed-2Motor.ino",
 		"/C/Users/Anna Sherlock/Documents/Arduino/Hello/Hello.ino",
@@ -69,7 +87,7 @@
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
@@ -83,6 +101,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"DIR_2",
+			"DIR_1",
+			"ENA_2",
+			"ENA_1",
+			"SetPinFrequency",
+			"Serial"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -90,11 +114,16 @@
 		"regex": false,
 		"replace_history":
 		[
+			"DIR_R_1",
+			"DIR_L_1",
+			"DIR_R_2",
+			"DIR_L_2",
+			"Serial1"
 		],
 		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
-		"whole_word": false,
+		"whole_word": true,
 		"wrap": true
 	},
 	"groups":
@@ -108,15 +137,15 @@
 					"file": "src/main.ino",
 					"settings":
 					{
-						"buffer_size": 513,
+						"buffer_size": 3765,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								412,
-								412
+								3657,
+								3657
 							]
 						],
 						"settings":
@@ -127,13 +156,72 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2537.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
+					"file": "platformio.ini",
+					"settings":
+					{
+						"buffer_size": 531,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								468,
+								468
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 57.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "/G/Study/Project/Smart Robot Car/Program/Code/Tang/StepMotor/StepMotor/StepMotor/StepMotor.ino",
+					"settings":
+					{
+						"buffer_size": 8120,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								402,
+								402
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/User/Stino/Arduino.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 627.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
 					"settings":
 					{
 						"buffer_size": 6834,
@@ -143,8 +231,8 @@
 						"selection":
 						[
 							[
-								6831,
-								6831
+								2085,
+								2085
 							]
 						],
 						"settings":
@@ -154,7 +242,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4326.0,
+						"translation.y": 976.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -179,11 +267,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":
@@ -193,6 +288,26 @@
 		]
 	},
 	"menu_visible": true,
+	"output.Deviot|Pio_Install1459659677.05":
+	{
+		"height": 124.0
+	},
+	"output.Deviot|Pio_Install1459659834.36":
+	{
+		"height": 124.0
+	},
+	"output.Deviot|Pio_Install1459659901.76":
+	{
+		"height": 124.0
+	},
+	"output.Deviot|Pio_Install1459660044.76":
+	{
+		"height": 124.0
+	},
+	"output.Deviot|Pio_Install1459663303.8":
+	{
+		"height": 124.0
+	},
 	"output.build|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Hello|1451308918.68":
 	{
 		"height": 100.0
@@ -319,7 +434,7 @@
 	},
 	"replace":
 	{
-		"height": 0.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":
