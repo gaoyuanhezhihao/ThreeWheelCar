@@ -1,0 +1,88 @@
+{
+	"build_systems":
+	[
+		{
+			"cmd":
+			[
+				"platformio",
+				"-f", "-c", "sublimetext",
+				"run"
+			],
+			"name": "PlatformIO",
+			"variants":
+			[
+				{
+					"cmd":
+					[
+						"platformio",
+						"-f", "-c", "sublimetext",
+						"run"
+					],
+					"name": "Build"
+				},
+				{
+					"cmd":
+					[
+						"platformio",
+						"-f", "-c", "sublimetext",
+						"run",
+						"--target",
+						"clean"
+					],
+					"name": "Clean"
+				},
+				{
+					"cmd":
+					[
+						"platformio",
+						"-f", "-c", "sublimetext",
+						"run",
+						"--target",
+						"upload"
+					],
+					"name": "Upload"
+				},
+				{
+					"cmd":
+					[
+						"platformio",
+						"-f", "-c", "sublimetext",
+						"run",
+						"--target",
+						"program"
+					],
+					"name": "Upload using Programmer"
+				},
+				{
+					"cmd":
+					[
+						"platformio",
+						"-f", "-c", "sublimetext",
+						"run",
+						"--target",
+						"uploadfs"
+					],
+					"name": "Upload SPIFFS image"
+				},
+				{
+					"cmd":
+					[
+						"platformio",
+						"-f", "-c", "sublimetext",
+						"update"
+					],
+					"name": "Update platforms and libraries"
+				}
+			],
+			"working_dir": "${project_path:${folder}}",
+			"selector": "source.c, source.c++",
+			"path": "D:\\Python27\\Lib\\site-packages\\PyQt4;D:\\Python27\\Lib\\site-packages;D:\\Python27\\;D:\\Python27\\Scripts;D:\\Python27;C:\\CTEX\\UserData\\miktex\\bin;C:\\CTEX\\MiKTeX\\miktex\\bin;C:\\CTEX\\CTeX\\ctex\\bin;C:\\CTEX\\CTeX\\cct\\bin;C:\\CTEX\\CTeX\\ty\\bin;C:\\CTEX\\Ghostscript\\gs9.05\\bin;C:\\CTEX\\GSview\\gsview;C:\\CTEX\\WinEdt;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\system32\\wbem;D:\\Python27\\Lib\\site-packages\\pip;G:\\Study\\OpenCV\\opencv\\build\\x86\\vc10\\bin;G:\\Study\\OpenCV\\opencv\\build\\python\\2.7\\x86;C:\\Program Files (x86)\\Windows Kits\\8.1\\Windows Performance Toolkit\\;C:\\Program Files\\Microsoft SQL Server\\110\\Tools\\Binn\\;C:\\Program Files (x86)\\Microsoft SDKs\\TypeScript\\1.0\\;C:\\Program Files\\Microsoft SQL Server\\120\\Tools\\Binn\\;C:\\Users\\Anna Sherlock\\Downloads\\vlfeat-0.9.20-bin\\vlfeat-0.9.20\\bin;G:\\Study\\OpenCV3\\opencv\\build\\x64\\vc12\\bin;D:\\Program_Programming\\VS2013_Community\\VC\\include;D:\\Program_Programming\\Graphviz\\bin;D:\\program files (x86)\\sys\\java\\jre\\win64\\jre\\bin;D:\\MinGW\\bin;D:\\CTex\\MiKTeX\\miktex\\bin;D:\\Python27\\Lib\\site-packages;D:\\DownloadOfBrowser\\Chrome\\pypy-4.0.1-win32;C:\\Users\\Anna Sherlock\\Downloads\\vlfeat-0.9.20-bin\\vlfeat-0.9.20\\bin\\win64"
+		}
+	],
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	]
+}

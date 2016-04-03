@@ -1,0 +1,347 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/main.ino",
+			"settings":
+			{
+				"buffer_size": 513,
+				"line_ending": "Windows",
+				"name": "/**"
+			}
+		},
+		{
+			"contents": "/*\nBy default Arduino's analogWrite (and consequently pwmWrite() since it mimics analogWrite()) uses 8 bit\npwm across all timers. 8 bit PWM allows for a total of 256 possible values. This library has some methods\nfor fine tuning resolution if a higher resolution is needed:\n\nvoid pwmWriteHR(uint8_t pin, uint16_t duty)\nSame a pwmWrite, except the range is 0 - 65535 (16 bit) instead\nof 0 - 255 (8 bit)\n\nfloat TimerX_GetResolution() (replace X with a timer number)\nGets the timer's resolution in base 2. The value returned in other words\nrepresents the number of bits required to represent the timer's range. ie\nthe value 7 means it takes 7 bits to represent all possible pin duties at\nthat frequency, or 7-bit resolution. Note that a float is returned, not\nan int.\n\nfloat GetPinResolution(uint8_t pin)\nReturns the same value as TimerX_GetResolution(), but takes a pin number\nas a parameter so that the caller is timer agnostic.\n\nThere are several things to keep in mind when trying to optimize resolution:\n-pwmWriteHR() is only useful for 16 bit timers, since 8 bit timers are inherently limited to 8 bit pwm\n-The higher the frequency, the lower the resolution. pwmWriteHR() will automatically map input to the\nactual timer resolution\n-Resolution can be optimized in this way for 2 pins on the Uno (9 and 10), and 11 pins on the Mega (2,\n3, 5, 6, 7, 8, 11, 12, 44, 45,  and 46)\n\nUse the serial moniter to see output from this program\nThis example runs on mega and uno.\n*/\n\n#include <PWM.h>\n#define ENA_1 4\n#define ENA_2 5\n#define DIR_1 2\n#define DIR_2 3\n//use pin 11 on the mega for this example to work\n#define PWM_1 9\n#define PWM_2 10\n#define TOTAL_BYTES 4\n#define BEST_PWM 20000\n#define START_FIRST_PWM 3200\n#define START_STEPS 20\n#define START_PWM_STEP (( BEST_PWM - START_FIRST_PWM)/START_STEPS)\n#define START_TIME 1000 //1000ms = 1s\n#define STEP_TIME (START_TIME/START_STEPS)\n\nchar state = 's';\nconst char HEADER = 'H';\nchar stoped = 1;\nvoid setup()\n{\n	InitTimersSafe(); //initialize all timers except for 0, to save time keeping functions\n	Serial.begin(9600);\n	Serial.println();\n\n	pinMode(DIR_1, OUTPUT);\n	pinMode(DIR_2, OUTPUT);\n	pinMode(PWM_1, INPUT);\n	pinMode(PWM_2, INPUT);\n	pinMode(ENA_1, OUTPUT);\n	pinMode(ENA_2, OUTPUT);\n	digitalWrite(ENA_1, LOW);\n	digitalWrite(ENA_2, LOW);\n	settingHighResolutionDuty(20000);\n\n}\n\n//void demonstrateFrequencysEffectOnResolution()\n//{\n//	Serial.println(\"As frequency increases, resolution will decrease...\");\n//	for (int i = 1; i < 10000; i += 10)\n//	{\n//		SetPinFrequency(PWM_1, i);  //setting the frequency\n//\n//		uint16_t frequency = Timer1_GetFrequency();\n//		uint16_t decimalResolution = Timer1_GetTop() + 1;\n//		uint16_t binaryResolution = GetPinResolution(PWM_1); //this number will be inaccurately low because the float is being truncated to a int\n//\n//		char strOut[75];\n//		sprintf(strOut, \"Frequency: %u Hz\\r\\n Number of Possible Duties: %u\\r\\n Resolution: %u bit\\r\\n\", frequency, decimalResolution, binaryResolution);\n//\n//		Serial.println(strOut);\n//	}\n//\n//	Serial.println(\"...Finished\");\n//}\n\nvoid settingHighResolutionDuty(unsigned int pwm)\n{\n	SetPinFrequency(PWM_1, pwm); //setting the frequency to 10 Hz\n	SetPinFrequency(PWM_2, pwm);\n	//Serial.println(\"\\r\\npwmWrite() and pwmWriteHR() are identical except for the valid range of inputs.\\r\\nThe following loop calls both functions to produce the same result on the \\r\\nLED pin. The pin should to run 10Hz at 50% duty regardless of the function called.\\r\\n\");\n\n	//the PWM_1 should flicker (10Hz 50% duty) for 1 second before calling\n	//the other function. This demonstrates the use of pwmWriteHR() and how its\n	//use is nearly identical to pwmWrite()\n\n	//setting the duty to 50% with 8 bit pwm. 128 is 1/2 of 256\n	//pwmWrite(PWM_1, 128);\n	//pwmWrite(PWM_2, 128);\n	//Serial.println(\"8-Bit PWM\");\n	//delay(1000);\n\n	//setting the duty to 50% with the highest possible resolution that \n	//can be applied to the timer (up to 16 bit). 1/2 of 65536 is 32768.\n	pwmWriteHR(PWM_1, 32768);\n	pwmWriteHR(PWM_2, 32768);\n	//Serial.println(\"High Resolution PWM\");\n	//delay(1000);\n\n}\n\nvoid change_pwm(char *rcv_ch, unsigned int *p_pwm,char channel)\n{\n	*p_pwm = rcv_ch[1] * 256;\n	*p_pwm += (unsigned char)rcv_ch[2];\n	Serial.print(\"rcv:pwm=\");\n	Serial.print(*p_pwm);\n	if (channel == 'l')\n	{\n		SetPinFrequency(PWM_1, *p_pwm);\n		pwmWriteHR(PWM_1, 32768);\n	}\n	else\n	{\n		SetPinFrequency(PWM_2, *p_pwm);\n		pwmWriteHR(PWM_2, 32768);\n	}\n	Serial.println(\"ok\\n\");\n	Serial.print(channel);\n	Serial.println(\" pwm changed\\n\");\n}\nvoid change_state(char order, unsigned int pwm, unsigned int start_pwm, unsigned pwm_step)\n{\n	change_wheel_direction(order);\n}\nvoid change_wheel_direction(char order)\n{\n	switch (order)\n	{\n	case 's':\n		state = 's';\n		Serial.println(\"ok\\n\");\n		Serial.println(\"try to stop\\n\");\n		stoped = 1;\n		pinMode(PWM_1, INPUT);\n		pinMode(PWM_2, INPUT);\n		delay(500);//brake 500ms\n		digitalWrite(ENA_1, LOW);\n		digitalWrite(ENA_2, LOW);\n		//pwmWriteHR(PWM_1, 65535);\n		//pwmWriteHR(PWM_2, 65535);\n		break;\n	case 'f':\n		state = 'f';\n		Serial.println(\"ok\");\n		Serial.println(\"try to go forward\");\n		pinMode(PWM_1, OUTPUT);\n		pinMode(PWM_2, OUTPUT);\n		digitalWrite(ENA_1, HIGH);\n		digitalWrite(ENA_2, HIGH);\n		//pwmWriteHR(PWM_1, 32768);\n		//pwmWriteHR(PWM_2, 32768);\n		digitalWrite(DIR_1, 1);\n		digitalWrite(DIR_2, 1);\n		break;\n	case 'l':\n		state = 'l';\n		Serial.println(\"ok\");\n		Serial.println(\"try to turn left\");\n		pinMode(PWM_1, OUTPUT);\n		pinMode(PWM_2, OUTPUT);\n		digitalWrite(ENA_1, HIGH);\n		digitalWrite(ENA_2, HIGH);\n		//pwmWriteHR(PWM_1, 32768);\n		//pwmWriteHR(PWM_2, 32768);\n		digitalWrite(DIR_1, 1);\n		digitalWrite(DIR_2, 0);\n		break;\n	case 'r':\n		state = 'r';\n		Serial.println(\"ok\");\n		Serial.println(\"try to turn right\");\n		pinMode(PWM_1, OUTPUT);\n		pinMode(PWM_2, OUTPUT);\n		digitalWrite(ENA_1, HIGH);\n		digitalWrite(ENA_2, HIGH);\n		digitalWrite(DIR_1, 0);\n		digitalWrite(DIR_2, 1);\n		break;\n	case 'b':\n		state = 'b';\n		Serial.println(\"ok\");\n		Serial.println(\"try to run back\");\n		pinMode(PWM_1, OUTPUT);\n		pinMode(PWM_2, OUTPUT);\n		digitalWrite(ENA_1, HIGH);\n		digitalWrite(ENA_2, HIGH);\n		digitalWrite(DIR_1, 0);\n		digitalWrite(DIR_2, 0);\n		break;\n	default:\n		break;\n	}\n}\nvoid process_msg(char rcv_ch[3])\n{\n	static unsigned int pwm = BEST_PWM;\n	static unsigned int starting_first_pwm = START_FIRST_PWM;\n	static unsigned int starting_pwm_step = START_PWM_STEP;\n	switch (rcv_ch[0])\n	{\n	case 'p':\n		change_pwm(rcv_ch, &pwm, &starting_first_pwm, &starting_pwm_step);\n		break;\n	default:\n		change_state(rcv_ch[0], pwm, starting_first_pwm, starting_pwm_step);\n		break;\n	}\n}\nvoid loop()\n{\n	char rcv_ch[3] = { 0 };\n	if (Serial.available() >= TOTAL_BYTES)\n	{\n		char tag = Serial.read();\n		if (tag == HEADER)\n		{\n			rcv_ch[0] = Serial.read();\n			rcv_ch[1] = Serial.read();\n			rcv_ch[2] = Serial.read();\n			process_msg(rcv_ch);\n		}\n	}\n\n}",
+			"settings":
+			{
+				"buffer_size": 6834,
+				"line_ending": "Windows",
+				"name": "/*"
+			}
+		}
+	],
+	"build_system": "PlatformIO",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"",
+				"Build: Upload"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/G/Study/Electronics/Arduino Workspace/platformio.sublime-project",
+		"/G/Study/Project/Smart Robot Car/Material/电机驱动/AnyRobot二路电机驱动板资料/arduino两路电机程序/两路电机PID调速/pidSpeed-2Motor/pidSpeed-2Motor.ino",
+		"/C/Users/Anna Sherlock/Documents/Arduino/Hello/Hello.ino",
+		"/G/Study/Project/Smart Robot Car/Program/Code/AnyCBot/pidSpeed-2Motor/pidSpeed-2Motor.ino",
+		"/C/Users/Anna Sherlock/Documents/Arduino/Serial_int/Serial_int.ino",
+		"/G/Study/Electronics/Arduino Workspace/VisualMicro/Serial/Serial_send_int/Serial_send_int.ino",
+		"/G/Study/Project/Smart Robot Car/Program/Code/Tang/StepMotor/StepMotor/StepMotor/StepMotor.ino",
+		"/C/Users/Anna Sherlock/AppData/Roaming/Sublime Text 2/Packages/User/Stino/Preferences.stino-settings"
+	],
+	"find":
+	{
+		"height": 0.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/main.ino",
+					"settings":
+					{
+						"buffer_size": 513,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								412,
+								412
+							]
+						],
+						"settings":
+						{
+							"auto_name": "/**",
+							"syntax": "Packages/User/Stino/Arduino.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"settings":
+					{
+						"buffer_size": 6834,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6831,
+								6831
+							]
+						],
+						"settings":
+						{
+							"auto_name": "/*",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 4326.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.build|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Hello|1451308918.68":
+	{
+		"height": 100.0
+	},
+	"output.build|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452734668.72":
+	{
+		"height": 124.0
+	},
+	"output.build|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452735167.16":
+	{
+		"height": 124.0
+	},
+	"output.build|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452735196.84":
+	{
+		"height": 124.0
+	},
+	"output.build|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452735469.83":
+	{
+		"height": 124.0
+	},
+	"output.build|G:\\Study\\Project\\Smart Robot Car\\Material\\电机驱动\\AnyRobot二路电机驱动板资料\\arduino两路电机程序\\两路电机PID调速\\pidSpeed-2Motor|1451307526.85":
+	{
+		"height": 100.0
+	},
+	"output.build|G:\\Study\\Project\\Smart Robot Car\\Material\\电机驱动\\AnyRobot二路电机驱动板资料\\arduino两路电机程序\\两路电机PID调速\\pidSpeed-2Motor|1451307677.87":
+	{
+		"height": 100.0
+	},
+	"output.build|G:\\Study\\Project\\Smart Robot Car\\Material\\电机驱动\\AnyRobot二路电机驱动板资料\\arduino两路电机程序\\两路电机PID调速\\pidSpeed-2Motor|1451308062.42":
+	{
+		"height": 100.0
+	},
+	"output.build|G:\\Study\\Project\\Smart Robot Car\\Material\\电机驱动\\AnyRobot二路电机驱动板资料\\arduino两路电机程序\\两路电机PID调速\\pidSpeed-2Motor|1451308749.6":
+	{
+		"height": 100.0
+	},
+	"output.build|G:\\Study\\Project\\Smart Robot Car\\Program\\Code\\AnyCBot\\pidSpeed-2Motor|1451395948.48":
+	{
+		"height": 124.0
+	},
+	"output.exec":
+	{
+		"height": 124.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Hello|1451308970.84":
+	{
+		"height": 100.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452735217.72":
+	{
+		"height": 124.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452735287.14":
+	{
+		"height": 124.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452735490.19":
+	{
+		"height": 124.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452736504.94":
+	{
+		"height": 124.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452736520.35":
+	{
+		"height": 124.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452736544.77":
+	{
+		"height": 124.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452736563.41":
+	{
+		"height": 124.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452736589.29":
+	{
+		"height": 124.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452736971.56":
+	{
+		"height": 124.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452737517.87":
+	{
+		"height": 124.0
+	},
+	"output.upload|C:\\Users\\Anna Sherlock\\Documents\\Arduino\\Serial_int|1452737564.24":
+	{
+		"height": 124.0
+	},
+	"output.upload|G:\\Study\\Electronics\\Arduino Workspace\\Serial\\print_test|1453101211.23":
+	{
+		"height": 124.0
+	},
+	"output.upload|G:\\Study\\Electronics\\Arduino Workspace\\Serial\\print_test|1453101255.07":
+	{
+		"height": 124.0
+	},
+	"output.upload|G:\\Study\\Electronics\\Arduino Workspace\\Serial\\print_test|1453101309.0":
+	{
+		"height": 124.0
+	},
+	"output.upload|G:\\Study\\Electronics\\Arduino Workspace\\Serial\\print_test|1453101395.46":
+	{
+		"height": 124.0
+	},
+	"output.upload|G:\\Study\\Electronics\\Arduino Workspace\\Serial\\print_test|1453101430.59":
+	{
+		"height": 124.0
+	},
+	"output.upload|G:\\Study\\Project\\Smart Robot Car\\Material\\电机驱动\\AnyRobot二路电机驱动板资料\\arduino两路电机程序\\两路电机PID调速\\pidSpeed-2Motor|1451307555.04":
+	{
+		"height": 100.0
+	},
+	"output.upload|G:\\Study\\Project\\Smart Robot Car\\Material\\电机驱动\\AnyRobot二路电机驱动板资料\\arduino两路电机程序\\两路电机PID调速\\pidSpeed-2Motor|1451307651.23":
+	{
+		"height": 100.0
+	},
+	"output.upload|G:\\Study\\Project\\Smart Robot Car\\Material\\电机驱动\\AnyRobot二路电机驱动板资料\\arduino两路电机程序\\两路电机PID调速\\pidSpeed-2Motor|1451307694.9":
+	{
+		"height": 100.0
+	},
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 173.0,
+	"status_bar_visible": true
+}
