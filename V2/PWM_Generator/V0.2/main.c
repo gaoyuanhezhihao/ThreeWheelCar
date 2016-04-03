@@ -125,44 +125,19 @@ void main (void)
 
 	OSCILLATOR_Init ();                 // Initialize oscillator
 	PORT_Init ();                       // Initialize crossbar and GPIO
-	TIMER0_Init(SYSTEMCLOCK/20000);
-	TIMER1_Init(SYSTEMCLOCK/20000);
+	TIMER0_Init(SYSTEMCLOCK/5000);
+	TIMER1_Init(SYSTEMCLOCK/5000);
 	Ext_Interrupt_Init();
 //   UART0_Init ();                      // Initialize UART0
 //   WirelessModule_Init();
 	EA = 1;
 
-	count = SYSTEMCLOCK/20000;
+	count = SYSTEMCLOCK/5000;
 
 
    while (1)
    {
-		SFRPAGE = CONFIG_PAGE;   
-	    PWM_Degree_uc = P5;
-//	    if( (PWM_Degree_uc & 0x0F) > 0 )
-//		{
-//			PWM1_HighLevelPercent = (PWM_Degree_uc & 0x0F) / 15.0;
-//			PWM1_HighLevelCount = count * (1-PWM1_HighLevelPercent);
-//			PWM1_LowLevelCount = (float)count * PWM1_HighLevelPercent;
-//		}
-		
-//		if( (PWM_Degree_uc & 0xF0) > 0 )
-//		{
-//			PWM3_HighLevelPercent = ((PWM_Degree_uc & 0xF0) >> 4) / 15.0;
-//			PWM3_HighLevelCount = count * (1-PWM3_HighLevelPercent);
-//			PWM3_LowLevelCount = (float)count * PWM3_HighLevelPercent;
-//		}
-		
-	   
-//	    TH0_high_pre = (0xFFFF-PWM1_HighLevelCount)>>8;
-//	    TL0_high_pre = (0xFFFF-PWM1_HighLevelCount);
-//		TH0_low_pre = (0xFFFF-PWM1_LowLevelCount)>>8;
-//		TL0_low_pre = (0xFFFF-PWM1_LowLevelCount);
-//		TH1_high_pre = (0xFFFF-PWM3_HighLevelCount)>>8;
-//		TL1_high_pre = (0xFFFF-PWM3_HighLevelCount);
-//		TH1_low_pre = (0xFFFF-PWM3_LowLevelCount)>>8;	
-//		TL1_low_pre = (0xFFFF-PWM3_LowLevelCount);
-	   
+	    ;
    }
 }
 

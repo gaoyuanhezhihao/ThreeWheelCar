@@ -115,11 +115,12 @@ sbit D7 = P5^7;
 #define ANGELSCALE10  0x071C  //10
 
 #define ADJUST_THRESHOLD 100
-#define PWM_CHG_GAP 50
+#define PWM_CHG_GAP 100
 //-----------------------------------------------------------------------------
 // Function Prototypes
 //-----------------------------------------------------------------------------
 
+void Ext_Interrupt_Init (void);
 void OSCILLATOR_Init (void);         
 void PORT_Init (void);
 void UART0_Init (void);
@@ -178,7 +179,8 @@ unsigned int uiAbsoluteDeviation =  0;
 unsigned int AbsoluteW_ui = 0;
 int iStablePoint = 0;
 bit RotateDirection = 0;
-
+unsigned int count_L = 0;
+unsigned int count_R = 0;
 int iAngleRange[] = 0;
 struct Pair_Angel_Control{
 	int Angel;
@@ -264,6 +266,7 @@ void main (void)
 //	UART1_Init();
 	WirelessModule_Init();
 	TIMER0_Init();
+//	Ext_Interrupt_Init();
 	Timer4_Init();
 	Timer3_Init();
 	EA = 1;
@@ -543,6 +546,7 @@ void PORT_Init (void)
 	XBR1     = 0x20;					//Enable T2
 	XBR2     = 0x40;                    // Enable crossbar and weak pull-up
 	XBR2	|= 0X08;					//Enable T4
+//	XBR1     = 0x04 + 0x10;				//Enable /INT0 and /INT1
 	XBR2	|= 0x04;					//Enable UART1
  //   P1MDIN   = 0xFF;                                   
 	P0MDOUT |= 0x04;                    // Set CEX0 (P0.2) to push-pull
@@ -1296,7 +1300,59 @@ void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigne
 #endif
 	SFRPAGE = SFRPAGE_SAVE;
 }
+//-----------------------------------------------------------------------------
+// /INT0 ISR
+//-----------------------------------------------------------------------------
+//
+// Whenever a negative edge appears on P0.0, the LED is toggled.
+// The interrupt pending flag is automatically cleared by vectoring to the ISR
+//
+//-----------------------------------------------------------------------------
+void INT0_ISR (void) interrupt 0
+{
+	char data SFRPAGE_SAVE =SFRPAGE;
+	SFRPAGE = CONFIG_PAGE;
+	Delay_ms(5);
+	if(!P0^4)
+	{
+		count_L ++;
+	}
+	SFRPAGE = SFRPAGE_SAVE;
+}
 
+//-----------------------------------------------------------------------------
+// /INT1 ISR
+//-----------------------------------------------------------------------------
+//
+// Whenever a negative edge appears on P0.1, the LED is toggled.
+// The interrupt pending flag is automatically cleared by vectoring to the ISR
+//
+//-----------------------------------------------------------------------------
+void INT1_ISR (void) interrupt 2
+{
+	char data SFRPAGE_SAVE =SFRPAGE;
+	SFRPAGE = CONFIG_PAGE;
+	Delay_ms(5);
+	if(!P0^5)
+	{
+		count_R ++;
+	}
+	SFRPAGE = SFRPAGE_SAVE;
+}
+void Ext_Interrupt_Init (void)
+{
+   char SFRPAGE_SAVE = SFRPAGE;
+
+   SFRPAGE = TIMER01_PAGE;
+
+   TCON |= 0x05;                        // /INT 0 and /INT 1 are falling edge
+                                       // triggered
+
+   EX0 = 1;                            // Enable /INT0 interrupts
+   EX1 = 1;                            // Enable /INT1 interrupts
+
+   SFRPAGE = SFRPAGE_SAVE;
+}
 //-----------------------------------------------------------------------------
 // End Of File
 //-----------------------------------------------------------------------------

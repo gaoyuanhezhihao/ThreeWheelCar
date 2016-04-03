@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/SocketControl_MPU6050.py" line="304" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="7d093451-91b4-49ca-b4e0-f1de036b690e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/SocketControl_MPU6050.py" />
-      <change type="DELETED" beforePath="G:\Study\Project\Smart Robot Car\Program\Code\ThreeWheel\TestVersion\FlashTest.M51" afterPath="" />
-      <change type="DELETED" beforePath="G:\Study\Project\Smart Robot Car\Program\Code\ThreeWheel\V0.2\test3.uvgui_Anna.bak" afterPath="" />
-      <change type="DELETED" beforePath="G:\Study\Project\Smart Robot Car\Program\Code\ThreeWheel\V2\Master_Controller\FlashTest.uvgui_Anna Sherlock.bak" afterPath="" />
-      <change type="DELETED" beforePath="G:\Study\Project\Smart Robot Car\Program\Code\ThreeWheel\V2\UpLevelProgram\ControlGUI.py" afterPath="" />
-      <change type="DELETED" beforePath="G:\Study\Project\Smart Robot Car\Program\Code\ThreeWheel\V2\UpLevelProgram\InnorControler.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/F120_FlashPrimitives.OBJ" afterPath="$PROJECT_DIR$/TestVersion/F120_FlashPrimitives.OBJ" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/FlashTestMain.OBJ" afterPath="$PROJECT_DIR$/TestVersion/FlashTestMain.OBJ" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/FlashTest" afterPath="$PROJECT_DIR$/TestVersion/FlashTest" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/MyDebug.OBJ" afterPath="$PROJECT_DIR$/TestVersion/MyDebug.OBJ" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/STARTUP.OBJ" afterPath="$PROJECT_DIR$/TestVersion/STARTUP.OBJ" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ClientBoss.py" afterPath="$PROJECT_DIR$/ClientBoss.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ControlGUI.py" afterPath="$PROJECT_DIR$/ControlGUI.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/F120_FlashPrimitives.LST" afterPath="$PROJECT_DIR$/TestVersion/F120_FlashPrimitives.LST" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/FlashTest.build_log.htm" afterPath="$PROJECT_DIR$/TestVersion/FlashTest.build_log.htm" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/FlashTest.uvgui.Anna Sherlock" afterPath="$PROJECT_DIR$/TestVersion/FlashTest.uvgui.Anna Sherlock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/FlashTest.uvgui_Anna Sherlock.bak" afterPath="$PROJECT_DIR$/TestVersion/FlashTest.uvgui_Anna Sherlock.bak" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/FlashTest.uvopt" afterPath="$PROJECT_DIR$/TestVersion/FlashTest.uvopt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/FlashTestMain.LST" afterPath="$PROJECT_DIR$/TestVersion/FlashTestMain.LST" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/FlashTestMain.c" afterPath="$PROJECT_DIR$/TestVersion/FlashTestMain.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/MyDebug.LST" afterPath="$PROJECT_DIR$/TestVersion/MyDebug.LST" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TestVersion/STARTUP.LST" afterPath="$PROJECT_DIR$/TestVersion/STARTUP.LST" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server.py" afterPath="$PROJECT_DIR$/Server.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SocketControl.py" afterPath="$PROJECT_DIR$/SocketControl.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SocketControl_SocketTest.py" afterPath="$PROJECT_DIR$/SocketControl_SocketTest.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V0.1/test3.uvgui.Anna Sherlock" afterPath="$PROJECT_DIR$/V0.1/test3.uvgui.Anna Sherlock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V0.2/test3.uvgui.Anna Sherlock" afterPath="$PROJECT_DIR$/V0.2/test3.uvgui.Anna Sherlock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V0.1/test3.uvgui_Anna Sherlock.bak" afterPath="$PROJECT_DIR$/V0.1/test3.uvgui_Anna Sherlock.bak" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V0.2/test3.uvgui_Anna Sherlock.bak" afterPath="$PROJECT_DIR$/V0.2/test3.uvgui_Anna Sherlock.bak" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/1-Program Flow Map.vsd" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/1-Program Flow Map.vsd" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/F120_FlashPrimitives.OBJ" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/F120_FlashPrimitives.OBJ" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTestMain.OBJ" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTestMain.OBJ" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTest" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTest" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/UpLevelProgram/Indoor/IndoorControler_MPU6050.vsd" afterPath="$PROJECT_DIR$/V2/UpLevelProgram/Indoor/IndoorControler_MPU6050.vsd" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/MyDebug.OBJ" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/MyDebug.OBJ" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/STARTUP.OBJ" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/STARTUP.OBJ" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/Client_Remote.py" afterPath="$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/Client_Remote.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/ControlGUI.py" afterPath="$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/ControlGUI.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/F120_FlashPrimitives.LST" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/F120_FlashPrimitives.LST" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTest.M51" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTest.M51" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller/FlashTest.build_log.htm" afterPath="$PROJECT_DIR$/V2/Master_Controller/FlashTest.build_log.htm" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTest.uvgui.Anna Sherlock" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTest.uvgui.Anna Sherlock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller/FlashTest.uvopt" afterPath="$PROJECT_DIR$/V2/Master_Controller/FlashTest.uvopt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTest.uvopt" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTest.uvopt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTestMain.LST" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTestMain.LST" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTestMain.c" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/FlashTestMain.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller/FlashTest_uvopt.bak" afterPath="$PROJECT_DIR$/V2/Master_Controller/FlashTest_uvopt.bak" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/MyDebug.LST" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/MyDebug.LST" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/STARTUP.LST" afterPath="$PROJECT_DIR$/V2/Master_Controller_NO_OpticalCodeCounter/STARTUP.LST" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/SocketControl_MPU6050.py" afterPath="$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/SocketControl_MPU6050.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/PWM_Generator/Const PWM Generator/50Hz_TwoLittleDiffeChannel/test3.build_log.htm" afterPath="$PROJECT_DIR$/V2/PWM_Generator/Const PWM Generator/50Hz_TwoLittleDiffeChannel/test3.build_log.htm" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/PWM_Generator/V0.2/test3.build_log.htm" afterPath="$PROJECT_DIR$/V2/PWM_Generator/V0.2/test3.build_log.htm" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/PWM_Generator/Const PWM Generator/50Hz_TwoLittleDiffeChannel/test3.uvgui.Anna Sherlock" afterPath="$PROJECT_DIR$/V2/PWM_Generator/Const PWM Generator/50Hz_TwoLittleDiffeChannel/test3.uvgui.Anna Sherlock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/PWM_Generator/V0.2/test3.uvgui.Anna Sherlock" afterPath="$PROJECT_DIR$/V2/PWM_Generator/V0.2/test3.uvgui.Anna Sherlock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/PWM_Generator/Const PWM Generator/50Hz_TwoLittleDiffeChannel/test3.uvgui_Anna Sherlock.bak" afterPath="$PROJECT_DIR$/V2/PWM_Generator/Const PWM Generator/50Hz_TwoLittleDiffeChannel/test3.uvgui_Anna Sherlock.bak" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/PWM_Generator/V0.2/test3.uvgui_Anna Sherlock.bak" afterPath="$PROJECT_DIR$/V2/PWM_Generator/V0.2/test3.uvgui_Anna Sherlock.bak" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/PWM_Generator/Const PWM Generator/50Hz_TwoLittleDiffeChannel/test3.uvopt" afterPath="$PROJECT_DIR$/V2/PWM_Generator/Const PWM Generator/50Hz_TwoLittleDiffeChannel/test3.uvopt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/V2/PWM_Generator/Const PWM Generator/50Hz_TwoLittleDiffeChannel/test3_uvopt.bak" afterPath="$PROJECT_DIR$/V2/PWM_Generator/Const PWM Generator/50Hz_TwoLittleDiffeChannel/test3_uvopt.bak" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ThreeWheel.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -50,59 +54,40 @@
     <favorites_list name="ThreeWheel" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5168539">
-      <split-first>
-        <leaf>
-          <file leaf-file-name="ControlGUI.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/ControlGUI.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SocketControl_MPU6050.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/SocketControl_MPU6050.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.55590063">
-                  <caret line="69" column="27" selection-start-line="69" selection-start-column="27" selection-end-line="69" selection-end-column="27" />
-                  <folding>
-                    <element signature="e#162#343#0" expanded="false" />
-                    <element signature="e#443#1079#0" expanded="false" />
-                    <element signature="e#1108#2345#0" expanded="false" />
-                    <element signature="e#3767#6221#0" expanded="false" />
-                    <element signature="e#6266#8313#0" expanded="false" />
-                    <element signature="e#8355#8432#0" expanded="false" />
-                    <element signature="e#8471#8696#0" expanded="false" />
-                    <element signature="e#8725#9183#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="SocketControl_MPU6050.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/SocketControl_MPU6050.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.083850935">
-                  <caret line="131" column="16" selection-start-line="131" selection-start-column="16" selection-end-line="131" selection-end-column="16" />
-                  <folding>
-                    <element signature="e#162#343#0" expanded="false" />
-                    <element signature="e#1108#2345#0" expanded="false" />
-                    <element signature="e#2383#3730#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf>
+      <file leaf-file-name="SocketControl_MPU6050.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/SocketControl_MPU6050.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.6011132">
+              <caret line="181" column="61" selection-start-line="181" selection-start-column="61" selection-end-line="181" selection-end-column="61" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ControlGUI.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/ControlGUI.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Client_Remote.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/Client_Remote.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -123,8 +108,9 @@
         <option value="$PROJECT_DIR$/V2/UpLevelProgram/Client_Indoor.py" />
         <option value="$PROJECT_DIR$/V2/UpLevelProgram/IndoorControler_MPU6050.py" />
         <option value="$PROJECT_DIR$/SocketControl.py" />
-        <option value="$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/Client_Remote.py" />
         <option value="$PROJECT_DIR$/V2/UpLevelProgram/Indoor/IndoorControler_MPU6050.py" />
+        <option value="$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/Client_Remote.py" />
+        <option value="$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/ControlGUI.py" />
         <option value="$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/SocketControl_MPU6050.py" />
       </list>
     </option>
@@ -133,9 +119,8 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-9" />
-    <option name="width" value="1378" />
-    <option name="height" value="738" />
+    <option name="width" value="1366" />
+    <option name="height" value="720" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -160,6 +145,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -175,6 +162,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="ThreeWheel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ThreeWheel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ThreeWheel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="V2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="UpLevelProgram" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -213,51 +218,9 @@
               <option name="myItemId" value="V2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UpLevelProgram" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ThreeWheel" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ThreeWheel" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="V2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UpLevelProgram" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Indoor" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ThreeWheel" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ThreeWheel" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="V2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -273,7 +236,7 @@
       <recent name="G:\Study\Programming\Python\Code\Socket" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.SocketControl_MPU6050">
+  <component name="RunManager" selected="Python.Client_Remote">
     <configuration default="false" name="ClientBoss" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -521,20 +484,20 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="0" width="1378" height="738" extended-state="0" />
+    <frame x="0" y="0" width="1366" height="720" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.13857678" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24419476" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293718" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293718" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293718" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32767403" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.14906368" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32767403" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="-1327" y="471" width="1335" height="193" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22826909" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39898133" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.40805605" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="105" y="186" width="1045" height="534" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -577,7 +540,14 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="17" />
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+      <option name="time" value="25" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -587,11 +557,26 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/ControlGUI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/SocketControl_MPU6050.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ClientBoss.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="13" column="26" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -599,7 +584,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="78" column="29" selection-start-line="78" selection-start-column="29" selection-end-line="78" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -607,7 +591,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -615,7 +598,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="24" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -623,7 +605,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="69" column="27" selection-start-line="69" selection-start-column="27" selection-end-line="69" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -631,7 +612,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -639,7 +619,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -654,7 +633,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="13" column="25" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -662,7 +640,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -670,7 +647,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="30" selection-start-line="14" selection-start-column="30" selection-end-line="14" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -685,7 +661,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="13" column="25" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -693,7 +668,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -701,7 +675,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="24" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -716,7 +689,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -724,7 +696,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="24" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -739,7 +710,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -747,7 +717,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4" column="32" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -762,7 +731,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -777,7 +745,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.56014365">
           <caret line="55" column="39" selection-start-line="55" selection-start-column="39" selection-end-line="55" selection-end-column="39" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -785,7 +752,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.04847397">
           <caret line="58" column="32" selection-start-line="58" selection-start-column="32" selection-end-line="58" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -793,7 +759,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33229813">
           <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -801,7 +766,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="10" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -813,44 +777,51 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/Client_Remote.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="35" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/V2/UpLevelProgram/Indoor/IndoorControler_MPU6050.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.04847397">
-          <caret line="77" column="20" selection-start-line="77" selection-start-column="20" selection-end-line="77" selection-end-column="20" />
+        <state vertical-scroll-proportion="-8.545455">
+          <caret line="149" column="23" selection-start-line="149" selection-start-column="23" selection-end-line="149" selection-end-column="23" />
           <folding>
             <element signature="e#163#344#0" expanded="false" />
             <element signature="e#444#965#0" expanded="false" />
             <element signature="e#994#2231#0" expanded="false" />
-            <element signature="e#3660#5791#0" expanded="false" />
             <element signature="e#5833#5910#0" expanded="false" />
-            <element signature="e#5949#6179#0" expanded="false" />
             <element signature="e#6208#6666#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/Client_Remote.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Python27/Lib/site-packages/serial/serialwin32.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="273" column="26" selection-start-line="273" selection-start-column="26" selection-end-line="273" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/ControlGUI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/V2/UpLevelProgram/RemoteControl/SocketControl_MPU6050.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.55590063">
-          <caret line="69" column="27" selection-start-line="69" selection-start-column="27" selection-end-line="69" selection-end-column="27" />
-          <folding>
-            <element signature="e#162#343#0" expanded="false" />
-            <element signature="e#443#1079#0" expanded="false" />
-            <element signature="e#1108#2345#0" expanded="false" />
-            <element signature="e#3767#6221#0" expanded="false" />
-            <element signature="e#6266#8313#0" expanded="false" />
-            <element signature="e#8355#8432#0" expanded="false" />
-            <element signature="e#8471#8696#0" expanded="false" />
-            <element signature="e#8725#9183#0" expanded="false" />
-          </folding>
+        <state vertical-scroll-proportion="0.6011132">
+          <caret line="181" column="61" selection-start-line="181" selection-start-column="61" selection-end-line="181" selection-end-column="61" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -93,6 +93,9 @@ sbit D4 = P5^4;
 sbit D5 = P5^5;
 sbit D6 = P5^6;
 sbit D7 = P5^7;
+sbit L_UP = P0^6;
+sbit R_UP = P0^7;
+sbit START_BALANCe = P0^5;
 // SYSTEMCLOCK = System clock frequency in Hz
 #define SYSTEMCLOCK       (22118400L * 9 / 4)
 #define TIMER0CLOCK			(SYSTEMCLOCK/48)
@@ -119,7 +122,7 @@ sbit D7 = P5^7;
 //-----------------------------------------------------------------------------
 // Function Prototypes
 //-----------------------------------------------------------------------------
-
+void Acknowledge_54(unsigned char index, unsigned char flag, unsigned char error);
 void OSCILLATOR_Init (void);         
 void PORT_Init (void);
 void UART0_Init (void);
@@ -146,7 +149,12 @@ void TouchKeepAlive(void);
 void Acknowledge(unsigned char back);
 void LostConnect(void);
 void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a);
-void balance_wheel(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a);
+void balance_wheel(void);
+void process_msg_53(void);
+void process_msg_54(void);
+void process_msg_55(void);
+void Ext_Interrupt_Init (void);
+void Report_PWM_55(void);
 //-----------------------------------------------------------------------------
 // Global Variables
 //-----------------------------------------------------------------------------
@@ -196,6 +204,11 @@ struct Pair_Angel_Control Map_Angel_PID[ANGELRANGE_SIZE] = {{ANGELSCALE_10,5,0,1
 int iCurrentKey = 0;
 unsigned int KeepAliveTime_i=0;
 char car_state = 0;  //1 = it is go forwarding state now
+unsigned int PWM_L_ui = 0;
+unsigned int PWM_R_ui = 0;	
+int PWM_L_add = 0;
+int PWM_R_add = 0;																
+char global_balance_flag = 0;															
 //-------------------------------Motor--------------------------------
 unsigned int Motor1_Time=0;
 unsigned int Motor2_Time=0;
@@ -264,8 +277,9 @@ void main (void)
 //	UART1_Init();
 	WirelessModule_Init();
 	TIMER0_Init();
-	Timer4_Init();
-	Timer3_Init();
+	Ext_Interrupt_Init();
+//	Timer4_Init();
+//	Timer3_Init();
 	EA = 1;
 
 	//*************flash test**********************
@@ -304,133 +318,37 @@ void main (void)
 		if(KeepAliveTime_i > 100)
 		{
 			LostConnect();
+			if(UART_Receive_Buffer_QueueHead < UART_Receive_Buffer_QueueBottom)
+			{
+				TouchKeepAlive();
+			}	
 		}
 		if(UART_Receive_Buffer_QueueHead < UART_Receive_Buffer_QueueBottom)
 		{
 			//Uart0_SendByte(*UART_Receive_Buffer_Queue);
 			//++UART_Receive_Buffer_Queue;
-			if( 0x53 == *UART_Receive_Buffer_QueueHead )
+		
+			// Switch by the message head
+			switch(*UART_Receive_Buffer_QueueHead)
 			{
-				char WaitFailSign = 0;
-				++UART_Receive_Buffer_QueueHead;
-				while( UART_Receive_Buffer_QueueBottom - UART_Receive_Buffer_QueueHead < 3 )
-				{
-					//wait the rest three char
-					if(KeepAliveTime_i > 100)
-					{
-						//wait too long 
-						WaitFailSign = 1;
-						break;
-					}
-				}
-				if(WaitFailSign == 1) 
-				{
-					//wait too long. Abort this frame. 
-					UART_Receive_Buffer_QueueHead = UART_Receive_Buffer_QueueHead;
+				case 0x53:
+					process_msg_53();
 					break;
-				}
-				
-				//check the sum 
-				if( *UART_Receive_Buffer_QueueHead + *(UART_Receive_Buffer_QueueHead+1) != *(UART_Receive_Buffer_QueueHead+2) )
-				{
-					/*debug*/
-					Uart0_SendByte('w');
-					UART_Receive_Buffer_QueueHead+=3;
-					/*debug end*/
-					continue;
-				}
-				
-				
-				
-				//next char (order) come
-				car_state = *UART_Receive_Buffer_QueueHead;
-				switch(*UART_Receive_Buffer_QueueHead)
-				{
-//					case 'g'://start the car
-//						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-//						PWMChange();
-//						IN11=1;
-//						IN12=0;
-//						IN31=1;
-//						IN32=0;
-//						TouchKeepAlive();
-//						Acknowledge(*UART_Receive_Buffer_QueueHead);
-//						break;
-					case 'f'://forward
-						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-//						PWMChange();						
-//						IN11=1;
-//						IN12=0;
-//						IN31=1;
-//						IN32=0;
-						if(uiPWM1Degree > 4)
-						{
-							uiPWM1Degree = 4;
-						}
-						TouchKeepAlive();
-						Acknowledge(*UART_Receive_Buffer_QueueHead);
-						break;
-					case 'l'://turn left
-						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-						PWMChange(1, uiPWM1Degree * 64 -1);	
-						PWMChange(2, uiPWM2Degree * 64 -1);	
-						IN11=0;
-						IN12=0;
-						IN31=1;
-						IN32=0;
-						TouchKeepAlive();
-						Acknowledge(*UART_Receive_Buffer_QueueHead);
-						break;
-					case 'r'://turn right
-						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-						PWMChange(1, uiPWM1Degree * 64 -1);	
-						PWMChange(2, uiPWM2Degree * 64 -1);						
-						IN11=1;
-						IN12=0;
-						IN31=0;
-						IN32=0;
-						TouchKeepAlive();
-						Acknowledge(*UART_Receive_Buffer_QueueHead);
-						break;
-					case 'b'://go back
-						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
-						PWMChange(1, uiPWM1Degree * 64 -1);	
-						PWMChange(2, uiPWM2Degree * 64 -1);
-						IN11=0;
-						IN12=1;
-						IN31=0;
-						IN32=1;
-						TouchKeepAlive();
-						Acknowledge(*UART_Receive_Buffer_QueueHead);
-						break;
-					case 's'://stop
-						uiPWM1Degree=uiPWM2Degree=0;
-						PWMChange(1, uiPWM1Degree * 64 -1);	
-						PWMChange(2, uiPWM2Degree * 64 -1);
-						IN11=0;
-						IN12=0;
-						IN31=0;
-						IN32=0;
-						TouchKeepAlive();
-						Acknowledge(*UART_Receive_Buffer_QueueHead);
-						break;
-					default:
-						/*debug*/
-						Acknowledge('n');//No such order
-						/*debug end*/
-						break;						
-				}
-				UART_Receive_Buffer_QueueHead+=3;
-			}
-			else
-			{
-				++UART_Receive_Buffer_QueueHead;
-			}
+				case 0x54:
+					process_msg_54();
+					break;
+				case 0x55:
+					process_msg_55();
+					break;
+				default:
+					++UART_Receive_Buffer_QueueHead;//throw this byte
+					break;
+			}	
 			
 		}	
 		// Get the counter information
-		Check_Counter(Counter_L_p, Counter_R_p, Counter_HighBits_a);
-		balance_wheel(Counter_L_p, Counter_R_p, Counter_HighBits_a);
+//		Check_Counter(Counter_L_p, Counter_R_p, Counter_HighBits_a);
+//		balance_wheel();
 	}
 }
 
@@ -538,11 +456,11 @@ void PORT_Init (void)
 
 	XBR0     = 0x04;                    // Enable UART0
 //	XBR0    |= 0x08;                     // Route CEX0 to P0.2
-	
-	XBR1     = 0x20;					//Enable T2
+	XBR1     = 0x04 + 0x10;				//Enable /INT0 and /INT1
+//	XBR1     = 0x20;					//Enable T2
 	XBR2     = 0x40;                    // Enable crossbar and weak pull-up
-	XBR2	|= 0X08;					//Enable T4
-	XBR2	|= 0x04;					//Enable UART1
+//	XBR2	|= 0X08;					//Enable T4
+//	XBR2	|= 0x04;					//Enable UART1
  //   P1MDIN   = 0xFF;                                   
 	P0MDOUT |= 0x04;                    // Set CEX0 (P0.2) to push-pull
 	P0MDOUT |= 0x01;                    // Set TX pin to push-pull
@@ -1100,7 +1018,8 @@ void Uart0_TransmitString(unsigned char * pucString , int iStringSize )
 
 void PWMChange(unsigned int side_ui, unsigned int PWM_degree)
 {
-	int i= 0;
+	char data SFRPAGE_SAVE =SFRPAGE;
+	SFRPAGE=0x0f;
 	/*************************DEBUG BEGIN*************************/
 	if( PWM_degree > 256 )
 	{
@@ -1113,18 +1032,21 @@ void PWMChange(unsigned int side_ui, unsigned int PWM_degree)
 	//------------------------DEBUG END-------------------------------
 	
 	P5 = PWM_degree;
-	if(side_ui == 1)
+	if(side_ui == 2)
 	{
 		PWM1CHANGEORDER =  0;
+		Delay_ms(4);
 		while( PWM1CHANGEORDER != 0 );//wait
 		PWM1CHANGEORDER =  1;
 	}
-	else if(side_ui == 2)
+	else if(side_ui == 1)
 	{
 		PWM2CHANGEORDER =  0;
+		Delay_ms(4);
 		while( PWM2CHANGEORDER != 0 );//wait
 		PWM2CHANGEORDER =  1;
 	}
+	SFRPAGE = SFRPAGE_SAVE;
 }
 void TouchKeepAlive(void)
 {
@@ -1138,8 +1060,8 @@ void TouchKeepAlive(void)
 void LostConnect(void)
 {
 	uiPWM1Degree=uiPWM2Degree=0;
-	PWMChange(1, uiPWM1Degree * 64 -1);	
-	PWMChange(2, uiPWM2Degree * 64 -1);
+	PWMChange(1, 0);	
+	PWMChange(2, 0);
 	IN11=0;
 	IN12=0;
 	IN31=0;
@@ -1149,67 +1071,61 @@ void LostConnect(void)
 }
 void Acknowledge(unsigned char back)
 {
-Uart0_SendByte(0x54);
+	Uart0_SendByte(0x53);
 	Uart0_SendByte(back);
 	Uart0_SendByte(1);
 	Uart0_SendByte(back+1);
 	
 	
 }
-void balance_wheel(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a)
+void Acknowledge_54(unsigned char index, unsigned char flag, unsigned char error)
 {
-	static long CHG_Times = 0;
-	static char last_order = 0;
-	unsigned int average_count = 0;
-	if(car_state != 'f')
-	{
-		if(car_state != last_order)
-		{
-			last_order = car_state;
-		}
-		return;
-	}
-	if(last_order != 'f')
-	{
-		//This is the start of forwarding
-		last_order = 'f';
-		// Clear wheels' count
-		*Counter_L_p = 0;
-		*Counter_R_p = 0;
-		*Counter_HighBits_a = 0;
-		*(Counter_HighBits_a + 1) = 0;
-		// Change the pwm
-		PWMChange(1, uiPWM1Degree * 64 -1);	
-		PWMChange(2, uiPWM1Degree * 64 -1);
-		IN11=1;
-		IN12=0;
-		IN31=1;
-		IN32=0;
-		return;
-	}
-	else
-	{
-		//check the counter
-		Check_Counter(Counter_L_p, Counter_R_p, Counter_HighBits_a);
-		if(ADJUST_THRESHOLD > *Counter_L_p || ADJUST_THRESHOLD > * Counter_R_p)
-		{
-			/*	
-				1.Change The PWM every PWM_CHG_GAP count.
-				2. proportional to wheel circle counts:PWM1 /PWM2 = dist1/dist2
-			*/
-			if(*Counter_L_p / PWM_CHG_GAP > CHG_Times || *Counter_R_p / PWM_CHG_GAP)
-			{
-				CHG_Times = *Counter_L_p / PWM_CHG_GAP;
-				average_count = (*Counter_L_p + *Counter_R_p) / 2;
-				uiPWM1Degree *= *Counter_L_p / average_count;
-				uiPWM2Degree *= *Counter_R_p / average_count;
-				PWMChange(1, uiPWM1Degree);
-				PWMChange(2, uiPWM2Degree);
-			}
-		}
-		return;
-	}
+	Uart0_SendByte(0x54);
+	Uart0_SendByte(index);
+	Uart0_SendByte(flag);
+	Uart0_SendByte(error);
+	Uart0_SendByte(0x54+flag+error);
 }
+void Report_PWM_55(void)
+{
+	Uart0_SendByte(0x55);
+	Uart0_SendByte(PWM_L_ui);
+	Uart0_SendByte(PWM_R_ui);
+}
+//void balance_wheel(void)
+//{
+//	static l_up_flag = 0;
+//	static r_up_flag = 0;
+//	if(L_UP && ~l_up_flag)//increase left pwm
+//	{
+//		PWM_L_ui += 1;
+//		PWMChange(1, PWM_L_ui);
+//	}
+//	else
+//	{
+//		l_up_flag=0;
+//	}
+////	else if(L_DOWN)// decrease left pwm
+////	{
+////		PWM_L_ui -= 1;
+////		PWMChange(1, PWM_L_ui);
+////	}
+//	
+//	if(R_UP && ~r_up_flag)//increase right pwm
+//	{
+//		PWM_R_ui += 1;
+//		PWMChange(2, PWM_R_ui);
+//	}
+//	else
+//	{
+//		r_up_flag=0;
+//	}
+////	else if(R_DOWN)//decrease right pwm
+////	{
+////		PWM_R_ui -= 1;
+////		PWMChange(2, PWM_R_ui);
+////	}
+//}
 
 void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigned long *Counter_HighBits_a)
 {
@@ -1264,7 +1180,321 @@ void Check_Counter(unsigned int *Counter_L_p, unsigned int *Counter_R_p, unsigne
 #endif
 	SFRPAGE = SFRPAGE_SAVE;
 }
+void process_msg_53(void)
+{
+	char WaitFailSign = 0;
+	++UART_Receive_Buffer_QueueHead;
+	while( UART_Receive_Buffer_QueueBottom - UART_Receive_Buffer_QueueHead < 3 )
+	{
+		//wait the rest three char
+		if(KeepAliveTime_i > 100)
+		{
+			//wait too long 
+			WaitFailSign = 1;
+			UART_Receive_Buffer_QueueHead = UART_Receive_Buffer_QueueBottom;
+			return;
+		}
+	}
 
+	//check the sum 
+	if( *UART_Receive_Buffer_QueueHead + *(UART_Receive_Buffer_QueueHead+1) != *(UART_Receive_Buffer_QueueHead+2) )
+	{
+		/*debug*/
+		Uart0_SendByte('w');
+		UART_Receive_Buffer_QueueHead+=3;
+		/*debug end*/
+		return;
+	}
+	//next char (order) come
+	car_state = *UART_Receive_Buffer_QueueHead;
+	switch(*UART_Receive_Buffer_QueueHead)
+	{
+//					case 'g'://start the car
+//						uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
+//						PWMChange();
+//						IN11=1;
+//						IN12=0;
+//						IN31=1;
+//						IN32=0;
+//						TouchKeepAlive();
+//						Acknowledge(*UART_Receive_Buffer_QueueHead);
+//						break;
+		case 'f'://forward
+			uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
+//						PWMChange();						
+//						IN11=1;
+//						IN12=0;
+//						IN31=1;
+//						IN32=0;
+			if(uiPWM1Degree > 4)
+			{
+				uiPWM1Degree = 4;
+			}
+			TouchKeepAlive();
+			Acknowledge(*UART_Receive_Buffer_QueueHead);
+			break;
+		case 'l'://turn left
+			uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
+			PWMChange(1, uiPWM1Degree * 64 -1);	
+			PWMChange(2, uiPWM2Degree * 64 -1);	
+			IN11=0;
+			IN12=0;
+			IN31=1;
+			IN32=0;
+			TouchKeepAlive();
+			Acknowledge(*UART_Receive_Buffer_QueueHead);
+			break;
+		case 'r'://turn right
+			uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
+			PWMChange(1, uiPWM1Degree * 64 -1);	
+			PWMChange(2, uiPWM2Degree * 64 -1);						
+			IN11=1;
+			IN12=0;
+			IN31=0;
+			IN32=0;
+			TouchKeepAlive();
+			Acknowledge(*UART_Receive_Buffer_QueueHead);
+			break;
+		case 'b'://go back
+			uiPWM1Degree=uiPWM2Degree=*(UART_Receive_Buffer_QueueHead+1);
+			PWMChange(1, uiPWM1Degree * 64 -1);	
+			PWMChange(2, uiPWM2Degree * 64 -1);
+			IN11=0;
+			IN12=1;
+			IN31=0;
+			IN32=1;
+			TouchKeepAlive();
+			Acknowledge(*UART_Receive_Buffer_QueueHead);
+			break;
+		case 's'://stop
+			uiPWM1Degree=uiPWM2Degree=0;
+			PWMChange(1, 0);	
+			PWMChange(2, 0);
+			IN11=0;
+			IN12=0;
+			IN31=0;
+			IN32=0;
+			TouchKeepAlive();
+			Acknowledge(*UART_Receive_Buffer_QueueHead);
+			break;
+		default:
+			/*debug*/
+			Acknowledge('n');//No such order
+			/*debug end*/
+			break;						
+	}
+	UART_Receive_Buffer_QueueHead+=3;
+
+}
+void process_msg_54(void)
+{
+
+	char WaitFailSign = 0;
+	unsigned char Msg_a[7] = {0};
+	int i = 0;
+	unsigned int sum= 0x54;
+		
+	++UART_Receive_Buffer_QueueHead;// throw header 0x54
+	//Wait for the whole message
+	while( UART_Receive_Buffer_QueueBottom - UART_Receive_Buffer_QueueHead < 6 )
+	{
+		//wait the rest three char
+		if(KeepAliveTime_i > 100)
+		{
+			//wait too long 
+			WaitFailSign = 1;
+			UART_Receive_Buffer_QueueHead = UART_Receive_Buffer_QueueBottom;
+			return;
+		}
+	}
+	
+	// Take the msg out from the buffer
+	memcpy(Msg_a, UART_Receive_Buffer_QueueHead, 6);
+	UART_Receive_Buffer_QueueHead += 6; // clear this fragment from buffer
+	// Check the sum
+	for(i=0;i++;i<5)
+	{
+		sum += Msg_a[i];
+	}
+	if( sum & 0x00ff != Msg_a[5])
+	{
+		// cracked msg
+		Acknowledge_54(Msg_a[0], 1, 1);
+		return;
+	}
+	// Change the PWM and rotation. 
+	PWMChange(1, Msg_a[1]);
+	PWMChange(2, Msg_a[2]);
+	switch(Msg_a[3])  //left rotation
+	{
+		case 0://stop
+			IN11=0;
+			IN12=0;
+			break;
+		case 1://forward
+			IN11=1;
+			IN12=0;
+			break;
+		case 2://backward
+			IN11=0;
+			IN12=1;
+			break;
+		default:// error
+			Acknowledge_54(Msg_a[0], 1, 2);
+	}
+	switch(Msg_a[4]) //right wheel rotation
+	{
+		case 0://stop
+			IN31=0;
+			IN32=0;
+			break;
+		case 1://forward
+			IN31=1;
+			IN32=0;
+			break;
+		case 2://backward
+			IN31 = 0;
+			IN32 = 1;
+			break;
+		default:// error
+			Acknowledge_54(Msg_a[0], 1, 2);
+	}
+	TouchKeepAlive();
+	return;
+}
+/*0x55+order+pwm+sum*/
+void process_msg_55(void)
+{
+	char WaitFailSign = 0;
+	unsigned char Msg_a[7] = {0};
+	unsigned char sum= 0;
+	++UART_Receive_Buffer_QueueHead;// throw header 0x55
+	//Wait for the whole message
+	while( UART_Receive_Buffer_QueueBottom - UART_Receive_Buffer_QueueHead < 3 )
+	{
+		//wait the rest three char
+		if(KeepAliveTime_i > 100)
+		{
+			//wait too long 
+			WaitFailSign = 1;
+			UART_Receive_Buffer_QueueHead = UART_Receive_Buffer_QueueBottom;
+			return;
+		}
+	}
+	
+	// Take the msg out from the buffer
+	memcpy(Msg_a, UART_Receive_Buffer_QueueHead, 3);
+	UART_Receive_Buffer_QueueHead += 3; // clear this fragment from buffer
+	// Check the sum
+	sum += Msg_a[0];
+	sum += Msg_a[1];
+	if( sum & 0xff - Msg_a[2])
+	{
+		// cracked msg
+		return;
+	}
+	switch(Msg_a[0])
+	{
+		case 1://start forwarding
+			IN11=1;
+			IN12=0;
+			IN31=1;
+			IN32=0;
+			PWM_L_ui = Msg_a[1] *48;
+			PWM_R_ui = PWM_L_ui;
+			PWMChange(1, PWM_L_ui);
+			PWMChange(2, PWM_R_ui);
+			global_balance_flag = 1;
+			START_BALANCe = 1;
+			break;
+		case 4://keep going
+			break;
+		case 2://start going back
+			IN11=0;
+			IN12=1;
+			IN31=0;
+			IN32=1;
+			PWM_L_ui = Msg_a[1] *48;
+			PWM_R_ui = PWM_L_ui;
+			PWMChange(1, PWM_L_ui);
+			PWMChange(2, PWM_R_ui);
+			break;
+		case 3://stop
+			IN11=1;
+			IN12=1;
+			IN31=1;
+			IN32=1;
+			global_balance_flag = 0;
+			START_BALANCe = 0;
+			PWM_R_add = 0;
+			PWM_L_add = 0;
+			break;
+		default:
+			break;
+			
+	}
+	TouchKeepAlive();
+}
+void INT0_ISR (void) interrupt 0
+{
+	if(global_balance_flag)
+	{
+		if(PWM_L_ui == 48)
+		{
+			PWM_L_ui += 8;
+			PWMChange(1, PWM_L_ui);
+			Report_PWM_55();
+		}
+		else
+		{
+			
+			PWM_R_ui = 48;
+			PWMChange(2, PWM_R_ui);
+			Report_PWM_55();
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// /INT1 ISR
+//-----------------------------------------------------------------------------
+//
+// Whenever a negative edge appears on P0.1, the LED is toggled.
+// The interrupt pending flag is automatically cleared by vectoring to the ISR
+//
+//-----------------------------------------------------------------------------
+void INT1_ISR (void) interrupt 2
+{
+	if(global_balance_flag)
+	{
+		if(PWM_R_ui == 48)
+		{
+			PWM_R_ui += 8;
+			PWMChange(2, PWM_R_ui);
+			Report_PWM_55();
+		}
+		else
+		{
+			PWM_L_ui = 48;
+			PWMChange(1, PWM_L_ui);
+			Report_PWM_55();
+		}
+	}
+}
+void Ext_Interrupt_Init (void)
+{
+   char SFRPAGE_SAVE = SFRPAGE;
+
+   SFRPAGE = TIMER01_PAGE;
+
+   TCON |= 0x05;                        // /INT 0 and /INT 1 are falling edge
+                                       // triggered
+
+   EX0 = 1;                            // Enable /INT0 interrupts
+   EX1 = 1;                            // Enable /INT1 interrupts
+
+   SFRPAGE = SFRPAGE_SAVE;
+}
 //-----------------------------------------------------------------------------
 // End Of File
 //-----------------------------------------------------------------------------

@@ -69,22 +69,21 @@ class CarSocketAdmin(CarAdmin):
 
     def SocketClient(self):
         LegalOrder = ['g', 'l', 'r', 'f', 's', 'b']
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind((SERVERIP, SERVERPORT))
+        s.listen(1)
         while True:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            try:
-                # print "connect to server"
-                s.connect((SERVERIP, SERVERPORT))
-                s.sendall(self.name + '\n')
-                s.sendall("ConnectBoss" + '\n')
-                while True:
-                    command = s.recv(1024)
-                    if command == "KeepAlive\n":
-                        continue
-                    if command == '':
-                        # print "***connection failed"
-                        raise
-                    # print "Recv:", repr(command)
-                    command_tokens = command.split('\n')
+            print 'Listening at', s.getsockname()
+            sc, sockname = s.accept()
+            print 'We have accepted a connection from ', sockname
+            print 'Socket connects', sc.getsockname(), 'and', sc.getpeername()
+            while True:
+                try:
+                    message = sc.recv(1024)
+                    sc.sendall("ok\n")
+                    print "recv", repr(message), '\n'
+                    command_tokens = message.split('\n')
                     if command_tokens[0] in ['g', 'f', 's', 'b']:
                         self.GlobalMem = command_tokens[0]
                         self.GlobalFlag = 1
@@ -92,11 +91,11 @@ class CarSocketAdmin(CarAdmin):
                     elif command_tokens[0] in ['l', 'r'] and len(command_tokens) >= 2:
                         self.Order_Sock_MPU6050 = command_tokens[0]
                         self.turning_angle = int(command_tokens[1])
-
-            except Exception, e:
-                self.GlobalMem = 's'
-                s.close()
-                # print "***connection failed.\n", e, "\n Retrying...***"
+                except Exception, e:
+                    print "*** connection failed.", e, "\n Delete the couple ***"
+                    sc.shutdown(socket.SHUT_RDWR)
+                    sc.close()
+                    break
 
     def ReadMPU6050(self):
         while True:
@@ -215,7 +214,7 @@ class CarSocketAdmin(CarAdmin):
                 self.SendOrder(self.GlobalMem)
             self.TouchTheCar()
 if __name__ == '__main__':
-    SERVERIP = '114.214.166.205'
-    SERVERPORT = 1060
+    SERVERIP = '127.0.0.1'
+    SERVERPORT = 8888
     Admin = CarSocketAdmin('CarCar', SERVERIP, SERVERPORT, 1)
     Admin.Run()

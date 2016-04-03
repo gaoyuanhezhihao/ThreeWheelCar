@@ -1,8 +1,8 @@
 # Client_Indoor.py
 import socket
 
-SERVERIP = "114.214.166.205"
-SERVERPORT = 1060
+SERVERIP = "127.0.0.1"
+SERVERPORT = 8888
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 while True:
     try:

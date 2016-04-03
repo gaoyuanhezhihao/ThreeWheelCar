@@ -141,7 +141,7 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>TH0_high_pre</ItemText>
+          <ItemText>TIMER0_ITRP_THRESHOLD</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
